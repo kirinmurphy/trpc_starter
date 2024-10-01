@@ -1,30 +1,19 @@
 import './App.css'
+import { TRPCLoader } from './components/TRPCLoader';
 import { trpcService } from './utils/trpc'
 
 function App() {
-
-  const { 
-    data: issData, 
-    isLoading: issIsLoading, 
-    error: issError, 
-  } = trpcService.getAstronautsOnISS.useQuery();
-
-  const people = issData?.people;
+  
+  const issAstrosResponse = trpcService.getAstronautsOnISS.useQuery();
 
   return (
     <>
-      <div>
-        {issIsLoading && <div>Loading...</div>}
-        {issError && !issIsLoading && <div>{issError.message}</div>}
-        {people && (
-          <div>
-            <header>ISS Astros</header>
-            <ul>
-              {people.map(({ name }) => <li key={name}>{name}</li>)}
-            </ul>
-          </div>
-        )}
-      </div>      
+      <TRPCLoader query={issAstrosResponse}>
+        {(issAstrosData) => <>
+          <header><h2>Current ISS Astros</h2></header>
+          {issAstrosData.people.map(({ name }) => <li key={name}>{name}</li>)}
+        </>}
+      </TRPCLoader>
     </>
   )
 }

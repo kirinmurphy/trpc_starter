@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "bun run src/server.ts"
+    "server": "bun run src/server/server.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "4.36.1",
