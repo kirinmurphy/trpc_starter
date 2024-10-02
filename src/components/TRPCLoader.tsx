@@ -2,7 +2,7 @@ import { UseTRPCQueryResult } from '@trpc/react-query/shared';
 import { TRPCClientErrorLike } from '@trpc/client';
 import { AnyRouter } from '@trpc/server';
 
-type TRPCLoaderProps<TData, TError> = {
+export type TRPCLoaderProps<TData, TError> = {
   query: UseTRPCQueryResult<TData, TError>;
   children: (data: TData) => React.ReactNode;
 }

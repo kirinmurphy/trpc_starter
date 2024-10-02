@@ -5,4 +5,34 @@
   padding: 2rem;
 }
 
+.container {
+  width: 100%;
+}
+
+.widget-wrapper {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2%;
+  }
+
+}
+
+/* @media (min-width: 1000px) {
+  .container {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+} */
+
+iframe {
+  width: 100%;
+}
+
+img {
+  width: 100%;
+}
 /* @media (prefers-reduced-motion: no-preference) { */
