@@ -1,6 +1,6 @@
 import { createRootRoute, createRoute } from '@tanstack/react-router'
 import App from '../App'
-import { Homepage } from '../modules/homepage/homepage';
+import { Homepage } from '../modules/authenticated/homepage';
 import { PublicHomepage } from '../modules/public/PublicHomepage';
 import { ROUTE_URLS } from './routeUrls';
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';

@@ -7,6 +7,8 @@ import { TRPCError } from '@trpc/server';
 import { ContextType } from './types';
 import { setAuthCookie } from './cookieActions';
 
+const SQL_GET_USER_BY_EMAIL = 'SELECT * FROM members WHERE email = $1';
+
 export const loginUserSchema = z.object({
   email: z.string().email(),
   password: z.string()
@@ -23,7 +25,7 @@ export async function loginUserMutation ({ input, ctx }: LoginUserMutationProps)
   const { email, password } = input;
 
   try {
-    const result = await pool.query('SELECT * FROM members WHERE email = $1', [email]);
+    const result = await pool.query(SQL_GET_USER_BY_EMAIL, [email]);
     const user = result.rows[0];
 
     if (!user) {
