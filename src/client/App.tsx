@@ -1,3 +1,4 @@
+import { Outlet } from '@tanstack/react-router';
 import './App.css'
 // import { trpcService } from '../utils/trpc'
 
@@ -11,6 +12,7 @@ function App() {
       <div className="container">
         Hey
       </div>
+      <Outlet />
     </>
   )
 }
