@@ -1,13 +1,7 @@
-import { IncomingMessage, ServerResponse } from 'http';
 import { initTRPC } from "@trpc/server";
+import { ContextType } from "./authentication/types";
 
-
-
-export function createContext({ req, res }: { req: IncomingMessage, res: ServerResponse }) {
-  return { req, res };
-}
-
-const t = initTRPC.context<typeof createContext>().create();
+const t = initTRPC.context<ContextType>().create();
 
 export const router = t.router;
 export const publicProcedure = t.procedure;

@@ -1,5 +1,5 @@
 export function Homepage () {
   return (
-    <div> Hai</div>
+    <div> EEE Homepage</div>
   )
 }
