@@ -1,7 +1,7 @@
 import './App.css'
-import { NasaDailySpace } from './components/modules/NasaDailySpace';
-import { TRPCLoader } from './components/TRPCLoader';
-import { trpcService } from './utils/trpc'
+import { NasaDailySpace } from '../../components/modules/NasaDailySpace';
+import { TRPCLoader } from '../../components/TRPCLoader';
+import { trpcService } from '../../../utils/trpc'
 
 const {
   getNasaDailySpace,
@@ -10,7 +10,7 @@ const {
   getISSLocation
 } = trpcService;
 
-function App() {
+export function SpaceStuff () {
   const issLocationQuery = getISSLocation.useQuery(undefined, {
     refetchInterval: 30 * 60 * 1000,
     refetchIntervalInBackground: false,
@@ -57,8 +57,6 @@ function App() {
     </>
   )
 }
-
-export default App;
 
 function SpaceWidget ({ children }: { children: React.ReactNode }) {
   return (

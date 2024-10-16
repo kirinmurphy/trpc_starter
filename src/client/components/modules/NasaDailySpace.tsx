@@ -1,5 +1,5 @@
 import YouTube from "react-youtube";
-import { NasaDailySpaceSchemaType } from "../../server/externalApis/nasaDailySpaceEndpoint";
+import { NasaDailySpaceSchemaType } from "../../../server/externalApis/nasaDailySpaceEndpoint";
 import { useState } from "react";
 
 export function NasaDailySpace ({ data }: { data: NasaDailySpaceSchemaType }) {

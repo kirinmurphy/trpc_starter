@@ -19,6 +19,10 @@ sequenceDiagram
     Website->>Database: Change member type from prospect to member
     Recommendation Service->>Website: redirect to authenticated page
   end
+  Recommendation Service->>Database: Create pending recommendation
+  Recommendation Service->>Recommendee: Send email to accept recommendation
+  Recommendee->>Website: Accept recommendation
+  Website->>Database: update recommendation to accepted   
 
   Recommender->>Website: Post Job
   Website->>Database: Save Job
