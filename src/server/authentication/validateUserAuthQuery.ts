@@ -12,18 +12,15 @@ type ValidateUserResultType = {
 
 type ValidateUserType = Pick<CreateNextContextOptions, 'req' | 'res'>;
 
-export async function validateUserQuery({ req }: ValidateUserType): Promise<ValidateUserResultType> {
-  console.log('validateUserQuery called');
+const SQL_SELECT_MEMBER = 'SELECT id, name, email FROM members WHERE id = $1';
+
+export async function validateUserAuthQuery({ req }: ValidateUserType): Promise<ValidateUserResultType> {
   
-  const authHeader = req.headers['authorization'];
   const cookieHeader = req.headers['cookie'];
   
   let token: string | undefined;
 
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    token = authHeader.split(' ')[1];
-    console.log('Token found in Authorization header');
-  } else if (cookieHeader) {
+ if (cookieHeader) {
     const cookies = cookie.parse(cookieHeader);
     token = cookies[COOKIE_NAME];
     console.log('Token found in cookie');
@@ -35,11 +32,7 @@ export async function validateUserQuery({ req }: ValidateUserType): Promise<Vali
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-    console.log('Token decoded, userId:', decoded.userId);
-
-    const result = await pool.query('SELECT id, name, email FROM members WHERE id = $1', [decoded.userId]);
-    const user = result.rows[0];
+    const user = await getUser({ token });
 
     if (!user) {
       console.log('User not found in database');
@@ -55,10 +48,17 @@ export async function validateUserQuery({ req }: ValidateUserType): Promise<Vali
         email: user.email
       }
     };
-
   } catch (err) {
     console.error('Token verification failed:', err);
     // Instead of throwing an error, return not authenticated
     return { isAuthenticated: false, user: null };
   }
+}
+
+async function getUser ({ token } : { token: string }) {
+  const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+  console.log('Token decoded, userId:', decoded.userId);
+
+  const result = await pool.query(SQL_SELECT_MEMBER, [decoded.userId]);
+  return result.rows[0];
 }

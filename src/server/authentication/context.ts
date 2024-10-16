@@ -1,10 +1,10 @@
 import { CreateNextContextOptions } from "@trpc/server/adapters/next";
-import { validateUserQuery } from "./validateUserQuery";
+import { validateUserAuthQuery } from "./validateUserAuthQuery";
 import { ContextType } from "./types";
 
 export async function createContext(options: CreateNextContextOptions): Promise<ContextType> {
   const { req, res } = options;
-  const userResult = await validateUserQuery({ req, res });
+  const userResult = await validateUserAuthQuery({ req, res });
   return {
     req,
     res,

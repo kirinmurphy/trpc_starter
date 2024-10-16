@@ -6,6 +6,8 @@ import { pool } from '../db/pool';
 import { JWT_SECRET } from './constants';
 import { ContextType } from './types';
 
+const SQL_CREATE_MEMBER = 'INSERT INTO members (name, email, password) VALUES ($1, $2, $3) RETURNING id';
+
 export const registerUserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -25,7 +27,7 @@ export async function registerUserMutation ({ input, ctx }: RegisterUserMutation
 
   try {
     const result = await pool.query(
-      'INSERT INTO members (name, email, password) VALUES ($1, $2, $3) RETURNING id',
+      SQL_CREATE_MEMBER,
       [name, email, hashedPassword]
     );
     const userId = result.rows[0].id;
