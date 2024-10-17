@@ -2,6 +2,7 @@ import { publicProcedure, router } from "../router";
 import { registerUserMutation, registerUserSchema } from './registerUserMutation';
 import { loginUserMutation, loginUserSchema } from './loginUserMutation';
 import { clearAuthCookie } from './cookieActions';
+import { refreshTokenMutation } from "./refreshTokenMutation";
 
 export const authRouter = router({
   register: publicProcedure
@@ -22,5 +23,8 @@ export const authRouter = router({
     .query(({ ctx }) => ({
       isAuthenticated: !!ctx.user,
       user: ctx.user
-    }))
+    })),
+
+  refreshToken: publicProcedure
+    .mutation(refreshTokenMutation)
 });

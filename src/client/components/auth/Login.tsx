@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { trpcService } from '../../../utils/trpc';
 import { useQueryClient } from '@tanstack/react-query';
 import { setAuthState } from '../../routing/isAuthenticated';
-
 interface LoginProps {
   onLoginSuccess?: () => void;
 }
@@ -40,7 +39,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 rounded-lg shadow-xl">
+    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-xl">
       <h2 className="text-2xl font-bold mb-6">Login</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
