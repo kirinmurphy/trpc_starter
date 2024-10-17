@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { trpcService } from '../../../utils/trpc';
 import { useQueryClient } from '@tanstack/react-query';
-import { setAuthState } from '../../routing/isAuthenticated';
 
 interface LoginProps {
   onLoginSuccess?: () => void;
@@ -18,7 +17,6 @@ export function Login ({ onLoginSuccess }: LoginProps) {
     onSuccess: async (data) => {
       console.log('Login successful, data: ', data);
       if ( data.success ) {
-        setAuthState(true);
         await queryClient.invalidateQueries(['auth', 'validateUser']);
         console.log('Auth query invalidated');
         console.log('Calling onLoginSuccess');
@@ -28,7 +26,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
       }
     },
     onError: (error) => {
-      console.error('Login error: ', error);
+      console.error('Loginn error: ', error);
       setError(error.message || 'An error occurred. Please try again.');
     },
   });

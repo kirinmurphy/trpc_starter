@@ -1,25 +1,34 @@
-import jwt from "jsonwebtoken";
 import { TRPCError } from "@trpc/server";
 import { ContextType } from "./types";
-import { JWT_SECRET, REFRESH_JWT_SECRET } from "./constants";
-import { clearAuthCookie, setAuthCookie } from "./cookieActions";
+import { 
+  setRefreshTokenCookie,
+  setAccessTokenCookie,
+  clearAuthCookies,
+  getRefreshTokenCookie,
+  decodeRefreshTokenCookie
+} from "./jwtCookies";
+
 
 export async function refreshTokenMutation ({ ctx }: { ctx: ContextType }) {
-  const refreshToken = ctx.req.cookies['refresh_token'];
+  const refreshToken = getRefreshTokenCookie({ req: ctx.req });
 
   if (!refreshToken ) {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'No refresh token'
-    });
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'No refresh token' });
   }
 
   try {
-    const decoded = jwt.verify(refreshToken, REFRESH_JWT_SECRET) as { userId: number }
+    const decoded = decodeRefreshTokenCookie({ refreshToken });
+    
     // check revoked/blacklisted token
 
-    const newAccessToken = jwt.sign({ userId: decoded.userId }, JWT_SECRET, { expiresIn: '15m' });
-    setAuthCookie(ctx.res, newAccessToken);
+    const NOW = Math.floor(Date.now() / 1000);
+    const notExpiredYet = decoded.exp - NOW < 3600;
+    
+    if ( notExpiredYet ) {
+      setRefreshTokenCookie({ res: ctx.res, userId: decoded.userId });
+    }
+    console.log('<<<<<<<<<<<<<<<<< <AUUUUGGGHHHH 2');
+    setAccessTokenCookie({ res: ctx.res, userId: decoded.userId });
 
     return {
       success: true, 
@@ -28,10 +37,7 @@ export async function refreshTokenMutation ({ ctx }: { ctx: ContextType }) {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err: unknown) {
-    clearAuthCookie(ctx.res);
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'Invalid or expired refresh token'
-    });
+    clearAuthCookies({ res: ctx.res });
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid/expired refresh token' });
   }
 }

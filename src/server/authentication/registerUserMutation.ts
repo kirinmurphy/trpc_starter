@@ -1,9 +1,7 @@
-import jwt from 'jsonwebtoken';
 import bcrypt from "bcrypt";
 import { z } from 'zod';
-import { setAuthCookie } from "./cookieActions";
 import { pool } from '../db/pool';
-import { JWT_SECRET } from './constants';
+import { setAccessTokenCookie, setRefreshTokenCookie } from './jwtCookies';
 import { ContextType } from './types';
 
 const SQL_CREATE_MEMBER = 'INSERT INTO members (name, email, password) VALUES ($1, $2, $3) RETURNING id';
@@ -31,9 +29,10 @@ export async function registerUserMutation ({ input, ctx }: RegisterUserMutation
       [name, email, hashedPassword]
     );
     const userId = result.rows[0].id;
-    const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1d' });
 
-    setAuthCookie(ctx.res, token);
+    console.log('<<<<<<<<<<<<<<<<< <AUUUUGGGHHHH 3');
+    setAccessTokenCookie({ res: ctx.res, userId });
+    setRefreshTokenCookie({ res: ctx.res, userId  });
 
     return { success: true, userId };
   } catch (err) {

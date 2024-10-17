@@ -1,11 +1,9 @@
-import jwt from 'jsonwebtoken';
 import bcrypt from "bcrypt";
 import { pool } from '../db/pool';
-import { JWT_SECRET } from './constants';
+import { setAccessTokenCookie, setRefreshTokenCookie } from './jwtCookies';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { ContextType } from './types';
-import { setAuthCookie } from './cookieActions';
 
 const SQL_GET_USER_BY_EMAIL = 'SELECT * FROM members WHERE email = $1';
 
@@ -37,16 +35,16 @@ export async function loginUserMutation ({ input, ctx }: LoginUserMutationProps)
       throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid password' });
     }
 
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' })
-    
-    setAuthCookie(ctx.res, token);
+    console.log('<<<<<<<<<<<<<<<<< <AUUUUGGGHHHH 1');
+    setAccessTokenCookie({ res: ctx.res, userId: user.id });
+    setRefreshTokenCookie({ res: ctx.res, userId: user.id });
 
     return { 
       success: true, 
       user: { id: user.id, name: user.name, email: user.email }
     };
   } catch (err) { 
-    console.error('Login error: ', err);
+    console.log('Invalid login credentials: ', err);
     if  (err instanceof TRPCError ) { throw err }
     throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Login failed' });
   }

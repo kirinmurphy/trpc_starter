@@ -1,8 +1,8 @@
-import { publicProcedure, router } from "../router";
+import { authenticatedProcedure, publicProcedure, router } from "../router";
 import { registerUserMutation, registerUserSchema } from './registerUserMutation';
 import { loginUserMutation, loginUserSchema } from './loginUserMutation';
-import { clearAuthCookie } from './cookieActions';
 import { refreshTokenMutation } from "./refreshTokenMutation";
+import { clearAuthCookies } from "./jwtCookies";
 
 export const authRouter = router({
   register: publicProcedure
@@ -13,18 +13,26 @@ export const authRouter = router({
     .input(loginUserSchema)
     .mutation(loginUserMutation),
 
-  logout: publicProcedure 
+  logout: authenticatedProcedure 
     .mutation(({ ctx }) => {
-      clearAuthCookie(ctx.res);
+      clearAuthCookies({ res: ctx.res });
       return { success: true }
     }),
 
-  validateUser: publicProcedure
-    .query(({ ctx }) => ({
-      isAuthenticated: !!ctx.user,
-      user: ctx.user
-    })),
+  validateUser: authenticatedProcedure
+    .query(({ ctx }) => {
+      console.log('<><><><><><>< ctx', ctx);
+
+      return ({
+        isAuthenticated: !!ctx.user,
+        user: ctx.user
+      });
+    }),
 
   refreshToken: publicProcedure
-    .mutation(refreshTokenMutation)
+    .mutation(refreshTokenMutation),
+
+  authCheck: publicProcedure.query(({ ctx }) => {
+    return { isAuthenticated: !!ctx.user };
+  })
 });
