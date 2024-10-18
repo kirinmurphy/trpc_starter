@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "bun run vite & bun run server",
+    "dev": "bun run vite & bun run server:dev",
     "build": "tsc -b && bun run vite build",
     "lint": "eslint .",
     "preview": "bun run vite preview",
     "server": "bun run src/server/server.ts",
+    "server:dev": "nodemon --watch src/server -e ts,json --exec 'bun run src/server/server.ts'",
     "migrate": "bun run src/server/db/runMigrations.ts"
   },
   "dependencies": {
@@ -45,6 +46,7 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc-fb9a90fa48-20240614",
     "eslint-plugin-react-refresh": "^0.4.12",
     "globals": "^15.11.0",
+    "nodemon": "^3.1.7",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "typescript": "^5.6.3",

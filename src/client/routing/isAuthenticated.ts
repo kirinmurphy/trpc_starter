@@ -31,25 +31,9 @@ async function getRefreshToken () {
 }
 
 export async function handleInvalidRefreshToken() {
-  console.log('handleInvalidRefreshToken called');
-  
-  // Clear all queries
-  console.log('Invalidating queries');
   await queryClient.invalidateQueries();
-  console.log('Removing queries');
   queryClient.removeQueries();
 
-  // Clear any auth-related local storage
-  console.log('Clearing local storage');
-  localStorage.removeItem('auth_token');
-  localStorage.removeItem('refresh_token');
-
-  // Clear any auth-related session storage
-  console.log('Clearing session storage');
-  sessionStorage.removeItem('auth_token');
-  sessionStorage.removeItem('refresh_token');
-
-  // Clear any auth-related cookies
   console.log('Clearing cookies');
   document.cookie.split(";").forEach((c) => {
     document.cookie = c

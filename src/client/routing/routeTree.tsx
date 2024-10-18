@@ -15,7 +15,7 @@ export const publicHomepageRoute = createRoute({
   path: ROUTE_URLS.publicHomepage,
   component: PublicHomepage,
   beforeLoad: async () => {
-    console.log('Public homepage beforeLoad called');
+    console.log('<><><><><><> Public homepage beforeLoad called');
     await redirectIfAuthenticated();
   },
 });
@@ -24,10 +24,7 @@ export const authenticatedHomepageRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.authenticatedHomepage,
   component: Homepage,
-  beforeLoad:  async () => {
-    console.log('Authenticated homepage beforeLoad called');
-    await redirectIfNotAuthenticated();
-  },
+  beforeLoad:  redirectIfNotAuthenticated,
 });
 
 export const loginRoute = createRoute({

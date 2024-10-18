@@ -1,45 +1,42 @@
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { CreateNextContextOptions } from '@trpc/server/adapters/next';
+import { TRPCError } from '@trpc/server';
 import { pool } from "../db/pool";
+import { SQL_SELECT_MEMBER } from '../db/sql';
 import { decodeAccessTokenCookie, getAccessTokenCookie } from "./jwtCookies";
 import { User } from './types';
-import { TRPCError } from '@trpc/server';
 
 type ValidateUserResultType = {
   isAuthenticated: boolean; 
   user: User | null;
 }
 
-type ValidateUserType = Pick<CreateNextContextOptions, 'req' | 'res'>;
+interface ValidateUrlProps {
+  req: CreateNextContextOptions['req'];
+  res: CreateNextContextOptions['res'];
+}
 
-const SQL_SELECT_MEMBER = 'SELECT id, name, email FROM members WHERE id = $1';
 
-export async function validateUserAuthQuery({ req }: ValidateUserType): Promise<ValidateUserResultType> {
+export async function validateUserAuthQuery (
+  { req }: ValidateUrlProps
+): Promise<ValidateUserResultType> {
+  
   const accessToken = getAccessTokenCookie({ req });
 
-  console.log('accessTokenCookie', accessToken);
+  console.log('accessTokenCookie', accessToken?.substring(0, 20));
 
   if (!accessToken) {
-    console.log('No token found');
     return { isAuthenticated: false, user: null };
   }
 
   try {
     const user = await getUser({ token: accessToken });
+    const userResponse = user ? { id: user.id, name: user.name, email: user.email } : null;
+    return { isAuthenticated: !!user, user: userResponse };
 
-    if (!user) {
-      console.log('User not found in database');
-      return { isAuthenticated: false, user: null };
-    }
-
-    // console.log('User authenticated:', user.id);
-    return {
-      isAuthenticated: true,
-      user: { id: user.id, name: user.name, email: user.email }
-    };
   } catch (err) {
     if (err instanceof TokenExpiredError) {
-      console.log('Token expired');
+      console.log('access Token expired');
       throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Token Expired' });
     }
 

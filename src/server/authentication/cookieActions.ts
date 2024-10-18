@@ -15,7 +15,7 @@ interface SetCookieProps {
   maxAge: number;
 }
 
-export function setAuthCookie (props: SetCookieProps) {
+export function setAuthCookie (props: SetCookieProps): void {
   const { res, token, name, maxAge } = props;
   const cookieString = cookie.serialize(name, token, { ...cookieDefaults, maxAge });  
   const existingCookies = res.getHeader('Set-Cookie') || [];
@@ -25,7 +25,9 @@ export function setAuthCookie (props: SetCookieProps) {
   res.setHeader('Set-Cookie', newCookies);
 }
 
-export function clearAuthCookie ({ res, cookieName }: { res: ServerResponse, cookieName: string }) {
+interface ClearCookieProps { res: ServerResponse, cookieName: string }
+
+export function clearAuthCookie ({ res, cookieName }: ClearCookieProps) {
   res.setHeader('Set-Cookie', cookie.serialize(cookieName, '', {
     ...cookieDefaults,
     maxAge: 0,
@@ -35,9 +37,8 @@ export function clearAuthCookie ({ res, cookieName }: { res: ServerResponse, coo
 interface GetCookieValueProps { req: IncomingMessage, name: string  }
 
 export function getCookieValue ({ req, name }: GetCookieValueProps): string | undefined {
-  console.log('GETTING ACCESS TOOKEN');
+  console.log('GETTING ACCESS TOOKEN', name);
   const cookieHeader = req.headers.cookie;
-  // console.log('name', name, 'cookieHeader', cookieHeader);
   if ( cookieHeader ) {
     const cookies = parse(cookieHeader);
     return cookies[name];

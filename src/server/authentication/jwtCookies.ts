@@ -13,11 +13,12 @@ const ACCESS_COOKIE_PROPS = { name: 'auth_token', maxAge:  60 * 15 }
 const ACCESS_TOKEN_SECRET_EXPIRES_IN = '15m';
 
 export function getAccessTokenCookie({ req }: GetCookieProps): GetCookieReturnType {
+  console.log('GETTING COOKIEEEEE');
   return getCookieValue({ req, name: ACCESS_COOKIE_PROPS.name  })
 }
 
 export function setAccessTokenCookie ({ res, userId }: SetCookieProps) {
-  console.log('SETTING COOKIEEEEE');
+  console.log('SETTING COOOOOOKIE');
   const accessToken = jwt.sign({ userId }, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_SECRET_EXPIRES_IN });
   setAuthCookie({ res, token: accessToken, ...ACCESS_COOKIE_PROPS  });
 }

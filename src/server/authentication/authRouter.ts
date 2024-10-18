@@ -14,15 +14,19 @@ export const authRouter = router({
     .mutation(loginUserMutation),
 
   logout: authenticatedProcedure 
-    .mutation(({ ctx }) => {
+    .mutation(async ({ ctx }) => {
+      console.log('CLEARRRRING COOKIES');
       clearAuthCookies({ res: ctx.res });
+      ctx.user = null;
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      console.log('AWAITTTTEDD');
       return { success: true }
     }),
 
   validateUser: authenticatedProcedure
     .query(({ ctx }) => {
-      console.log('<><><><><><>< ctx', ctx);
-
+      console.log('<><><><><><>< validate user: ', ctx.user);
+      
       return ({
         isAuthenticated: !!ctx.user,
         user: ctx.user
@@ -33,6 +37,7 @@ export const authRouter = router({
     .mutation(refreshTokenMutation),
 
   authCheck: publicProcedure.query(({ ctx }) => {
+    console.log("AUHT CHECK", ctx.user);
     return { isAuthenticated: !!ctx.user };
   })
 });

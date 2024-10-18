@@ -1,5 +1,6 @@
 import { pool } from "./db/pool";
 import bcrypt from "bcrypt";
+import { SQL_CREATE_USER } from "./db/sql";
 
 const rootUser = {
   email: 'mrnussbaum@gmail.com',
@@ -12,7 +13,7 @@ async function initFirstUser () {
 
   try {
     const result = await pool.query(
-      'INSERT INTO members (name, email, password) VALUES ($1, $2, $3) RETURNING id',
+      SQL_CREATE_USER,
       [rootUser.name, rootUser.email, hashedPassword]
     ); 
     

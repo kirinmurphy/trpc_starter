@@ -3,7 +3,7 @@ import { ROUTE_URLS } from './routeUrls';
 import { isAuthenticated } from './isAuthenticated';
 
 export async function redirectIfAuthenticated () {
-  console.log('redirectIfAuthenticated called');
+  // console.log('redirectIfAuthenticated called');
   const authenticated = await isAuthenticated();
   console.log('Authentication check result:', authenticated);
   if (authenticated) {
@@ -13,7 +13,7 @@ export async function redirectIfAuthenticated () {
 }
 
 export async function redirectIfNotAuthenticated () {
-  console.log('redirectIfNotAuthenticated called');
+  // console.log('redirectIfNotAuthenticated called');
   const authenticated = await isAuthenticated();
   if ( !authenticated ) {
     console.log('Redirecting to public homepage');

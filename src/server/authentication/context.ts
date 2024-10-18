@@ -4,16 +4,15 @@ import { ContextType } from "./types";
 
 export async function createContext(options: CreateNextContextOptions): Promise<ContextType> {
   const { req, res } = options;
-  console.log('Creating context, request path:', req.url);
-  const userResult = await validateUserAuthQuery({ req, res });
-  console.log('Context creation result:', {
-    isAuthenticated: userResult.isAuthenticated,
-    userId: userResult.user?.id
-  });
+
+  const authResult = await validateUserAuthQuery({ req, res });
   
-  return {
-    req,
-    res,
-    user: userResult.isAuthenticated ? userResult.user : null
-  }
+  const user = authResult.isAuthenticated ? authResult.user : null;  
+
+  
+  return { 
+    req, 
+    res, 
+    user, 
+  };
 }

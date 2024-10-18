@@ -4,8 +4,8 @@ import { setAccessTokenCookie, setRefreshTokenCookie } from './jwtCookies';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { ContextType } from './types';
+import { SQL_GET_USER_BY_EMAIL } from "../db/sql";
 
-const SQL_GET_USER_BY_EMAIL = 'SELECT * FROM members WHERE email = $1';
 
 export const loginUserSchema = z.object({
   email: z.string().email(),
@@ -35,7 +35,6 @@ export async function loginUserMutation ({ input, ctx }: LoginUserMutationProps)
       throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid password' });
     }
 
-    console.log('<<<<<<<<<<<<<<<<< <AUUUUGGGHHHH 1');
     setAccessTokenCookie({ res: ctx.res, userId: user.id });
     setRefreshTokenCookie({ res: ctx.res, userId: user.id });
 

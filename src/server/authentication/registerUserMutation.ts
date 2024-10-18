@@ -3,8 +3,8 @@ import { z } from 'zod';
 import { pool } from '../db/pool';
 import { setAccessTokenCookie, setRefreshTokenCookie } from './jwtCookies';
 import { ContextType } from './types';
+import { SQL_CREATE_MEMBER } from "../db/sql";
 
-const SQL_CREATE_MEMBER = 'INSERT INTO members (name, email, password) VALUES ($1, $2, $3) RETURNING id';
 
 export const registerUserSchema = z.object({
   name: z.string(),
