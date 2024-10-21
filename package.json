@@ -4,13 +4,17 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "bun run vite & bun run server:dev",
+    "dev": "bun run server:dev & bun run vite",
     "build": "tsc -b && bun run vite build",
     "lint": "eslint .",
     "preview": "bun run vite preview",
     "server": "bun run src/server/server.ts",
     "server:dev": "nodemon --watch src/server -e ts,json --exec 'bun run src/server/server.ts'",
-    "migrate": "bun run src/server/db/runMigrations.ts"
+    "migrate": "bun run src/server/db/runMigrations.ts",
+    "cypress:open": "cypress open --config-file cypress.config.cjs",
+    "cypress:run": "cypress run --config-file cypress.config.cjs",
+    "test": "NODE_ENV=test bun run server & bun run vite & sleep 5 && bun run cypress:run",
+    "test:dev": "NODE_ENV=test bun run dev & sleep 5 && bun run cypress:open"    
   },
   "dependencies": {
     "@tanstack/react-query": "4.36.1",
@@ -42,6 +46,7 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react-swc": "^3.7.1",
     "autoprefixer": "^10.4.20",
+    "cypress": "^13.15.0",
     "eslint": "^9.12.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc-fb9a90fa48-20240614",
     "eslint-plugin-react-refresh": "^0.4.12",

@@ -1,5 +1,5 @@
 import { TRPCClientError } from '@trpc/client';
-import { trpcVanillaClient } from '../../utils/trpc';
+import { trpcVanillaClient } from '../../utils/trpcClients';
 // import { trpcVanillaClient } from '../../utils/trpc';
 // import { handleInvalidRefreshToken } from './handleInvalidRefreshToken';
 // import { ROUTE_URLS } from './routeUrls';

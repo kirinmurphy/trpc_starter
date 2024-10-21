@@ -6,30 +6,20 @@ export const queryClient = new QueryClient();
 
 export const trpcService = createTRPCReact<AppRouter>();
 
+const httpLink = httpBatchLink({
+  url: 'http://localhost:3000',
+  fetch(url, options) {
+    return fetch(url, {
+      ...options,
+      credentials: 'include', 
+    });
+  },
+});
+
 export const trpcReactClient = trpcService.createClient({
-  links: [
-    httpBatchLink({
-      url: 'http://localhost:3000',
-      fetch(url, options) {
-        return fetch(url, {
-          ...options,
-          credentials: 'include', 
-        });
-      },
-    })
-  ]
+  links: [httpLink]
 });
 
 export const trpcVanillaClient = createTRPCProxyClient<AppRouter>({
-  links: [
-    httpBatchLink({
-      url: 'http://localhost:3000',
-      fetch(url, options) {
-        return fetch(url, {
-          ...options,
-          credentials: 'include', 
-        });
-      },
-    })
-  ]
+  links: [httpLink]
 });

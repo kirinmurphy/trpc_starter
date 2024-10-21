@@ -1,4 +1,4 @@
-import { trpcService } from "../../../utils/trpc"
+import { trpcService } from "../../../utils/trpcClients"
 import { handleInvalidRefreshToken } from "../../routing/handleInvalidRefreshToken";
 import { ROUTE_URLS } from "../../routing/routeUrls";
 

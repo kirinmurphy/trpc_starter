@@ -1,4 +1,4 @@
-import { queryClient } from '../../utils/trpc';
+import { queryClient } from '../../utils/trpcClients';
 // import { ROUTE_URLS } from './routeUrls';
 
 export async function handleInvalidRefreshToken() {

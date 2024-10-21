@@ -37,19 +37,19 @@ const cookieDefaults = {
   path: '/'
 } as const;
 
-export function clearCookie ({ res, cookieName }: { res: ServerResponse; cookieName: string; }) {
-  res.setHeader(
-    "Set-Cookie",
-    `${cookieName}=; ${Object.entries({ ...cookieDefaults, expires: new Date(0) })
-      .map(([key, value]) => `${key}=${value}`)
-      .join("; ")}`
-  );
-}
-
 export function setCookie ({ res, value, cookieName }: { res: ServerResponse; value: string; cookieName: string;  }) {
   res.setHeader(
     "Set-Cookie",
     `${cookieName}=${value}; ${Object.entries(cookieDefaults)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("; ")}`
+  );
+}
+  
+export function clearCookie ({ res, cookieName }: { res: ServerResponse; cookieName: string; }) {
+  res.setHeader(
+    "Set-Cookie",
+    `${cookieName}=; ${Object.entries({ ...cookieDefaults, expires: new Date(0) })
       .map(([key, value]) => `${key}=${value}`)
       .join("; ")}`
   );

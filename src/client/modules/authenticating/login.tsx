@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { trpcService } from '../../../utils/trpc';
+import { trpcService } from '../../../utils/trpcClients';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface LoginProps {
