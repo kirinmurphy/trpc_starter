@@ -1,6 +1,6 @@
 import { createRootRoute, createRoute } from '@tanstack/react-router'
 import App from '../App'
-import { Homepage } from '../modules/authenticated/homepage';
+import { AuthenticatedHomepage } from '../modules/authenticated/AuthenticatedHomepage';
 import { PublicHomepage } from '../modules/public/PublicHomepage';
 import { ROUTE_URLS } from './routeUrls';
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';
@@ -14,17 +14,7 @@ export const publicHomepageRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.publicHomepage,
   component: PublicHomepage,
-  beforeLoad: async () => {
-    console.log('<><><><><><> Public homepage beforeLoad called');
-    await redirectIfAuthenticated();
-  },
-});
-
-export const authenticatedHomepageRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: ROUTE_URLS.authenticatedHomepage,
-  component: Homepage,
-  beforeLoad:  redirectIfNotAuthenticated,
+  beforeLoad: redirectIfAuthenticated
 });
 
 export const loginRoute = createRoute({
@@ -34,8 +24,15 @@ export const loginRoute = createRoute({
   beforeLoad: redirectIfAuthenticated
 });
 
+export const authenticatedHomepageRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: ROUTE_URLS.authenticatedHomepage,
+  component: AuthenticatedHomepage,
+  beforeLoad:  redirectIfNotAuthenticated,
+});
+
 export const routeTree = rootRoute.addChildren([
   publicHomepageRoute,
+  loginRoute,
   authenticatedHomepageRoute,
-  loginRoute
 ]);  

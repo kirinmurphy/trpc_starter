@@ -2,8 +2,8 @@ import bcrypt from "bcrypt";
 import { z } from 'zod';
 import { pool } from '../db/pool';
 import { setAccessTokenCookie, setRefreshTokenCookie } from './jwtCookies';
-import { ContextType } from './types';
 import { SQL_CREATE_MEMBER } from "../db/sql";
+import { ContextType } from "./context";
 
 
 export const registerUserSchema = z.object({

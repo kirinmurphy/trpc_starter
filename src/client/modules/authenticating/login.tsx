@@ -15,7 +15,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
 
   const loginMutation = trpcService.auth.login.useMutation({
     onSuccess: async (data) => {
-      if ( data.success ) {
+      if ( data?.success ) {
         await queryClient.invalidateQueries(['auth', 'validateUser']);
         if ( onLoginSuccess ) onLoginSuccess();
       } else {

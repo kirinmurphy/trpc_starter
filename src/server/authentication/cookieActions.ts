@@ -1,10 +1,11 @@
 import cookie, { parse } from 'cookie';
 import { IncomingMessage, ServerResponse } from 'http';
 
-const cookieDefaults = {
+export const cookieDefaults = {
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
   sameSite: 'strict',
+  expires: new Date(0),
   path: '/'
 } as const;
 
@@ -25,13 +26,20 @@ export function setAuthCookie (props: SetCookieProps): void {
   res.setHeader('Set-Cookie', newCookies);
 }
 
-interface ClearCookieProps { res: ServerResponse, cookieName: string }
+interface ClearCookieProps { res: ServerResponse, req: IncomingMessage; cookieName: string }
 
-export function clearAuthCookie ({ res, cookieName }: ClearCookieProps) {
-  res.setHeader('Set-Cookie', cookie.serialize(cookieName, '', {
+export function clearAuthCookie ({ res, req, cookieName }: ClearCookieProps) {
+  const cookiesBefore = req.headers.cookie;
+  console.log(cookieName, ' after clearing:', cookiesBefore);
+const cookieString = cookie.serialize(cookieName, '', {
     ...cookieDefaults,
+    expires: new Date(0),
     maxAge: 0,
-  }));
+  });
+  res.setHeader('Set-Cookie', cookieString);
+
+  const cookiesAfter = req.headers.cookie;
+  console.log(cookieName, ' after clearing:', cookiesAfter);
 }
 
 interface GetCookieValueProps { req: IncomingMessage, name: string  }
@@ -39,6 +47,7 @@ interface GetCookieValueProps { req: IncomingMessage, name: string  }
 export function getCookieValue ({ req, name }: GetCookieValueProps): string | undefined {
   console.log('GETTING ACCESS TOOKEN', name);
   const cookieHeader = req.headers.cookie;
+  console.log('cookieHeader', cookieHeader);
   if ( cookieHeader ) {
     const cookies = parse(cookieHeader);
     return cookies[name];
