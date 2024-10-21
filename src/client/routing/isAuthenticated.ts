@@ -5,12 +5,10 @@ import { trpcVanillaClient } from '../../utils/trpc';
 // import { ROUTE_URLS } from './routeUrls';
 
 export async function isAuthenticated () {
-
   try {
-    const result = await trpcVanillaClient.auth.isAuthenticated.query();
-    console.log('result: ', result);
-  
+    const result = await trpcVanillaClient.auth.isAuthenticated.query();  
     return result.isAuthenticated;
+
   } catch (err: unknown) {
     if ( err instanceof TRPCClientError && err.data?.code === 'UNAUTHORIZED' ) {
       if ( err.message === 'TokenExpired' ) {

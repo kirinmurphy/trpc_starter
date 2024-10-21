@@ -16,3 +16,8 @@ export interface MutationPropsWithInput<InputType> {
   input: InputType
   ctx: ContextType
 }
+
+export interface SimpleMutationReturnType { 
+  success: boolean; 
+  message: string; 
+}

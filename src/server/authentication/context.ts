@@ -1,17 +1,28 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { TokenExpiredError } from "jsonwebtoken";
 import { CreateNextContextOptions } from "@trpc/server/adapters/next";
-import { ACCESS_TOKEN_SECRET, getAccessTokenCookie } from "./jwtCookies";
+import { decodeAccessTokenCookie, getAccessTokenCookie } from "./jwtActions";
 import { ContextType } from "./types";
+import { clearAccessTokenCookie } from "./jwtActions";
 
 export async function createContext(options: CreateNextContextOptions): Promise<ContextType> {
   const { req, res } = options;
+
   const accessToken = getAccessTokenCookie({ req });
   
   if ( !accessToken ) {
     return { req, res, userId: null }
   }
 
-  const { userId } = jwt.verify(accessToken, ACCESS_TOKEN_SECRET) as JwtPayload;
+  try {
+    const { userId } = decodeAccessTokenCookie({ accessToken });
 
-  return { req, res, userId };
+    return { req, res, userId };
+
+  } catch ( err: unknown ) {
+    if ( err instanceof TokenExpiredError ) {
+      clearAccessTokenCookie({ res });
+    }
+
+    return { req, res, userId: null }
+  }
 }

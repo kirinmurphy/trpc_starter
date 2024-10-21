@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import { z } from 'zod';
 import { pool } from '../db/pool';
-import { setAccessTokenCookie, setRefreshTokenCookie } from './jwtCookies';
 import { SQL_CREATE_MEMBER } from "../db/sql";
-import { ContextType } from "./context";
+import { ContextType } from "./types";
+import { setAccessTokenCookie } from "./jwtActions";
 
 
 export const registerUserSchema = z.object({
@@ -19,8 +19,12 @@ interface RegisterUserMutationProps {
   ctx: ContextType
 }
 
-export async function registerUserMutation ({ input, ctx }: RegisterUserMutationProps) {
-  const { name, email, password } = input;
+export async function registerUserMutation (props: RegisterUserMutationProps) {
+  const { 
+    input: { name, email, password }, 
+    ctx: { res  } 
+  } = props;
+  
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
@@ -30,9 +34,7 @@ export async function registerUserMutation ({ input, ctx }: RegisterUserMutation
     );
     const userId = result.rows[0].id;
 
-    console.log('<<<<<<<<<<<<<<<<< <AUUUUGGGHHHH 3');
-    setAccessTokenCookie({ res: ctx.res, userId });
-    setRefreshTokenCookie({ res: ctx.res, userId  });
+    setAccessTokenCookie({ res, userId });
 
     return { success: true, userId };
   } catch (err) {

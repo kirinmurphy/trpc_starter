@@ -1,22 +1,13 @@
-import { ACCESS_COOKIE_NAME } from "./jwtCookieNames";
-import { ContextType } from "./types";
+import { clearAccessTokenCookie } from "./jwtActions";
+import { ContextType, SimpleMutationReturnType } from "./types";
 
-const cookieDefaults = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'strict',
-  path: '/'
-} as const;
+interface LogoutMutationType { 
+  ctx: ContextType 
+}
 
-export function logoutUserMutation ({ ctx }: { ctx: ContextType }): { success: boolean; message: string; } {
-  const { res } = ctx;
-
-  res.setHeader(
-    "Set-Cookie",
-    `${ACCESS_COOKIE_NAME}=; ${Object.entries({...cookieDefaults, expires: new Date(0)})
-      .map(([key, value]) => `${key}=${value}`)
-      .join("; ")}`
-  );
-
+export function logoutUserMutation (props: LogoutMutationType): SimpleMutationReturnType {
+  const { ctx: { res } } = props;
+  
+  clearAccessTokenCookie({ res });
   return { success: true, message: "Logged out successfully" };
 }

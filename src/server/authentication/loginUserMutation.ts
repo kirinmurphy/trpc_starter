@@ -1,19 +1,10 @@
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { pool } from '../db/pool';
 import { z } from 'zod';
 import { TRPCError } from "@trpc/server";
+import { pool } from '../db/pool';
 import { SQL_GET_USER_BY_EMAIL } from "../db/sql";
-import { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_SECRET_EXPIRES_IN } from "./jwtCookies";
-import { ACCESS_COOKIE_NAME } from "./jwtCookieNames";
+import { setAccessTokenCookie } from "./jwtActions";
 import { MutationPropsWithInput } from "./types";
-
-const cookieDefaults = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'strict',
-  path: '/'
-} as const;
 
 export const loginUserSchema = z.object({
   email: z.string().email(),
@@ -23,6 +14,8 @@ export const loginUserSchema = z.object({
 type LoginInputType = z.infer<typeof loginUserSchema>;
 
 export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<LoginInputType>) {
+  const { res } = ctx;
+
   try {
     const { email, password } = input;  
     
@@ -39,19 +32,9 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
     }
 
     console.log('email: ', email, user.id, user.name);
-    const token = jwt.sign(
-      { userId: user.id }, 
-      ACCESS_TOKEN_SECRET, 
-      { expiresIn: ACCESS_TOKEN_SECRET_EXPIRES_IN }
-    );
-    
-    ctx.res.setHeader(
-      "Set-Cookie",
-      `${ACCESS_COOKIE_NAME}=${token}; ${Object.entries(cookieDefaults)
-        .map(([key, value]) => `${key}=${value}`)
-        .join("; ")}`
-    );
-  
+
+    setAccessTokenCookie({ res, userId: user.id });
+
     return { success: true, message: "Logged in successfully" };
 
   } catch (err: unknown) {
