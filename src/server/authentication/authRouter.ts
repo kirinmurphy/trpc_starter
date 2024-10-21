@@ -1,9 +1,8 @@
 
-// import jwt from "jsonwebtoken";
-// import { z } from "zod";
-import { router, publicProcedure } from "../router";
+import { router, publicProcedure, protectedProcedure } from "../router";
 import { loginUserMutation, loginUserSchema } from "./loginUserMutation";
 import { logoutUserMutation } from "./logoutUserMutation";
+import { getUserQuery } from "./getUserQuery";
 
 
 export const authRouter = router({
@@ -14,9 +13,22 @@ export const authRouter = router({
   logout: publicProcedure
     .mutation(logoutUserMutation),
 
+  getUser: protectedProcedure
+    .query(getUserQuery),
+
   isAuthenticated: publicProcedure 
-    .query(({ ctx: { userId } }) => ({ 
-      isAuthenticated: !!userId,
-      userId 
-    })),
+    .query(({ ctx: { userId } }) => {
+      console.log('<<<><><><><><><><><><', userId);
+      return ({
+        isAuthenticated: !!userId,
+        userId
+      });
+    }),
+
+  // register: publicProcedure
+  //   .input(registerUserSchema)
+  //   .mutation(registerUserMutation),
+
+  // refreshToken: publicProcedure
+  //   .mutation(refreshTokenMutation),    
 });

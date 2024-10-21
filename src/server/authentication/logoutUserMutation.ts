@@ -1,5 +1,5 @@
-import { ContextType } from "./context";
 import { ACCESS_COOKIE_NAME } from "./jwtCookieNames";
+import { ContextType } from "./types";
 
 const cookieDefaults = {
   httpOnly: true,
@@ -11,7 +11,6 @@ const cookieDefaults = {
 export function logoutUserMutation ({ ctx }: { ctx: ContextType }): { success: boolean; message: string; } {
   const { res } = ctx;
 
-  // Clear the cookie by setting its expiration to a past date
   res.setHeader(
     "Set-Cookie",
     `${ACCESS_COOKIE_NAME}=; ${Object.entries({...cookieDefaults, expires: new Date(0)})

@@ -5,8 +5,8 @@ import { z } from 'zod';
 import { TRPCError } from "@trpc/server";
 import { SQL_GET_USER_BY_EMAIL } from "../db/sql";
 import { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_SECRET_EXPIRES_IN } from "./jwtCookies";
-import { ContextType } from "./context";
 import { ACCESS_COOKIE_NAME } from "./jwtCookieNames";
+import { MutationPropsWithInput } from "./types";
 
 const cookieDefaults = {
   httpOnly: true,
@@ -22,12 +22,7 @@ export const loginUserSchema = z.object({
 
 type LoginInputType = z.infer<typeof loginUserSchema>;
 
-interface LoginUserMutationProps {
-  input: LoginInputType
-  ctx: ContextType
-}
-
-export async function loginUserMutation ({ input, ctx }: LoginUserMutationProps) {
+export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<LoginInputType>) {
   try {
     const { email, password } = input;  
     

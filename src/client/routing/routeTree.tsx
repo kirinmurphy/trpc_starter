@@ -5,6 +5,7 @@ import { PublicHomepage } from '../modules/public/PublicHomepage';
 import { ROUTE_URLS } from './routeUrls';
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';
 import { redirectIfAuthenticated, redirectIfNotAuthenticated } from './authenticationRedirects';
+import { AuthenticatedApp } from '../modules/authenticated/AuthenticatedApp';
 
 export const rootRoute = createRootRoute({
   component: App,
@@ -27,7 +28,7 @@ export const loginRoute = createRoute({
 export const authenticatedHomepageRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.authenticatedHomepage,
-  component: AuthenticatedHomepage,
+  component: () => <AuthenticatedApp><AuthenticatedHomepage /></AuthenticatedApp>,
   beforeLoad:  redirectIfNotAuthenticated,
 });
 

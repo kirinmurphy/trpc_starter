@@ -27,7 +27,6 @@ export async function refreshTokenMutation ({ ctx }: { ctx: ContextType }) {
     if ( notExpiredYet ) {
       setRefreshTokenCookie({ res: ctx.res, userId: decoded.userId });
     }
-    console.log('<<<<<<<<<<<<<<<<< <AUUUUGGGHHHH 2');
     setAccessTokenCookie({ res: ctx.res, userId: decoded.userId });
 
     return {
@@ -37,7 +36,7 @@ export async function refreshTokenMutation ({ ctx }: { ctx: ContextType }) {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err: unknown) {
-    clearAuthCookies({ res: ctx.res });
+    clearAuthCookies({ res: ctx.res, req: ctx.req });
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid/expired refresh token' });
   }
 }
