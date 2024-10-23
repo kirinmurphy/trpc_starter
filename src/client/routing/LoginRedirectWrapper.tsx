@@ -7,7 +7,6 @@ export function LoginRedirectWrapper () {
 
   return (
     <Login onLoginSuccess={() => {
-      console.log('HWOOOOO');
       navigate({ to: ROUTE_URLS.authenticatedHomepage })    
     }}/>    
   );

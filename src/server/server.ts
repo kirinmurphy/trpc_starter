@@ -3,12 +3,11 @@ import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import { pool } from './db/pool';
 import { router } from "./router";
 import { authRouter } from './authentication/authRouter';
-import { createContext } from './authentication/context';
+import { createContext } from './authentication/createContext';
 
 export const appRouter = router({
   auth: authRouter,
 });
-
 
 const server = createHTTPServer({
   router: appRouter,

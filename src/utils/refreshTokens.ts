@@ -1,9 +1,11 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import { AppRouter } from "../server/server";
+import { customFetch } from "./customFetch";
 
 let isRefreshing = false;
 
-export async function refreshTokens () {
+export async function refreshTokens (props?: { failGracefully?: boolean; }) {
+  const { failGracefully = false } = props || {}; 
   if ( isRefreshing ) { return false; }
 
   try {
@@ -13,9 +15,7 @@ export async function refreshTokens () {
       links: [
         httpBatchLink({
           url: import.meta.env.SERVER_URL || 'http://localhost:3000',
-          fetch(url, options) {
-            return fetch(url, { ...options,  credentials: 'include' });
-          }
+          fetch: customFetch
         }),
       ]
     });
@@ -23,7 +23,10 @@ export async function refreshTokens () {
     await refreshClient.auth.refreshToken.mutate();
     return true;
   } catch (err: unknown) {
-    console.error('Token refresh failed: ', err);
+    if ( failGracefully ) {
+      console.error('Token refresh failed: ', err);
+    }
+    return false;
   } finally {
     isRefreshing = false;
   }

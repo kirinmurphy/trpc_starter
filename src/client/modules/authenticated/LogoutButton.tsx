@@ -11,7 +11,9 @@ export function LogoutButton () {
 
   const handleLogout = async () => {
     try {
-      await logoutMutation.mutateAsync();
+      console.log('---------------------- logging out');
+      await logoutMutation.mutate();
+      console.log('---------------------- logged out');
       window.location.href = ROUTE_URLS.publicHomepage;
     } catch (error) {
       console.error("Error during logout:", error);

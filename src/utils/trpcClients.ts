@@ -10,6 +10,7 @@ import { AppRouter } from "../server/server";
 import { QueryClient } from "@tanstack/react-query";
 import { refreshTokens } from "./refreshTokens";
 import { isTRPCError } from "./isTRPCError";
+import { customFetch } from "./customFetch";
 
 export const queryClient = new QueryClient();
 export const trpcService = createTRPCReact<AppRouter>();
@@ -18,18 +19,17 @@ function getAuthLink(): TRPCLink<AppRouter> {
   return (runtime) => {
     const forward = httpBatchLink({
       url: import.meta.env.SERVER_URL || 'http://localhost:3000',
-      fetch(url, options) {
-        return fetch(url, { ...options, credentials: 'include' })
-      }
+      fetch: customFetch
     })(runtime);
 
     return (req) => {
       return observable(observer => {
         const subscription = forward(req).subscribe({
-          next(value) { console.log('continuing'); observer.next(value); },
+          next(value) { console.log('next'); observer.next(value); },
 
           async error(err: unknown) {
-            console.log('err', err);
+            
+            console.log('errrrrr', err);
 
             if ( !isTRPCError(err) ) {
               const cause = err instanceof Error ? err : new Error(String(err));
@@ -82,6 +82,7 @@ export const trpcVanillaClient = createTRPCProxyClient<AppRouter>({
 async function isTokenRefreshed ({ errorMsg, path }: { errorMsg: string, path: string }) {
   const isAccessTokenExpired = errorMsg === 'Token expired';
   const isRefreshRequest = !path.includes('auth.refreshToken');
+  console.log('<<<<<<<<>>>>>>>> REquested refresh token in middleware');
   return isAccessTokenExpired && isRefreshRequest && await refreshTokens();
 }
 

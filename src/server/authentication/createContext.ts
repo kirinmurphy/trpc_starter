@@ -10,13 +10,13 @@ export async function createContext(options: CreateNextContextOptions): Promise<
   const accessToken = getAccessTokenCookie({ req });
   
   if ( !accessToken ) {
-    return { req, res, userId: null, authStatus: AUTH_STATUSES.noToken }
+    return { ...options, userId: null, authStatus: AUTH_STATUSES.noToken };
   }
 
   try {
     const { userId } = decodeAccessTokenCookie({ accessToken });
 
-    return { req, res, userId, authStatus: AUTH_STATUSES.authenticated };
+    return { ...options, userId, authStatus: AUTH_STATUSES.authenticated };
 
   } catch ( err: unknown ) {
 
@@ -26,21 +26,13 @@ export async function createContext(options: CreateNextContextOptions): Promise<
     clearAccessTokenCookie({ res });
 
     if ( !isTokenExpiredErr ) {
-      console.log('NOT TOKEN EXPIRED ERROR', err);
       clearRefreshTokenCookie({ res });
-    } else {
-      console.log('------ ITOKENEXPERR', err);
-    }
+    } 
 
     const errorStatus = isTokenExpiredErr ? AUTH_STATUSES.tokenExpired
       : isInvalidTokenErr ? AUTH_STATUSES.invalidToken
       : AUTH_STATUSES.unknownError;
     
-    return { 
-      req, 
-      res, 
-      userId: null, 
-      authStatus: errorStatus
-    };
+    return { ...options, userId: null, authStatus: errorStatus };
   }
 }

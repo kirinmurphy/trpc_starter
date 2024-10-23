@@ -31,7 +31,7 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
       throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid password' });
     }
 
-    console.log('email: ', email, user.id, user.name);
+    console.log('user logged in: ', email, user.id, user.name);
 
     setAccessTokenCookie({ res, userId: user.id });
     setRefreshTokenCookie({ res, userId: user.id });

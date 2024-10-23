@@ -19,12 +19,12 @@ interface SetCookieValueProps {
   res: ServerResponse; 
   value: string; 
   name: string; 
-  expires?: Date 
+  expires: Date 
 }
 
-export function setCookie ({ res, value, name, expires }: SetCookieValueProps) {
-  const options = expires ? { ...cookieDefaults, expires } : cookieDefaults;
-  const cookieString = cookie.serialize(name, value, options);  
+export function setCookie (props: SetCookieValueProps) {
+  const { res, value, name, expires } = props;
+  const cookieString = cookie.serialize(name, value, { ...cookieDefaults, expires });  
   const existingCookies = res.getHeader('Set-Cookie') || [];
   const newCookies = Array.isArray(existingCookies)
     ? [...existingCookies, cookieString]
