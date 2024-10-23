@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { TRPCError } from "@trpc/server";
 import { pool } from '../db/pool';
 import { SQL_GET_USER_BY_EMAIL } from "../db/sql";
-import { setAccessTokenCookie } from "./jwtActions";
+import { setAccessTokenCookie, setRefreshTokenCookie } from "./jwtActions";
 import { MutationPropsWithInput } from "./types";
 
 export const loginUserSchema = z.object({
@@ -34,6 +34,7 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
     console.log('email: ', email, user.id, user.name);
 
     setAccessTokenCookie({ res, userId: user.id });
+    setRefreshTokenCookie({ res, userId: user.id });
 
     return { success: true, message: "Logged in successfully" };
 

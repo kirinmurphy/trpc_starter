@@ -1,7 +1,7 @@
-import { TokenExpiredError } from "jsonwebtoken";
+import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import { CreateNextContextOptions } from "@trpc/server/adapters/next";
-import { decodeAccessTokenCookie, getAccessTokenCookie } from "./jwtActions";
-import { ContextType } from "./types";
+import { clearRefreshTokenCookie, decodeAccessTokenCookie, getAccessTokenCookie } from "./jwtActions";
+import { AUTH_STATUSES, ContextType } from "./types";
 import { clearAccessTokenCookie } from "./jwtActions";
 
 export async function createContext(options: CreateNextContextOptions): Promise<ContextType> {
@@ -10,19 +10,37 @@ export async function createContext(options: CreateNextContextOptions): Promise<
   const accessToken = getAccessTokenCookie({ req });
   
   if ( !accessToken ) {
-    return { req, res, userId: null }
+    return { req, res, userId: null, authStatus: AUTH_STATUSES.noToken }
   }
 
   try {
     const { userId } = decodeAccessTokenCookie({ accessToken });
 
-    return { req, res, userId };
+    return { req, res, userId, authStatus: AUTH_STATUSES.authenticated };
 
   } catch ( err: unknown ) {
-    if ( err instanceof TokenExpiredError ) {
-      clearAccessTokenCookie({ res });
+
+    const isTokenExpiredErr = err instanceof TokenExpiredError;
+    const isInvalidTokenErr = err instanceof JsonWebTokenError;
+
+    clearAccessTokenCookie({ res });
+
+    if ( !isTokenExpiredErr ) {
+      console.log('NOT TOKEN EXPIRED ERROR', err);
+      clearRefreshTokenCookie({ res });
+    } else {
+      console.log('------ ITOKENEXPERR', err);
     }
 
-    return { req, res, userId: null }
+    const errorStatus = isTokenExpiredErr ? AUTH_STATUSES.tokenExpired
+      : isInvalidTokenErr ? AUTH_STATUSES.invalidToken
+      : AUTH_STATUSES.unknownError;
+    
+    return { 
+      req, 
+      res, 
+      userId: null, 
+      authStatus: errorStatus
+    };
   }
 }

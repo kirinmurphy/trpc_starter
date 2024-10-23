@@ -1,33 +1,11 @@
-import { parse } from 'cookie';
+import cookie, { parse } from 'cookie';
 import { IncomingMessage, ServerResponse } from 'http';
-
-// interface SetCookieProps {
-//   res: ServerResponse;
-//   token: string;
-//   name: string;
-//   maxAge: number;
-// }
-
-// export function setAuthCookie (props: SetCookieProps): void {
-//   const { res, token, name, maxAge } = props;
-//   const cookieString = cookie.serialize(name, token, { ...cookieDefaults, maxAge });  
-//   const existingCookies = res.getHeader('Set-Cookie') || [];
-//   const newCookies = Array.isArray(existingCookies)
-//     ? [...existingCookies, cookieString]
-//     : [existingCookies.toString(), cookieString];
-//   res.setHeader('Set-Cookie', newCookies);
-// }
 
 interface GetCookieValueProps { req: IncomingMessage, name: string  }
 
 export function getCookieValue ({ req, name }: GetCookieValueProps): string | undefined {
   const cookieHeader = req.headers.cookie;
-  if ( cookieHeader ) {
-    const cookies = parse(cookieHeader);
-    return cookies[name];
-  }
-
-  return undefined;
+  return cookieHeader ? parse(cookieHeader)[name] : undefined;
 }
 
 const cookieDefaults = {
@@ -37,20 +15,25 @@ const cookieDefaults = {
   path: '/'
 } as const;
 
-export function setCookie ({ res, value, cookieName }: { res: ServerResponse; value: string; cookieName: string;  }) {
-  res.setHeader(
-    "Set-Cookie",
-    `${cookieName}=${value}; ${Object.entries(cookieDefaults)
-      .map(([key, value]) => `${key}=${value}`)
-      .join("; ")}`
-  );
+interface SetCookieValueProps { 
+  res: ServerResponse; 
+  value: string; 
+  name: string; 
+  expires?: Date 
 }
+
+export function setCookie ({ res, value, name, expires }: SetCookieValueProps) {
+  const options = expires ? { ...cookieDefaults, expires } : cookieDefaults;
+  const cookieString = cookie.serialize(name, value, options);  
+  const existingCookies = res.getHeader('Set-Cookie') || [];
+  const newCookies = Array.isArray(existingCookies)
+    ? [...existingCookies, cookieString]
+    : [existingCookies.toString(), cookieString];
+  res.setHeader('Set-Cookie', newCookies);
+}
+
+type ClearCookievalueProps = Pick<SetCookieValueProps, 'res' | 'name'>;
   
-export function clearCookie ({ res, cookieName }: { res: ServerResponse; cookieName: string; }) {
-  res.setHeader(
-    "Set-Cookie",
-    `${cookieName}=; ${Object.entries({ ...cookieDefaults, expires: new Date(0) })
-      .map(([key, value]) => `${key}=${value}`)
-      .join("; ")}`
-  );
+export function clearCookie ({ res, name }: ClearCookievalueProps) {
+  setCookie({ res, name, value: '', expires: new Date(0) });
 }

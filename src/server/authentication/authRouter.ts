@@ -3,6 +3,7 @@ import { router, publicProcedure, protectedProcedure } from "../router";
 import { loginUserMutation, loginUserSchema } from "./loginUserMutation";
 import { logoutUserMutation } from "./logoutUserMutation";
 import { getUserQuery } from "./getUserQuery";
+import { refreshTokenMutation } from "./refreshTokenMutation";
 
 export const authRouter = router({
   login: publicProcedure
@@ -25,6 +26,6 @@ export const authRouter = router({
   //   .input(registerUserSchema)
   //   .mutation(registerUserMutation),
 
-  // refreshToken: publicProcedure
-  //   .mutation(refreshTokenMutation),    
+  refreshToken: publicProcedure
+    .mutation(refreshTokenMutation),    
 });

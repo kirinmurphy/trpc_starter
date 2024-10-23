@@ -1,27 +1,31 @@
-import { TRPCError } from "@trpc/server";
-import { ContextType } from "./types";
-// import { getRefreshTokenCookie } from "./jwtCookies";
+import { AUTH_STATUSES, ContextType } from "./types";
+import { 
+  clearAccessTokenCookie, 
+  clearRefreshTokenCookie, 
+  decodeRefreshTokenCookie, 
+  getRefreshTokenCookie, 
+  setAccessTokenCookie, 
+  setRefreshTokenCookie 
+} from "./jwtActions";
+import { throwAuthError } from "../router";
 
 export async function refreshTokenMutation ({ ctx }: { ctx: ContextType }) {
-  console.log('ctx', ctx);
-  // const refreshToken = getRefreshTokenCookie({ req: ctx.req });
+  const { req, res } = ctx;
+  
+  const refreshToken = getRefreshTokenCookie({ req });
 
-  // if (!refreshToken ) {
-  //   throw new TRPCError({ code: 'UNAUTHORIZED', message: 'No refresh token' });
-  // }
+  if (!refreshToken ) {
+    throwAuthError(AUTH_STATUSES.noRefreshToken);
+    return;
+  }
 
   try {
-    // const decoded = decodeRefreshTokenCookie({ refreshToken });
+    const { userId } = decodeRefreshTokenCookie({ refreshToken });
     
-    // // check revoked/blacklisted token
+    // check revoked/blacklisted token
 
-    // const NOW = Math.floor(Date.now() / 1000);
-    // const notExpiredYet = decoded.exp - NOW < 3600;
-    
-    // if ( notExpiredYet ) {
-    //   setRefreshTokenCookie({ res: ctx.res, userId: decoded.userId });
-    // }
-    // setAccessTokenCookie({ res: ctx.res, userId: decoded.userId });
+    setAccessTokenCookie({ res, userId });
+    setRefreshTokenCookie({ res, userId });
 
     return {
       success: true, 
@@ -30,6 +34,9 @@ export async function refreshTokenMutation ({ ctx }: { ctx: ContextType }) {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err: unknown) {
-    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid/expired refresh token' });
+    clearAccessTokenCookie({ res });
+    clearRefreshTokenCookie({ res });
+
+    throwAuthError(AUTH_STATUSES.invalidToken);
   }
 }
