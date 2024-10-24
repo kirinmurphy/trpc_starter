@@ -1,9 +1,9 @@
-import cors from 'cors';
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import { pool } from './db/pool';
 import { router } from "./router";
 import { authRouter } from './authentication/authRouter';
 import { createContext } from './authentication/createContext';
+import { getMiddleware } from './middleware/getMiddleware';
 
 export const appRouter = router({
   auth: authRouter,
@@ -12,10 +12,7 @@ export const appRouter = router({
 const server = createHTTPServer({
   router: appRouter,
   createContext,
-  middleware: cors({
-    origin: 'http://localhost:5173', 
-    credentials: true
-  })
+  middleware: getMiddleware
 });
 
 server.listen(3000);
