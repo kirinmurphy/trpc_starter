@@ -1,5 +1,5 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { trpcService } from '../../../utils/trpcClients';
+import { invalidateAuthCheckQuery } from '../../../utils/invalidateQueries';
 import { SimpleForm } from '../../components/forms/SimpleForm';
 import { InputField } from '../../components/forms/InputField';
 import { useFormState } from '../../components/forms/utils/useFormState';
@@ -14,8 +14,6 @@ interface LoginFormProps {
 }
 
 export function Login ({ onLoginSuccess }: LoginProps) {
-  const queryClient = useQueryClient();
-
   const { 
     formData: { email, password },
     handleFieldChange 
@@ -24,7 +22,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
   const { mutate, isLoading, error } = trpcService.auth.login.useMutation({
     onSuccess: async (data) => {
       if ( data?.success ) {
-        await queryClient.invalidateQueries(['auth', 'validateUser']);
+        await invalidateAuthCheckQuery();
         if ( onLoginSuccess ) onLoginSuccess();
       } 
     },

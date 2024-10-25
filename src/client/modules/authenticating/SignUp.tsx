@@ -1,8 +1,8 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { trpcService } from '../../../utils/trpcClients';
 import { SimpleForm } from '../../components/forms/SimpleForm';
 import { InputField } from '../../components/forms/InputField';
 import { useFormState } from '../../components/forms/utils/useFormState';
+import { invalidateAuthCheckQuery } from '../../../utils/invalidateQueries';
 
 interface SignUpProps {
   onSignUpSuccess?: () => void;
@@ -15,8 +15,6 @@ interface SubmitFormDataProps {
 }
 
 export function SignUp ({ onSignUpSuccess }: SignUpProps) {
-  const queryClient = useQueryClient();
-
   const { 
     formData: { email, name, password }, 
     handleFieldChange 
@@ -26,8 +24,7 @@ export function SignUp ({ onSignUpSuccess }: SignUpProps) {
     onSuccess: async (data) => {
       console.log('sign up data', data);
       if ( data?.success ) {
-        // TODO: what other queries to invalidate 
-        await queryClient.invalidateQueries(['auth', 'validateUser']);
+        await invalidateAuthCheckQuery();
         if ( onSignUpSuccess ) onSignUpSuccess();
       } 
     },

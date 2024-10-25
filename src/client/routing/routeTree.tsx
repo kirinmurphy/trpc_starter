@@ -1,13 +1,13 @@
 import { createRootRoute, createRoute } from '@tanstack/react-router'
 import App from '../App'
-import { AuthenticatedHomepage } from '../modules/authenticated/AuthenticatedHomepage';
+import { PublicApp } from '../modules/public/PublicApp';
 import { PublicHomepage } from '../modules/public/PublicHomepage';
 import { AuthenticatedApp } from '../modules/authenticated/AuthenticatedApp';
+import { AuthenticatedHomepage } from '../modules/authenticated/AuthenticatedHomepage';
 import { ROUTE_URLS } from './routeUrls';
-import { LoginRedirectWrapper } from './LoginRedirectWrapper';
 import { redirectIfAuthenticated, redirectIfNotAuthenticated } from './authenticationRedirects';
+import { LoginRedirectWrapper } from './LoginRedirectWrapper';
 import { SignUpRedirectWrapper } from './SignUpRedirectWrapper';
-import { PublicApp } from '../modules/public/PublicApp';
 
 export const rootRoute = createRootRoute({
   component: App,

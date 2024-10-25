@@ -1,11 +1,11 @@
-import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import { createTRPCProxyClient, httpBatchLink, TRPCClientError } from "@trpc/client";
 import { AppRouter } from "../server/server";
 import { customFetch } from "./customFetch";
+import { clearAuthQueries } from "./invalidateQueries";
 
 let isRefreshing = false;
 
-export async function refreshTokens (props?: { failGracefully?: boolean; }) {
-  const { failGracefully = false } = props || {}; 
+export async function refreshTokens () {
   if ( isRefreshing ) { return false; }
 
   try {
@@ -23,9 +23,11 @@ export async function refreshTokens (props?: { failGracefully?: boolean; }) {
     await refreshClient.auth.refreshToken.mutate();
     return true;
   } catch (err: unknown) {
-    if ( failGracefully ) {
-      console.error('Token refresh failed: ', err);
-    }
+    console.error('Token refresh failed: ', err);
+
+    if ( err instanceof TRPCClientError ) {
+      await clearAuthQueries();
+    }      
     return false;
   } finally {
     isRefreshing = false;

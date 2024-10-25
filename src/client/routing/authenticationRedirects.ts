@@ -4,7 +4,7 @@ import { ROUTE_URLS } from './routeUrls';
 import { isAuthenticated } from "./isAuthenticated";
 
 export async function redirectIfAuthenticated () {
-  if ( await isAuthenticated({ failGracefully: true }) ) {
+  if ( await isAuthenticated() ) {
     console.log('Redirecting to authenticated homepage');
     throw redirect({ to: ROUTE_URLS.authenticatedHomepage });
   }

@@ -13,6 +13,7 @@ import { isTRPCError } from "./isTRPCError";
 import { customFetch } from "./customFetch";
 
 export const queryClient = new QueryClient();
+
 export const trpcService = createTRPCReact<AppRouter>();
 
 function getAuthLink(): TRPCLink<AppRouter> {

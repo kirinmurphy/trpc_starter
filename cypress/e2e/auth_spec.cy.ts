@@ -1,6 +1,3 @@
-const CURRENT_USER_EMAIL = 'mrnussbaum@gmail.com';
-const CURRENT_USER_NAME = 'mister nussbaum';
-
 const DEMO_USER = {
   name: 'Test User',
   email: 'testtt@gmail.com',
@@ -8,65 +5,71 @@ const DEMO_USER = {
 } as const; 
 
 describe('Public Pages', () => {
-  it('should load the public home page', () => {
+  it('loads the public homepage', () => {
     cy.visit('/');
     cy.contains('Wilkommmen', { timeout: 10000 }).should('be.visible');
   });
 
-  it('redirect to the public homepage if going to logged in view when unauthenticated', () => {
+  it('redirects to / if visiting an authenticated route', () => {
     cy.visit('/home');
     cy.contains('Wilkommmen', { timeout: 10000 }).should('be.visible');
   });
 });
 
-describe.only("Create Account", () => {
+describe("Create Account", () => {
   before(() => {
     cy.verifyTestEnvironment();
-  });
-
-  after(() => {
-    cy.cleanupTestUsers();
+    cy.cleanupTestUsers();  // in case prior tests don't complete
   });
 
   beforeEach(() => {
-    cy.visit('/');
-    cy.contains('a', 'SIGN UP').click();
-    cy.get('input[type="name"]').type(DEMO_USER.name);
-    cy.get('input[type="email"]').type(DEMO_USER.email);
-    cy.get('input[type="password"]').type(DEMO_USER.password);
-    cy.get('button[type="submit"]').click();
-    cy.url().should('include', '/home');
+    cy.signUp({ demoUser: DEMO_USER });
   });
 
-  it('Render the authenticated homepage', () => {
-    cy.contains(DEMO_USER.name).should('be.visible');
-    cy.contains(DEMO_USER.email).should('be.visible');
+  afterEach(() => {
+    cy.cleanupTestUsers();
+  });
+
+  describe('successful sign up', () => {
+    it('renders the authenticated homepage', () => {
+      cy.contains(DEMO_USER.name).should('be.visible');
+      cy.contains(DEMO_USER.email).should('be.visible');
+    });
+    
+    it('redirects back to / on logout', () => {
+      cy.contains('button', 'Logout').click();
+      cy.location('pathname').should('eq', '/');
+    });
   });
 });
 
 describe('Loggin in', () => {
+  before(() => {
+    cy.signUp({ demoUser: DEMO_USER });    
+    cy.contains('button', 'Logout').click();
+  });
+
   beforeEach(() => {
-    cy.visit('/');
-    cy.contains('a', 'LOGIN').click();
-    cy.get('input[type="email"]').type(CURRENT_USER_EMAIL);
-    cy.get('input[type="password"]').type('password1');
-    cy.get('button[type="submit"]').click();
-    cy.url().should('include', '/home');
+    cy.login({ demoUser: DEMO_USER });
   });  
+
+  after(() => {
+    cy.cleanupTestUsers();
+  });
   
   describe('Authenticated', () => {
-    it('Render the authenticated homepage', () => {
-      cy.contains(CURRENT_USER_EMAIL).should('be.visible');
-      cy.contains(CURRENT_USER_NAME).should('be.visible');
+    it('renders the authenticated homepage', () => {
+      cy.contains(DEMO_USER.name).should('be.visible');
+      cy.contains(DEMO_USER.email).should('be.visible');
     });
   
-    it('should redirect back to authenticated homepage if authenticated user navigates to /', () => {
+    it('redirects users from / to /home', () => {
       cy.visit('/');
       cy.url().should('include', '/home');
       cy.contains('Wilkommmen').should('not.exist');
     });
 
-    it('should redirect back to authenticated homepage if authenticated user navigates to /login', () => {
+    it('redirects users from /login to /home', () => {
       cy.visit('/login');
       cy.url().should('include', '/home');
       cy.contains('Wilkommmen').should('not.exist');
@@ -74,13 +77,13 @@ describe('Loggin in', () => {
   });
 
   describe('token expiry', () => {
-    it('should redirect to public homepage after token expired', () => {
+    it('redirects to / after token expired', () => {
       cy.wait(8000);
       cy.reload();
       cy.location('pathname').should('eq', '/');
     });
 
-    it('should remain on authenticated homepage before token expiry', () => {
+    it('remains at /home before token expiry', () => {
       cy.wait(5000);
       cy.reload();
       cy.location('pathname').should('eq', '/home');
