@@ -1,7 +1,6 @@
 export const ROUTE_URLS = {
   publicHomepage: '/',
   authenticatedHomepage: '/home',
-  signUp: '/signUp',
+  signUp: '/signup',
   login: '/login',
-  loggedOutPage: '/loggedOut'
 } as const;

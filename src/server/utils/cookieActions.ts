@@ -1,7 +1,10 @@
 import cookie, { parse } from 'cookie';
 import { IncomingMessage, ServerResponse } from 'http';
 
-interface GetCookieValueProps { req: IncomingMessage, name: string  }
+interface GetCookieValueProps { 
+  req: IncomingMessage;
+  name: string;
+}
 
 export function getCookieValue ({ req, name }: GetCookieValueProps): string | undefined {
   const cookieHeader = req.headers.cookie;
@@ -19,7 +22,7 @@ interface SetCookieValueProps {
   res: ServerResponse; 
   value: string; 
   name: string; 
-  expires: Date 
+  expires: Date;
 }
 
 export function setCookie (props: SetCookieValueProps) {

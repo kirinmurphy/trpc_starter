@@ -1,4 +1,5 @@
 import { AUTH_STATUSES, ContextType } from "./types";
+import { throwAuthError } from "./throwAuthError";
 import { 
   clearAccessTokenCookie, 
   clearRefreshTokenCookie, 
@@ -7,7 +8,6 @@ import {
   setAccessTokenCookie, 
   setRefreshTokenCookie 
 } from "./jwtActions";
-import { throwAuthError } from "../router";
 
 export async function refreshTokenMutation ({ ctx }: { ctx: ContextType }) {
   const { req, res } = ctx;
@@ -22,7 +22,7 @@ export async function refreshTokenMutation ({ ctx }: { ctx: ContextType }) {
   try {
     const { userId } = decodeRefreshTokenCookie({ refreshToken });
     
-    // check revoked/blacklisted token
+    // TODO: check revoked/blacklisted token
 
     setAccessTokenCookie({ res, userId });
     setRefreshTokenCookie({ res, userId });

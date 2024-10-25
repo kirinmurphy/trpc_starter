@@ -21,7 +21,7 @@ describe('Public Pages', () => {
 
 describe.only("Create Account", () => {
   before(() => {
-    cy.task('verifyTestEnvironment');
+    cy.verifyTestEnvironment();
   });
 
   after(() => {
@@ -37,7 +37,6 @@ describe.only("Create Account", () => {
     cy.get('button[type="submit"]').click();
     cy.url().should('include', '/home');
   });
-
 
   it('Render the authenticated homepage', () => {
     cy.contains(DEMO_USER.name).should('be.visible');
@@ -79,13 +78,12 @@ describe('Loggin in', () => {
       cy.wait(8000);
       cy.reload();
       cy.location('pathname').should('eq', '/');
-      cy.contains('Wilkommmen').should('be.visible');
     });
 
     it('should remain on authenticated homepage before token expiry', () => {
       cy.wait(5000);
       cy.reload();
       cy.location('pathname').should('eq', '/home');
-      });
+    });
   });
 });

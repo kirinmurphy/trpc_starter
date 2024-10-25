@@ -1,31 +1,16 @@
-import { initTRPC, TRPCError } from "@trpc/server";
-import { 
-  AUTH_ERROR_MESSAGES, 
-  AUTH_STATUSES, 
-  AuthStatusOptionType, 
-  ContextType 
-} from "./authentication/types";
+import { initTRPC } from "@trpc/server";
+import { ContextType } from "./authentication/types";
+import { throwAuthError } from "./authentication/throwAuthError";
 
 const t = initTRPC.context<ContextType>().create();
 
 export const router = t.router;
 
+export const publicProcedure = t.procedure;
 
 const authedMiddleware = t.middleware(async ({ ctx, next }) => {
-  if ( !ctx.userId ) {
-    throwAuthError(ctx.authStatus);
-  }
+  if ( !ctx.userId ) { throwAuthError(ctx.authStatus); }
   return next({ ctx });
 });
 
-export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(authedMiddleware);
-
-
-export function throwAuthError(authStatus: AuthStatusOptionType) {
-  throw new TRPCError({
-    code: 'UNAUTHORIZED',
-    message: AUTH_ERROR_MESSAGES[authStatus] 
-      || AUTH_ERROR_MESSAGES[AUTH_STATUSES.unknownError]
-  });  
-}

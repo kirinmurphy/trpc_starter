@@ -1,22 +1,26 @@
 {
-  "name": "space_stuff",
+  "name": "trpc_starter",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "bun run server:dev & bun run vite",
+    "server:dev": "nodemon --watch src/server -e ts,json --exec 'bun run server'",
+    "test:dev": "NODE_ENV=test bun run dev & sleep 5 && bun run cypress:open",
+
     "build": "tsc -b && bun run vite build",
-    "lint": "eslint .",
-    "preview": "bun run vite preview",
     "server": "bun run src/server/server.ts",
-    "server:dev": "nodemon --watch src/server -e ts,json --exec 'bun run src/server/server.ts'",
+    "test": "NODE_ENV=test bun run server & bun run vite & sleep 5 && bun run cypress:run",
+
     "migrate": "bun run src/server/db/runMigrations.ts",
     "migrate:test": "NODE_ENV=test bun run migrate",
     "migrate:all": "bun run migrate && bun run migrate:test",
+
     "cypress:open": "cypress open --config-file cypress.config.cjs",
     "cypress:run": "cypress run --config-file cypress.config.cjs",
-    "test": "NODE_ENV=test bun run server & bun run vite & sleep 5 && bun run cypress:run",
-    "test:dev": "NODE_ENV=test bun run dev & sleep 5 && bun run cypress:open"
+
+    "lint": "eslint .",
+    "preview": "bun run vite preview"
   },
   "dependencies": {
     "@tanstack/react-query": "4.36.1",
@@ -26,7 +30,6 @@
     "@trpc/server": "10.45.1",
     "@types/cookie": "^0.6.0",
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
     "@types/pg": "^8.11.10",
     "bcrypt": "^5.1.1",
     "cookie": "^1.0.1",
