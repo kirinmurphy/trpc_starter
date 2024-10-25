@@ -1,5 +1,5 @@
 import { createTRPCProxyClient, httpBatchLink, TRPCClientError } from "@trpc/client";
-import { AppRouter } from "../server/server";
+import { AppRouter } from "../../server/server";
 import { customFetch } from "./customFetch";
 import { clearAuthQueries } from "./invalidateQueries";
 

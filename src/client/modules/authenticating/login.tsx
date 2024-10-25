@@ -1,5 +1,5 @@
-import { trpcService } from '../../../utils/trpcClients';
-import { invalidateAuthCheckQuery } from '../../../utils/invalidateQueries';
+import { trpcService } from '../../trpcService/trpcClients';
+import { invalidateAuthCheckQuery } from '../../trpcService/invalidateQueries';
 import { SimpleForm } from '../../components/forms/SimpleForm';
 import { InputField } from '../../components/forms/InputField';
 import { useFormState } from '../../components/forms/utils/useFormState';

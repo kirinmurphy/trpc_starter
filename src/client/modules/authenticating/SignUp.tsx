@@ -1,8 +1,8 @@
-import { trpcService } from '../../../utils/trpcClients';
+import { trpcService } from '../../trpcService/trpcClients';
 import { SimpleForm } from '../../components/forms/SimpleForm';
 import { InputField } from '../../components/forms/InputField';
 import { useFormState } from '../../components/forms/utils/useFormState';
-import { invalidateAuthCheckQuery } from '../../../utils/invalidateQueries';
+import { invalidateAuthCheckQuery } from '../../trpcService/invalidateQueries';
 
 interface SignUpProps {
   onSignUpSuccess?: () => void;

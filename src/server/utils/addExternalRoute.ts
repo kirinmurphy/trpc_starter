@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { publicProcedure } from "../router";
+import { publicProcedure } from "../trpcRouter";
 
 type EndpointType<T> = {
   url: string; 

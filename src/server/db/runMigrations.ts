@@ -43,7 +43,7 @@ async function runMigration (filename: string) {
     console.log(`-- Runnin migration: ${filename}`);
     await client.query('BEGIN');
     await client.query(upMigration);
-    await recordMigration(client, filename);
+    await client.query(SQL_ADD_MIGRATION_ENTRY, [filename]);    
     await client.query('COMMIT');
     console.log(`---- Migration completed: ${filename}`);
 
@@ -65,8 +65,4 @@ async function getCompleteddMigrations (client: PoolClient): Promise<string[]> {
   } catch ( err: unknown ) {
     return [];
   }
-}
-
-async function recordMigration (client: PoolClient, filename: string) {
-  await client.query(SQL_ADD_MIGRATION_ENTRY, [filename]);
 }

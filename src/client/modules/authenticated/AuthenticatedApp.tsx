@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { trpcService } from "../../../utils/trpcClients";
+import { trpcService } from "../../trpcService/trpcClients";
 import { ROUTE_URLS } from "../../routing/routeUrls";
 import { LogoutButton } from "./LogoutButton";
 import { UserContext } from "./UserContext";

@@ -1,5 +1,5 @@
-import { trpcVanillaClient } from '../../utils/trpcClients';
-import { refreshTokens } from '../../utils/refreshTokens';
+import { trpcVanillaClient } from '../trpcService/trpcClients';
+import { refreshTokens } from '../trpcService/refreshTokens';
 
 export async function isAuthenticated (): Promise<boolean> {
   try {

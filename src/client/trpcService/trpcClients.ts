@@ -6,7 +6,7 @@ import {
   TRPCClientError,
 } from "@trpc/react-query";
 import { observable } from "@trpc/server/observable";
-import { AppRouter } from "../server/server";
+import { AppRouter } from "../../server/server";
 import { QueryClient } from "@tanstack/react-query";
 import { refreshTokens } from "./refreshTokens";
 import { isTRPCError } from "./isTRPCError";

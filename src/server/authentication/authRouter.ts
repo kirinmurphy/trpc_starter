@@ -1,5 +1,5 @@
 
-import { router, publicProcedure, protectedProcedure } from "../router";
+import { router, publicProcedure, protectedProcedure } from "../trpcRouter";
 import { loginUserMutation, loginUserSchema } from "./loginUserMutation";
 import { logoutUserMutation } from "./logoutUserMutation";
 import { getUserQuery } from "./getUserQuery";

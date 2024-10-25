@@ -1,6 +1,6 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import { pool } from './db/pool';
-import { router } from "./router";
+import { router } from "./trpcRouter";
 import { authRouter } from './authentication/authRouter';
 import { createContext } from './authentication/createContext';
 import { getMiddleware } from './middleware/getMiddleware';

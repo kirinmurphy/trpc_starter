@@ -1,10 +1,62 @@
 # tRPC web app starter
 Some general web things that are generally used for other web things.
 
-- tRPC/Zod authentication api and UI
+- tRPC/Zod authentication api and UI shell
 - JWT auth and refresh token sessions
-- tanstack client router implementation
 - native DB migration workflow for Postgres DB
+- cypress e2e harness with test DB instance 
+- tanstack client router implementation
 - helmet headers, csp and and cors support
-- cypress e2e test coverage with test DB instance (almost....)
 - tailwind yo
+
+### On Deck: 
+- Dockerizing & remote build
+- API Rate limiting
+- Access token revocation flow 
+- CSRF
+
+
+## Local Setup - Not Docker
+### ENV Variables
+``` 
+CLIENT_URL=http://localhost:5173
+
+DB_USER=some_user
+DB_HOST=some_host
+DB_NAME=some_db_name
+DB_PASSWORD=some_password
+TEST_DB_NAME=some_other_db_name
+
+AUTH_TOKEN_SECRET=some_token_secret
+REFRESH_TOKEN_SECRET=some_other_token_secret
+``` 
+
+### Install Bun
+install bun - https://bun.sh/docs/installation    
+then install packages 
+``` 
+bun install
+```
+
+### DB Setup 
+create postgres databases for DB_NAME and TEST_DB_NAME
+``` 
+\c postgres
+CREATE DATABASE some_db_name;
+CREATE DATABASE some_other_db_name;
+``` 
+
+then run migration
+```
+bun run migrate:all
+```
+
+### Run App
+```
+bun dev
+``` 
+
+### Run Tests
+```
+bun run test:dev
+``` 

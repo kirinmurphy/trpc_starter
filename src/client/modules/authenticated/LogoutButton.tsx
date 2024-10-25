@@ -1,5 +1,5 @@
-import { clearAuthQueries } from "../../../utils/invalidateQueries";
-import { trpcService } from "../../../utils/trpcClients"
+import { clearAuthQueries } from "../../trpcService/invalidateQueries";
+import { trpcService } from "../../trpcService/trpcClients"
 import { ROUTE_URLS } from "../../routing/routeUrls";
 
 export function LogoutButton () {

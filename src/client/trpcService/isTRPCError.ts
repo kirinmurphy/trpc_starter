@@ -1,5 +1,5 @@
 import { TRPCClientError } from "@trpc/client";
-import { AppRouter } from "../server/server";
+import { AppRouter } from "../../server/server";
 
 type TRPCErrorType = TRPCClientError<AppRouter>;
 
