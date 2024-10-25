@@ -11,6 +11,8 @@
     "server": "bun run src/server/server.ts",
     "server:dev": "nodemon --watch src/server -e ts,json --exec 'bun run src/server/server.ts'",
     "migrate": "bun run src/server/db/runMigrations.ts",
+    "migrate:test": "NODE_ENV=test bun run migrate",
+    "migrate:all": "bun run migrate && bun run migrate:test",
     "cypress:open": "cypress open --config-file cypress.config.cjs",
     "cypress:run": "cypress run --config-file cypress.config.cjs",
     "test": "NODE_ENV=test bun run server & bun run vite & sleep 5 && bun run cypress:run",

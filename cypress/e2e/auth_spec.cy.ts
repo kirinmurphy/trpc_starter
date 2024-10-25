@@ -1,6 +1,12 @@
 const CURRENT_USER_EMAIL = 'mrnussbaum@gmail.com';
 const CURRENT_USER_NAME = 'mister nussbaum';
 
+const DEMO_USER = {
+  name: 'Test User',
+  email: 'testtt@gmail.com',
+  password: 'P@ssword-123'
+} as const; 
+
 describe('Public Pages', () => {
   it('should load the public home page', () => {
     cy.visit('/');
@@ -10,6 +16,32 @@ describe('Public Pages', () => {
   it('redirect to the public homepage if going to logged in view when unauthenticated', () => {
     cy.visit('/home');
     cy.contains('Wilkommmen', { timeout: 10000 }).should('be.visible');
+  });
+});
+
+describe.only("Create Account", () => {
+  before(() => {
+    cy.task('verifyTestEnvironment');
+  });
+
+  after(() => {
+    cy.cleanupTestUsers();
+  });
+
+  beforeEach(() => {
+    cy.visit('/');
+    cy.contains('a', 'SIGN UP').click();
+    cy.get('input[type="name"]').type(DEMO_USER.name);
+    cy.get('input[type="email"]').type(DEMO_USER.email);
+    cy.get('input[type="password"]').type(DEMO_USER.password);
+    cy.get('button[type="submit"]').click();
+    cy.url().should('include', '/home');
+  });
+
+
+  it('Render the authenticated homepage', () => {
+    cy.contains(DEMO_USER.name).should('be.visible');
+    cy.contains(DEMO_USER.email).should('be.visible');
   });
 });
 

@@ -25,15 +25,12 @@ function getAuthLink(): TRPCLink<AppRouter> {
     return (req) => {
       return observable(observer => {
         const subscription = forward(req).subscribe({
-          next(value) { console.log('next'); observer.next(value); },
+          next(value) { observer.next(value); },
 
           async error(err: unknown) {
-            
-            console.log('errrrrr', err);
-
             if ( !isTRPCError(err) ) {
-              const cause = err instanceof Error ? err : new Error(String(err));
-              observer.error(new TRPCClientError('Unknown error', { cause }));
+              const errorMessage = err instanceof Error ? err.message : String(err);
+              observer.error(new TRPCClientError(errorMessage));
               return; 
             }
             
@@ -82,7 +79,6 @@ export const trpcVanillaClient = createTRPCProxyClient<AppRouter>({
 async function isTokenRefreshed ({ errorMsg, path }: { errorMsg: string, path: string }) {
   const isAccessTokenExpired = errorMsg === 'Token expired';
   const isRefreshRequest = !path.includes('auth.refreshToken');
-  console.log('<<<<<<<<>>>>>>>> REquested refresh token in middleware');
   return isAccessTokenExpired && isRefreshRequest && await refreshTokens();
 }
 

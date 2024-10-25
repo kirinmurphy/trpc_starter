@@ -3,13 +3,17 @@ import { z } from 'zod';
 import { pool } from '../db/pool';
 import { SQL_CREATE_MEMBER } from "../db/sql";
 import { ContextType } from "./types";
-import { setAccessTokenCookie } from "./jwtActions";
+import { setAccessTokenCookie, setRefreshTokenCookie } from "./jwtActions";
+import { createEmailSchema, createPasswordSchema } from "./sharedSchema";
 
 
 export const registerUserSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  password: z.string().min(6)
+  name: z.string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(70, 'Name cannot exceed 70 characters')
+    .trim(),
+  email: createEmailSchema,
+  password: createPasswordSchema
 });
 
 type RegisterInput = z.infer<typeof registerUserSchema>;
@@ -35,6 +39,7 @@ export async function registerUserMutation (props: RegisterUserMutationProps) {
     const userId = result.rows[0].id;
 
     setAccessTokenCookie({ res, userId });
+    setRefreshTokenCookie({ res, userId });
 
     return { success: true, userId };
   } catch (err) {

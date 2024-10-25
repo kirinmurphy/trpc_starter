@@ -7,8 +7,13 @@ import { setAccessTokenCookie, setRefreshTokenCookie } from "./jwtActions";
 import { MutationPropsWithInput } from "./types";
 
 export const loginUserSchema = z.object({
-  email: z.string().email(),
+  email: z.string()
+    .trim()
+    .max(254, 'Invalid email')
+    .email('Invalid email format'),
   password: z.string()
+    .trim()
+    .max(72, 'Invalid password')
 });
 
 type LoginInputType = z.infer<typeof loginUserSchema>;
@@ -30,8 +35,6 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
     if (!validPassword) {
       throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid password' });
     }
-
-    console.log('user logged in: ', email, user.id, user.name);
 
     setAccessTokenCookie({ res, userId: user.id });
     setRefreshTokenCookie({ res, userId: user.id });
