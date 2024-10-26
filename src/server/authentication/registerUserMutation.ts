@@ -1,17 +1,20 @@
 import bcrypt from "bcrypt";
 import { z } from 'zod';
+import { escapeHTML } from "../utils/escapeHtml";
 import { pool } from '../db/pool';
 import { SQL_CREATE_MEMBER } from "../db/sql";
 import { ContextType } from "./types";
 import { setAccessTokenCookie, setRefreshTokenCookie } from "./jwtActions";
-import { createEmailSchema, createPasswordSchema } from "./sharedSchema";
+import { createEmailSchema, createPasswordSchema, inputIsUnsafe } from "./sharedSchema";
 
 
 export const registerUserSchema = z.object({
   name: z.string()
     .min(2, 'Name must be at least 2 characters')
     .max(70, 'Name cannot exceed 70 characters')
-    .trim(),
+    .trim()
+    .transform(html => escapeHTML(html))
+    .refine(inputIsUnsafe, 'Name contains potentially unsafe content'),
   email: createEmailSchema,
   password: createPasswordSchema
 });

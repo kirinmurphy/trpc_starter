@@ -41,7 +41,7 @@ bun install
 ### DB Setup 
 create postgres databases for DB_NAME and TEST_DB_NAME
 ``` 
-\c postgres
+~ psql
 CREATE DATABASE some_db_name;
 CREATE DATABASE some_other_db_name;
 ``` 
