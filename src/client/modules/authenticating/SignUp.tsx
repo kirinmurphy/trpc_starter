@@ -1,4 +1,4 @@
-import { trpcService } from '../../trpcService/trpcClients';
+import { trpcService } from '../../trpcService/trpcClientService';
 import { SimpleForm } from '../../components/forms/SimpleForm';
 import { InputField } from '../../components/forms/InputField';
 import { useFormState } from '../../components/forms/utils/useFormState';
@@ -22,7 +22,6 @@ export function SignUp ({ onSignUpSuccess }: SignUpProps) {
 
   const { mutate, error, isLoading } = trpcService.auth.signUp.useMutation({
     onSuccess: async (data) => {
-      console.log('sign up data', data);
       if ( data?.success ) {
         await invalidateAuthCheckQuery();
         if ( onSignUpSuccess ) onSignUpSuccess();

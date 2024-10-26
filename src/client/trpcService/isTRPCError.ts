@@ -1,7 +1,7 @@
 import { TRPCClientError } from "@trpc/client";
 import { AppRouter } from "../../server/server";
 
-type TRPCErrorType = TRPCClientError<AppRouter>;
+export type TRPCErrorType = TRPCClientError<AppRouter>;
 
 export function isTRPCError (err: unknown): err is TRPCErrorType {
   return (

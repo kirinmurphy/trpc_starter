@@ -1,4 +1,4 @@
-import { queryClient } from "./trpcClients";
+import { queryClient } from "./trpcClientService";
 
 export async function clearAuthQueries() {
   await queryClient.invalidateQueries({ queryKey: ['auth'] });

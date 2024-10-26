@@ -1,16 +1,30 @@
 import { initTRPC } from "@trpc/server";
-import { ContextType } from "./authentication/types";
+import { AUTH_STATUSES, ContextType } from "./authentication/types";
 import { throwAuthError } from "./authentication/throwAuthError";
+import { clearCsrfToken, validateCsrfToken } from "./utils/csrfActions";
 
-const t = initTRPC.context<ContextType>().create();
+const trpc = initTRPC.context<ContextType>().create();
 
-export const router = t.router;
-
-export const publicProcedure = t.procedure;
-
-const authedMiddleware = t.middleware(async ({ ctx, next }) => {
+const authedMiddleware = trpc.middleware(async ({ ctx, next }) => {
   if ( !ctx.userId ) { throwAuthError(ctx.authStatus); }
   return next({ ctx });
 });
 
-export const protectedProcedure = t.procedure.use(authedMiddleware);
+const csrfMiddleware = trpc.middleware(async ({ ctx, next }) => {
+  const { res, req } = ctx; 
+  
+  if ( !validateCsrfToken({ req }) ) {
+    clearCsrfToken({ res });
+    throwAuthError(AUTH_STATUSES.csrfError);
+  }
+  return next({ ctx });
+});
+
+export const router = trpc.router;
+
+export const procedures = {
+  publicQuery: trpc.procedure,
+  protectedQuery: trpc.procedure.use(authedMiddleware),
+  publicMutation: trpc.procedure.use(csrfMiddleware),
+  protectedMutation: trpc.procedure.use(csrfMiddleware).use(authedMiddleware)
+}

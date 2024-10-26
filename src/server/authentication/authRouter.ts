@@ -1,32 +1,34 @@
 
-import { router, publicProcedure, protectedProcedure } from "../trpcRouter";
+import { router, procedures } from "../trpcRouter";
 import { loginUserMutation, loginUserSchema } from "./loginUserMutation";
 import { logoutUserMutation } from "./logoutUserMutation";
 import { getUserQuery } from "./getUserQuery";
 import { refreshTokenMutation } from "./refreshTokenMutation";
 import { registerUserMutation, registerUserSchema } from "./registerUserMutation";
 
+const { publicQuery,  protectedQuery,  publicMutation } = procedures;
+
 export const authRouter = router({
-  signUp: publicProcedure
+  signUp: publicMutation
     .input(registerUserSchema)
     .mutation(registerUserMutation),
 
-  login: publicProcedure
+  login: publicMutation
     .input(loginUserSchema)
     .mutation(loginUserMutation),
 
-  logout: publicProcedure  
+  logout: publicMutation  
     .mutation(logoutUserMutation),
 
-  isAuthenticated: publicProcedure   
+  isAuthenticated: publicQuery   
     .query(({ ctx: { userId } }) => ({
       isAuthenticated: !!userId,
       userId
     })),  
     
-  refreshToken: publicProcedure
+  refreshToken: publicMutation
     .mutation(refreshTokenMutation),    
 
-  getUser: protectedProcedure  
+  getUser: protectedQuery  
     .query(getUserQuery),
 });  

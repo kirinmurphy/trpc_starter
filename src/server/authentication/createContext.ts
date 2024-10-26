@@ -1,11 +1,18 @@
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import { CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { generateCsrfToken, setCsrfToken } from "../utils/csrfActions";
 import { clearRefreshTokenCookie, decodeAccessTokenCookie, getAccessTokenCookie } from "./jwtActions";
 import { AUTH_STATUSES, ContextType } from "./types";
 import { clearAccessTokenCookie } from "./jwtActions";
 
 export async function createContext(options: CreateNextContextOptions): Promise<ContextType> {
   const { req, res } = options;
+
+  // res.on('finish', () => {});
+  
+  if ( req.method === 'GET') {
+    setCsrfToken({ res, token: generateCsrfToken() });
+  }
 
   const accessToken = getAccessTokenCookie({ req });
   

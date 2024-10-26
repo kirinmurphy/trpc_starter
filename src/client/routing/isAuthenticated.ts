@@ -1,11 +1,11 @@
-import { trpcVanillaClient } from '../trpcService/trpcClients';
+import { trpcVanillaClient } from '../trpcService/trpcClientService';
 import { refreshTokens } from '../trpcService/refreshTokens';
 
 export async function isAuthenticated (): Promise<boolean> {
   try {
     const result = await trpcVanillaClient.auth.isAuthenticated.query();  
 
-    if ( result.isAuthenticated ) { console.log('=== IS AUTHENTICATED'); return true; }
+    if ( result.isAuthenticated ) { return true; }
 
     try {
       if ( await refreshTokens() ) {

@@ -6,7 +6,7 @@ import { ReactNode } from "react";
 export function PublicApp ({ children }: { children: ReactNode }) {
   return (
     <>
-      <header className="flex mb-4">
+      <header className="flex py-4 mb-8 border-b border-gray-600">
         <div className="flex-grow">
           <Link  to={ROUTE_URLS.publicHomepage} preload={false}>Home</Link>
         </div>
