@@ -1,22 +1,20 @@
 # tRPC web app starter
 Some general web things that are generally used for other web things.
 
-- tRPC/Zod authentication api and UI shell
+- tRPC / Zod authentication api and UI shell
 - JWT auth and refresh token sessions
-- native DB migration workflow for Postgres DB
-- cypress e2e harness with test DB instance 
+- native Postgres DB migration workflow
+- cypress e2e harness with test DB integration 
+- security strategy including helmet headers/csp, csrf and cors support
 - tanstack client router implementation
-- helmet headers, csp and and cors support
 - tailwind yo
 
 ### On Deck: 
 - Dockerizing & remote build
 - API Rate limiting
-- Access token revocation flow 
-- CSRF
 
 
-## Local Setup - Not Docker
+## Local Setup
 ### ENV Variables
 ``` 
 CLIENT_URL=http://localhost:5173
