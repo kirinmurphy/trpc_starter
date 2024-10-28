@@ -1,4 +1,4 @@
-import { TRPCClientErrorLike } from '@trpc/client';
+import { TRPCClientError, TRPCClientErrorLike } from '@trpc/client';
 import { ReactNode, FormEvent } from 'react';
 import { AppRouter } from '../../../server/server';
 
@@ -13,17 +13,18 @@ interface AuthFormProps {
 export function SimpleForm (props: AuthFormProps) {
   const { children, onSubmit, isLoading, error, title } = props;
 
-  const errorMessage = error && Array.isArray(JSON.parse(error.message)) 
+  const errorMessage = error && error instanceof TRPCClientError 
+    ? error.message
+    : error && Array.isArray(JSON.parse(error.message)) 
     ? JSON.parse(error.message)
       .map((error:{ message: string }) => error.message).join('.\n') 
     : error?.message || '';
-
 
   const handleSubmit = async (e: FormEvent) => {
     if ( isLoading ) { return; }
     e.preventDefault();
     onSubmit();
-  }
+  };
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 rounded-lg shadow-xl">

@@ -13,6 +13,7 @@ export const AUTH_STATUSES = {
   tokenExpired: 'TOKEN_EXPIRED',
   invalidToken: 'INVALID_TOKEN',
   unknownError: 'UNKNOWN_ERROR',
+  csrfError: 'CSRF_ERROR',
 } as const;
 
 export const AUTH_ERROR_MESSAGES = {
@@ -21,8 +22,9 @@ export const AUTH_ERROR_MESSAGES = {
   [AUTH_STATUSES.tokenExpired]: 'Token expired',
   [AUTH_STATUSES.invalidToken]: 'Invalid token',
   [AUTH_STATUSES.unknownError]: 'Authentication error',
+  [AUTH_STATUSES.csrfError]: 'CSRF error',
   [AUTH_STATUSES.authenticated]: null
-}
+} as const;
 
 export type AuthStatusOptionType =  typeof AUTH_STATUSES[keyof typeof AUTH_STATUSES];
 

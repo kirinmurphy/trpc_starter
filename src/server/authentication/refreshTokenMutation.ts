@@ -1,4 +1,4 @@
-import { AUTH_STATUSES, ContextType } from "./types";
+import { AUTH_ERROR_MESSAGES, AUTH_STATUSES, ContextType } from "./types";
 import { throwAuthError } from "./throwAuthError";
 import { 
   clearAccessTokenCookie, 
@@ -15,8 +15,10 @@ export async function refreshTokenMutation ({ ctx }: { ctx: ContextType }) {
   const refreshToken = getRefreshTokenCookie({ req });
 
   if (!refreshToken ) {
-    throwAuthError(AUTH_STATUSES.noRefreshToken);
-    return;
+    return { 
+      success: false,
+      message: AUTH_ERROR_MESSAGES[AUTH_STATUSES.noRefreshToken]
+    };
   }
 
   try {
@@ -36,7 +38,6 @@ export async function refreshTokenMutation ({ ctx }: { ctx: ContextType }) {
   } catch (err: unknown) {
     clearAccessTokenCookie({ res });
     clearRefreshTokenCookie({ res });
-
     throwAuthError(AUTH_STATUSES.invalidToken);
   }
 }

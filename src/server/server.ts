@@ -3,7 +3,7 @@ import { pool } from './db/pool';
 import { router } from "./trpcRouter";
 import { authRouter } from './authentication/authRouter';
 import { createContext } from './authentication/createContext';
-import { getMiddleware } from './middleware/getMiddleware';
+import { apiMiddleware } from './middleware/apiMiddleware';
 
 export const appRouter = router({
   auth: authRouter,
@@ -12,7 +12,7 @@ export const appRouter = router({
 const server = createHTTPServer({
   router: appRouter,
   createContext,
-  middleware: getMiddleware
+  middleware: apiMiddleware
 });
 
 server.listen(3000);

@@ -5,14 +5,14 @@ import { isAuthenticated } from "./isAuthenticated";
 
 export async function redirectIfAuthenticated () {
   if ( await isAuthenticated() ) {
-    console.log('Redirecting to authenticated homepage');
+    // console.log('Redirecting to authenticated homepage');
     throw redirect({ to: ROUTE_URLS.authenticatedHomepage });
   }
 }
 
 export async function redirectIfNotAuthenticated () {
   if ( !await isAuthenticated() ) {
-    console.log('Redirecting to public homepage');
+    // console.log('Redirecting to public homepage');
     throw redirect({ to: ROUTE_URLS.publicHomepage })
   }
 }

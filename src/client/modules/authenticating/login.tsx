@@ -1,4 +1,4 @@
-import { trpcService } from '../../trpcService/trpcClients';
+import { trpcService } from '../../trpcService/trpcClientService';
 import { invalidateAuthCheckQuery } from '../../trpcService/invalidateQueries';
 import { SimpleForm } from '../../components/forms/SimpleForm';
 import { InputField } from '../../components/forms/InputField';

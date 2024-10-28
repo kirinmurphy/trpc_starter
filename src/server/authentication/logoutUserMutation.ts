@@ -7,7 +7,6 @@ interface LogoutMutationType {
 
 export function logoutUserMutation (props: LogoutMutationType): SimpleMutationReturnType {
   const { ctx: { res } } = props;
-  
   clearAccessTokenCookie({ res });
   clearRefreshTokenCookie({ res });
   return { success: true, message: "Logged out successfully" };

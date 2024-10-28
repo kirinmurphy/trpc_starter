@@ -1,6 +1,13 @@
+import { csrfStore } from "./createHttpLink";
+
 export function customFetch (input: RequestInfo | URL, options?: RequestInit) {
-  if ( typeof window !== 'undefined' && 'Cypress' in window ){
-    return window.fetch(input,  { ...options, credentials: 'include' });
-  }
-  return fetch(input, { ...options, credentials: 'include' })
+  const fetchFn = (typeof window !== 'undefined' && 'Cypress' in window)
+    ? window.fetch : fetch;
+
+  return fetchFn(input, options)
+    .then(response => {
+      const csrfToken = response.headers.get('x-csrf-token');
+      if ( csrfToken ) { csrfStore.setToken(csrfToken); }
+      return response;
+    });
 }
