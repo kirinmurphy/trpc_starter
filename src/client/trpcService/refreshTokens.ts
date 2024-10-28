@@ -3,6 +3,7 @@ import { AppRouter } from "../../server/server";
 import { clearAuthQueries } from "./invalidateQueries";
 import { createHttpLink, csrfStore } from "./createHttpLink";
 import { AUTH_ERROR_MESSAGES } from "../../server/authentication/types";
+import { triggerCsrfErrorRetry } from "./triggerCsrfErrorRetry";
 
 let isRefreshing = false;
 
@@ -16,19 +17,19 @@ export async function refreshTokens () {
       links: [createHttpLink()]
     });
 
-    await refreshClient.auth.refreshToken.mutate();
-    return true;
+    const response = await refreshClient.auth.refreshToken.mutate();
+    return response?.success;
   } catch (err: unknown) {
     console.error('Token refresh failed: ', err);
 
     if ( err instanceof TRPCClientError ) {
       if ( err.message === AUTH_ERROR_MESSAGES.CSRF_ERROR) {
-        // TODO: ADD REFRESH ATTEMPT SO WE DON'T GET AN IN FINITE LOOP 
-        // TODO: SHOULD WE DO THIS EVERYWHERE CLEAR TOKEN IS HAPPENING? 
-        csrfStore.clearToken();
+        triggerCsrfErrorRetry({ 
+          onRetryFailure: () => { csrfStore.clearToken(); }
+        });
       }
 
-      if ( err.message !== AUTH_ERROR_MESSAGES.NO_REFRESH_TOKEN) {
+      if ( err.message !== AUTH_ERROR_MESSAGES.NO_REFRESH_TOKEN ) {
         await clearAuthQueries();
       }
     }

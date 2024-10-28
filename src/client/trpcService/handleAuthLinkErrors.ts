@@ -24,14 +24,15 @@ export async function handleAuthLinkErrors (props: HandleErrorsProps) {
   }
 
   if ( err.message === AUTH_ERROR_MESSAGES.CSRF_ERROR) {
-    triggerCsrfErrorRetry(observer);
+    triggerCsrfErrorRetry({ onRetryFailure: ({ message }) => { 
+      observer.error(new TRPCClientError(message)); 
+    }});
     return;
   }
   
   try {
     const refreshProps = { errorMsg: err?.message, path: req.op.path };
-    const refreshed = await isTokenRefreshed(refreshProps);
-    if ( !refreshed ) { 
+    if ( !await isTokenRefreshed(refreshProps) ) { 
       csrfStore.clearToken();
       observer.error(err); 
       return; 
@@ -61,7 +62,7 @@ async function isTokenRefreshed ({ errorMsg, path }: { errorMsg: string, path: s
   return isAccessTokenExpired && isRefreshRequest && await refreshTokens();
 }
 
-export function getError (err: unknown) {
+function getError (err: unknown) {
   const isClientError = err instanceof TRPCClientError;
   return isClientError ? err : new TRPCClientError('Unknown error');
 }

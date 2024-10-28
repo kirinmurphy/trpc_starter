@@ -5,12 +5,12 @@ import { clearCookie, getCookieValue, setCookie } from './cookieActions';
 const CSRF_COOKIE_NAME = 'csrf-token';
 const CSRF_EXPIRY_HOURS = 24;
 
-export function generateCsrfToken (): string {
-  return randomBytes(32).toString('hex');
-}
-
 interface RequestActionProps {
   req: IncomingMessage;
+}
+
+export function generateCsrfToken (): string {
+  return randomBytes(32).toString('hex');
 }
 
 interface SetCsrfTokenProps {
@@ -39,6 +39,7 @@ export function validateCsrfToken ({ req }: RequestActionProps): boolean {
   const cookieToken = getCsrfToken({ req });
   const headerToken = req.headers['x-csrf-token'];
   if ( !cookieToken || !headerToken ) { return false; }
+
   const headerTokenMatcher = Array.isArray(headerToken) ? headerToken[0] : headerToken;
   return cookieToken === headerTokenMatcher;
 }
