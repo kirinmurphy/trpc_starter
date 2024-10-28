@@ -5,7 +5,7 @@ Some general web things that are generally used for other web things.
 - JWT auth and refresh token sessions
 - native Postgres DB migration workflow
 - cypress e2e harness with test DB integration 
-- security strategy including helmet headers/csp, csrf and cors support
+- security strategy including helmet headers/csp, csrf and cors enforcement
 - tanstack client router implementation
 - tailwind yo
 

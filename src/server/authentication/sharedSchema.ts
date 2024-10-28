@@ -31,7 +31,7 @@ export const createEmailSchema = z.string()
 
 export const createPasswordSchema = z.string()
   .trim()
-  .min(10, 'Password must be at least 8 characters')
+  .min(10, 'Password must be at least 10 characters')
   .max(72, 'Password cannot exceed 72 characters')
   .regex(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*-])[A-Za-z\d!@#$%^&-_*]{8,}$/,
