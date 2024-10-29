@@ -1,0 +1,37 @@
+services: 
+  app:
+    environment:
+      NODE_ENV: test
+
+  cypress: 
+    build:
+      context: .
+      dockerfile: Dockerfile.cypress
+      args: 
+        COMPOSE_DOCKER_CLI_BUILD: 1
+        DOCKER_BUILDKIT: 1
+ 
+    depends_on:
+      app:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    environment: 
+      - CYPRESS_baseUrl=http://app:5173
+      - DB_USER=${DB_USER}
+      - DB_HOST=db
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=5432
+      - TEST_DB_NAME=${TEST_DB_NAME}
+      - NODE_ENV=test
+    volumes: 
+      - .:/e2e:ro
+      - ./cypress:/e2e/cypress
+      - ./cypress.config.cjs:/e2e/cypress.config.cjs
+
+    working_dir: /e2e
+    
+    # command: npx cypress run --config-file cypress.config.cjs --browser chrome --headless
+
+volumes: 
+  postgres_data: 

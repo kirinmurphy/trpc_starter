@@ -1,0 +1,20 @@
+# syntax=docker/dockerfile:1.4
+FROM node:18-slim
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \ 
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y \
+    chromium \ 
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /e2e
+
+COPY package.json bun.lockb ./
+# COPY package.json package-lock.json ./
+
+RUN --mount=type=cache,target=/root/.npm \
+    npm install pg cypress 
+
+ENV CHROME_BIN=/usr/bin/chromium
+
+
