@@ -2,6 +2,9 @@ const { defineConfig } = require('cypress');
 const { verifyTestEnvironment, cleanupTestUsers } = require('./cypress/support/db.cjs');
 require('dotenv').config();
 
+const isDocker = process.env.IN_DOCKER === 'true';
+const baseUrl = isDocker ? 'http://app:5173' : 'http://localhost:5173';
+
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
@@ -15,13 +18,23 @@ module.exports = defineConfig({
         TEST_DB_NAME: process.env.TEST_DB_NAME,
       };
 
-      on('before:run', () => {
+      on('before:run', async () => {
         console.log('Test run starting');
+        try {
+          await verifyTestEnvironment();
+        } catch (err) {
+          console.error('Test environment verification failed: ', err);
+          throw err;
+        }
       });
 
       on('after:run', () => {});
 
       on('task', {
+        log(message) {
+          console.log(message + '\n');
+          return null;
+        },
         async cleanupTestUsers() {
           await cleanupTestUsers();
           return null;
@@ -32,14 +45,13 @@ module.exports = defineConfig({
         }
       });
 
-      verifyTestEnvironment()
-        .then(() => console.log('Test environment verified'))
-        .catch(console.error);
-
+      config.baseUrl = baseUrl;
       return config;
     },
-    baseUrl: 'http://localhost:5173',
+    baseUrl,
     specPattern: 'cypress/e2e/**/*.{ts,tsx}',
     supportFile: 'cypress/support/e2e.ts',   
+    defaultCommandTimeout: 10000,
+    requestTimeout: 10000
   },
 });

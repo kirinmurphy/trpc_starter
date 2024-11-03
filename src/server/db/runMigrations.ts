@@ -1,19 +1,10 @@
 import path from 'path';
 import fs from 'fs';
-import { Pool, PoolClient } from 'pg';
+import { PoolClient } from 'pg';
+import { createPool } from './pool';
 
 const SQL_GET_MIGRATION_ENTRIES = 'SELECT filename FROM schema_migrations ORDER BY id';
 const SQL_ADD_MIGRATION_ENTRY = 'INSERT INTO schema_migrations (filename) VALUES ($1)';
-
-async function createPool (dbName: string) {
-  return new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: dbName,
-    password: process.env.DB_PASSWORD,
-    port: 5432
-  });
-}
 
 void runAllMigrations();
 
@@ -31,7 +22,7 @@ async function runAllMigrations () {
 }
   
 async function runDatabaseMigrations ({ dbName }: { dbName: string }) {
-  const pool = await createPool(dbName);
+  const pool = await createPool({ dbName });
   const client = await pool.connect();
 
   try {

@@ -11,6 +11,11 @@ services:
     volumes: 
       - .:/app
       - /app/node_modules
+    logging: 
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: '3'
     environment:
       DB_USER: ${DB_USER}
       DB_HOST: db 
@@ -23,12 +28,17 @@ services:
       VITE_HOST: 0.0.0.0
       HOST: 0.0.0.0
       NODE_ENV: development
+      VITE_API_URL: http://localhost:3000
+      DEBUG: "app:*"
     depends_on: 
       db:
         condition: service_healthy    
 
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5173 > /dev/null 2>&1 && curl -f 'http://localhost:3000/ping?batch=1&input=%7B%7D' > /dev/null 2>&1"]
+      test: [
+        "CMD-SHELL", 
+        "curl -f http://localhost:5173 > /dev/null 2>&1 && curl -f 'http://localhost:3000/ping?batch=1&input=%7B%7D' > /dev/null 2>&1"
+      ]
       interval: 10s
       timeout: 5s
       retries: 5

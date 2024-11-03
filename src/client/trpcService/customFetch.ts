@@ -9,5 +9,9 @@ export function customFetch (input: RequestInfo | URL, options?: RequestInit) {
       const csrfToken = response.headers.get('x-csrf-token');
       if ( csrfToken ) { csrfStore.setToken(csrfToken); }
       return response;
+    })
+    .catch(err => {
+      console.error('CustomFetch Error:', err);
+      throw err;
     });
 }

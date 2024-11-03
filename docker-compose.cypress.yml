@@ -2,6 +2,7 @@ services:
   app:
     environment:
       NODE_ENV: test
+      VITE_API_URL: http://app:3000
 
   cypress: 
     build:
@@ -24,14 +25,22 @@ services:
       - DB_PORT=5432
       - TEST_DB_NAME=${TEST_DB_NAME}
       - NODE_ENV=test
+      - IN_DOCKER=true
+      - CYPRESS_QUIET=1
+      - FORCE_COLOR=1
+      - DEBUG=cypress:server:browsers:*
+      - DEBUG=cypress:user:log
+      - NODE_DEBUG=console
+      - VITE_API_URL=http://app:3000
     volumes: 
       - .:/e2e:ro
       - ./cypress:/e2e/cypress
       - ./cypress.config.cjs:/e2e/cypress.config.cjs
+      - ./cypress/videos:/e2e/cypress/videos
 
     working_dir: /e2e
     
-    # command: npx cypress run --config-file cypress.config.cjs --browser chrome --headless
+    command: npx cypress run --config-file cypress.config.cjs --browser chrome --headless
 
 volumes: 
   postgres_data: 

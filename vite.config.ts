@@ -12,5 +12,13 @@ export default defineConfig({
     watch: {
       usePolling: true,
     }
-  }
-})
+  },
+  // define: {
+  //   __VITE_API_URL__: JSON.stringify(process.env.VITE_API_URL)
+  // }  
+});
+
+console.log('Vite Config Environment:', {
+  VITE_API_URL: process.env.VITE_API_URL,
+  NODE_ENV: process.env.NODE_ENV
+});
