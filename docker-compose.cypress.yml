@@ -1,4 +1,4 @@
-x-app-urls: &test-app-defaults 
+x-test-app-defaults: &test-app-defaults 
   CLIENT_URL: "${API_PROTOCOL}://app:${VITE_PORT}"
   VITE_API_URL: "${API_PROTOCOL}://app:${API_PORT}"
   NODE_ENV: test
@@ -35,16 +35,23 @@ services:
       DEBUG: cypress:user:log
       NODE_DEBUG: console
     volumes: 
-      - .:/e2e:ro
-      - ./cypress:/e2e/cypress
-      - ./cypress.config.cjs:/e2e/cypress.config.cjs
+      # Read-only source files
+      - ./tsconfig.json:/e2e/tsconfig.json:ro
+      - ./cypress/tsconfig.json:/e2e/cypress/tsconfig.json:ro
+      - ./cypress/e2e:/e2e/cypress/e2e:ro
+      - ./cypress/support:/e2e/cypress/support:ro
+      - ./cypress/fixtures:/e2e/cypress/fixtures:ro
+      - ./cypress/plugins:/e2e/cypress/plugins:ro
+      - ./cypress.config.cjs:/e2e/cypress.config.cjs:ro
+      
+      # Writable output directories
       - ./cypress/videos:/e2e/cypress/videos
-
-    # TODO: CAN'T WRITE TO THIS FOLDER? 
+      - ./cypress/screenshots:/e2e/cypress/screenshots
+      - ./cypress/downloads:/e2e/cypress/downloads  
+      
     working_dir: /e2e
     
-    # TOOD: move to package.json?
-    command: npx cypress run --config-file cypress.config.cjs --browser chrome --headless
+    command: bun run test:docker
 
 volumes: 
   postgres_data: 

@@ -23,13 +23,11 @@ fi
 echo "Migrations completed successfully" 
 
 echo "Starting API server..." 
-bun run server:dev & 
-API_PID=$!
+bun run server:dev & API_PID=$!
 echo "API server PID: $API_PID"
 
 echo "Starting Vite dev server..." 
-bun vite --host & 
-VITE_PID=$!
+bun vite --host & VITE_PID=$!
 echo "Vite dev server PID: $VITE_PID"
 
 trap 'kill $API_PID $VITE_PID' INT TERM

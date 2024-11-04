@@ -13,6 +13,8 @@
     "server": "bun run src/server/server.ts",
     "test": "NODE_ENV=test bun run server & bun run vite & sleep 5 && bun run cypress:run",
 
+    "test:docker": "npx cypress run --config-file cypress.config.cjs --browser chrome --headless",
+
     "migrate": "bun run src/server/db/runMigrations.ts",
     "migrate:local": "DB_HOST=localhost bun run migrate",
     "migrate:docker": "DB_HOST=db bun run migrate",

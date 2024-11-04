@@ -25,8 +25,8 @@ dist-ssr
 
 .env
 
-cypress/plugins
 cypress/screenshots
-cypress.config.js
+cypress/videos
+cypress/downloads
 
 docs/
