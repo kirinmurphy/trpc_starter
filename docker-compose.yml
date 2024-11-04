@@ -17,18 +17,21 @@ services:
         max-size: "10m"
         max-file: '3'
     environment:
-      DB_USER: ${DB_USER}
-      DB_HOST: db 
-      DB_NAME: ${DB_NAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      TEST_DB_NAME: ${TEST_DB_NAME}
-      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
-      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
       CLIENT_URL: ${CLIENT_URL}
       VITE_HOST: 0.0.0.0
       HOST: 0.0.0.0
       NODE_ENV: development
       VITE_API_URL: http://localhost:3000
+      # DB
+      DB_USER: ${DB_USER}
+      DB_HOST: db 
+      DB_NAME: ${DB_NAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      TEST_DB_NAME: ${TEST_DB_NAME}
+      # AUTH
+      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      # OUTPUT
       DEBUG: "app:*"
     depends_on: 
       db:

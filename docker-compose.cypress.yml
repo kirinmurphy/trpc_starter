@@ -18,20 +18,21 @@ services:
       db:
         condition: service_healthy
     environment: 
-      - CYPRESS_baseUrl=http://app:5173
-      - DB_USER=${DB_USER}
-      - DB_HOST=db
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_PORT=5432
-      - TEST_DB_NAME=${TEST_DB_NAME}
-      - NODE_ENV=test
-      - IN_DOCKER=true
-      - CYPRESS_QUIET=1
-      - FORCE_COLOR=1
-      - DEBUG=cypress:server:browsers:*
-      - DEBUG=cypress:user:log
-      - NODE_DEBUG=console
-      - VITE_API_URL=http://app:3000
+      NODE_ENV: test
+      IN_DOCKER: true
+      CYPRESS_baseUrl: http://app:5173
+      VITE_API_URL: http://app:3000
+      # DB
+      DB_USER: ${DB_USER}
+      DB_HOST: db
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: 5432
+      TEST_DB_NAME: ${TEST_DB_NAME}
+      # OUTPUT
+      CYPRESS_QUIET: 1
+      FORCE_COLOR: 1
+      DEBUG: cypress:user:log
+      NODE_DEBUG: console
     volumes: 
       - .:/e2e:ro
       - ./cypress:/e2e/cypress
