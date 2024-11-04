@@ -17,29 +17,30 @@ Some general web things that are generally used for other web things.
 ## Setup
 ### ENV Variables
 ```env 
-CLIENT_URL=http://localhost:5173
+# commented variables are optional
 
-# For Docker, DB_HOST will be set in 'docker compose'
-# For local development, use 'localhost'
-DB_HOST=localhost
-DB_USER=your_username
+API_PROTOCOL=http
+API_PORT=3000
+VITE_PORT=5173
+# API_HOST=0.0.0.0
+# VITE_HOST=0.0.0.0
+# CLIENT_URL=http://localhost:5137 - required for non-docker local environment
+
+# DB
 DB_NAME=your_db_name
-DB_PASSWORD=your_password
 TEST_DB_NAME=your_other_test_db_name
+DB_USER=your_username
+DB_PASSWORD=your_password
+# DB_HOST=localhost - not needed with docker 
+# DB_PORT=5432
 
+# AUTH
 AUTH_TOKEN_SECRET=your_JTW_token_secret
 REFRESH_TOKEN_SECRET=your_refresh_JWT_token_secret
 ``` 
 
 
 # Running App With Docker
-### First Time Setup
-```bash
-docker compose up -d
-
-# Run migrations (only needed first time, or after container deleted)
-docker compose exec app bun run migrate:docker
-``` 
 
 ### Docker Development 
 ```bash
@@ -55,6 +56,7 @@ docker compose logs -f
 
 ### Running Tests in Docker 
 ```bash
+# TODO: ADD MAKE COMMANDS 
 # interactive test interface 
 docker compose exec app bun run test:dev
 
@@ -65,13 +67,6 @@ docker compose exec app bun run test
 docker compose exec app bun run cypress run --spec "cypress/e2e/your-test.cy.ts"
 ```
 
-### Docker Reset 
-Fully reset the DB
-```bash
-docker compose down -v 
-docker compose up -d
-docker compose exec app bun run migrate:docker 
-```
 
 # Running app locally (no Docker)
 ### Prerequisites

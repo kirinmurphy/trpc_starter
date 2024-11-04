@@ -1,9 +1,17 @@
 #!/bin/sh
 
+timeout=30
+elapsed=0
 echo "Waiting for the database"
-until nc -z db 5432; do
+until nc -z db 5432 || [ $elapsed -gt $timeout ]; do
   sleep 1
+  elapsed=$((elapsed+1))
 done
+
+if [ $elapsed -gt $timeout ]; then
+  echo "Database connection timeout"
+  exit 1
+fi
 echo "Database is ready"
 
 echo "Running migrations..."

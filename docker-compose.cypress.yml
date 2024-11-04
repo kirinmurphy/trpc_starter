@@ -1,8 +1,12 @@
+x-app-urls: &test-app-defaults 
+  CLIENT_URL: "${API_PROTOCOL}://app:${VITE_PORT}"
+  VITE_API_URL: "${API_PROTOCOL}://app:${API_PORT}"
+  NODE_ENV: test
+
 services: 
   app:
     environment:
-      NODE_ENV: test
-      VITE_API_URL: http://app:3000
+      <<: *test-app-defaults
 
   cypress: 
     build:
@@ -18,10 +22,7 @@ services:
       db:
         condition: service_healthy
     environment: 
-      NODE_ENV: test
-      IN_DOCKER: true
-      CYPRESS_baseUrl: http://app:5173
-      VITE_API_URL: http://app:3000
+      <<: *test-app-defaults
       # DB
       DB_USER: ${DB_USER}
       DB_HOST: db
@@ -39,8 +40,10 @@ services:
       - ./cypress.config.cjs:/e2e/cypress.config.cjs
       - ./cypress/videos:/e2e/cypress/videos
 
+    # TODO: CAN'T WRITE TO THIS FOLDER? 
     working_dir: /e2e
     
+    # TOOD: move to package.json?
     command: npx cypress run --config-file cypress.config.cjs --browser chrome --headless
 
 volumes: 

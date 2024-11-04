@@ -16,11 +16,12 @@ const server = createHTTPServer({
   middleware: apiMiddleware
 });
 
-const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-const host = process.env.HOST || '0.0.0.0'; 
+const port = parseInt(process.env.API_PORT || '3000');
+const host = process.env.API_HOST || '0.0.0.0'; 
+const protocol = process.env.API_PROTOCOL || 'http';
 
 server.listen(port, host);
-console.log('Server running on port 3000');
+console.log(`Server running on ${protocol}://${host}:${port}`);
 
 process.on('SIGINT', () => {
   pool.end().then(() => {

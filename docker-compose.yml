@@ -6,8 +6,8 @@ services:
         COMPOSE_DOCKER_CLI_BUILD: 1
         DOCKER_BUILDKIT: 1
     ports:
-      - "3000:3000"
-      - "5173:5173"
+      - "${API_PORT}:${API_PORT}"
+      - "${VITE_PORT}:${VITE_PORT}"
     volumes: 
       - .:/app
       - /app/node_modules
@@ -17,17 +17,18 @@ services:
         max-size: "10m"
         max-file: '3'
     environment:
-      CLIENT_URL: ${CLIENT_URL}
-      VITE_HOST: 0.0.0.0
-      HOST: 0.0.0.0
+      CLIENT_URL: "${API_PROTOCOL}://localhost:${VITE_PORT}"
+      VITE_API_URL: "${API_PROTOCOL}://localhost:${API_PORT}"
+      VITE_HOST: ${VITE_HOST}
+      API_HOST: ${API_HOST}
       NODE_ENV: development
-      VITE_API_URL: http://localhost:3000
+      PORT: ${API_PORT}
       # DB
-      DB_USER: ${DB_USER}
-      DB_HOST: db 
       DB_NAME: ${DB_NAME}
-      DB_PASSWORD: ${DB_PASSWORD}
       TEST_DB_NAME: ${TEST_DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db 
       # AUTH
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
@@ -40,7 +41,7 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL", 
-        "curl -f http://localhost:5173 > /dev/null 2>&1 && curl -f 'http://localhost:3000/ping?batch=1&input=%7B%7D' > /dev/null 2>&1"
+        "curl -f ${API_PROTOCOL}://localhost:${VITE_PORT} > /dev/null 2>&1 && curl -f '${API_PROTOCOL}://localhost:${API_PORT}/ping?batch=1&input=%7B%7D' > /dev/null 2>&1"
       ]
       interval: 10s
       timeout: 5s

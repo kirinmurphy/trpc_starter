@@ -7,7 +7,6 @@ const DEMO_USER = {
 describe('Public Pages', () => {
   it('loads the public homepage', () => {
     cy.visit('/');
-    console.log('YOOOOOOOOOOOOOO');
     cy.contains('Wilkommmen', { timeout: 10000 }).should('be.visible');
   });
 

@@ -2,9 +2,6 @@ const { defineConfig } = require('cypress');
 const { verifyTestEnvironment, cleanupTestUsers } = require('./cypress/support/db.cjs');
 require('dotenv').config();
 
-const isDocker = process.env.IN_DOCKER === 'true';
-const baseUrl = isDocker ? 'http://app:5173' : 'http://localhost:5173';
-
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
@@ -45,10 +42,9 @@ module.exports = defineConfig({
         }
       });
 
-      config.baseUrl = baseUrl;
       return config;
     },
-    baseUrl,
+    baseUrl: process.env.CLIENT_URL,
     specPattern: 'cypress/e2e/**/*.{ts,tsx}',
     supportFile: 'cypress/support/e2e.ts',   
     defaultCommandTimeout: 10000,
