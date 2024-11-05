@@ -9,7 +9,9 @@
     "server:dev": "nodemon --watch src/server -e ts,json --exec 'bun run server'",
     "test:dev": "NODE_ENV=test bun run dev & sleep 5 && bun run cypress:open",
 
-    "build": "tsc -b && bun run vite build",
+    "build": "bun build src/server/server.ts --outdir=dist/server --target=node && bun run vite build",
+    "start": "bun run server & bun run preview",
+
     "server": "bun run src/server/server.ts",
     "test": "NODE_ENV=test bun run server & bun run vite & sleep 5 && bun run cypress:run",
 
@@ -23,7 +25,7 @@
     "cypress:run": "cypress run --config-file cypress.config.cjs",
 
     "lint": "eslint .",
-    "preview": "bun run vite preview"
+    "preview": "vite preview --host 0.0.0.0 --port 4173 --base ./"
   },
   "dependencies": {
     "@tanstack/react-query": "4.36.1",

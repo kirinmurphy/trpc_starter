@@ -1,8 +1,6 @@
 # syntax=docker/dockerfile:1.4
-FROM oven/bun:latest
-
+FROM oven/bun:latest as base 
 WORKDIR /app
-
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && apt-get install -y \
@@ -11,13 +9,23 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     netcat-traditional \
     && rm -rf /var/lib/apt/lists/*
 
-COPY package.json bun.lockb ./
 
+# DEVELOPMENT 
+FROM base AS development    
+COPY package.json bun.lockb ./
 RUN --mount=type=cache,target=/root/.bun \
     bun install
-
 COPY . .
+CMD ["bun", "run", "dev"]
 
-RUN bun run build
 
-CMD ["bun", "run", "server"]
+# PRODUCTION 
+FROM base AS production
+COPY package.json bun.lockb ./
+RUN --mount=type=cache,target=/root/.bun \
+    bun install && \
+    bun add mock-aws-s3 aws-sdk nock
+COPY . .
+# TODO: this builds the devDependencies in the container
+# optimally, the devDependencies should not be included 
+CMD ["./docker/init-prod.sh"]

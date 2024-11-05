@@ -1,12 +1,6 @@
 # syntax=docker/dockerfile:1.4
 FROM cypress/included:13.3.0
 
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \ 
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && apt-get install -y \
-    dbus \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /e2e
 
 ENV NODE_ENV=test

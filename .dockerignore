@@ -11,4 +11,5 @@ Dockerfile
 Dockerfile.cypress
 docker-compose.yml
 docker-compose.cypress.yml
-docker/
+docker/*
+!docker/init-prod.sh
