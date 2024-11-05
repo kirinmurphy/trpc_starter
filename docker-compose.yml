@@ -2,8 +2,8 @@ services:
   app:
     build: 
       context: .
+      target: development
       args:
-        COMPOSE_DOCKER_CLI_BUILD: 1
         DOCKER_BUILDKIT: 1
     ports:
       - "${API_PORT}:${API_PORT}"
@@ -41,7 +41,7 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL", 
-        "curl -f ${API_PROTOCOL}://localhost:${VITE_PORT} > /dev/null 2>&1 && curl -f '${API_PROTOCOL}://localhost:${API_PORT}/ping?batch=1&input=%7B%7D' > /dev/null 2>&1"
+        "curl -f ${API_PROTOCOL}://localhost:${VITE_PORT} && curl -f '${API_PROTOCOL}://localhost:${API_PORT}/ping?batch=1&input=%7B%7D'"
       ]
       interval: 10s
       timeout: 5s
