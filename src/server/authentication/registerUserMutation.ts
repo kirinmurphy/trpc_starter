@@ -31,7 +31,7 @@ export async function registerUserMutation (props: RegisterUserMutationProps) {
     input: { name, email, password }, 
     ctx: { res  } 
   } = props;
-  
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {

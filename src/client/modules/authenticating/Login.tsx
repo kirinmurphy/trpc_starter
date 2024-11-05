@@ -54,5 +54,3 @@ export function Login ({ onLoginSuccess }: LoginProps) {
     </SimpleForm>
   );
 };
-
-export default Login;

@@ -1,0 +1,73 @@
+services: 
+  app:
+    build: 
+      context: .
+      args:
+        COMPOSE_DOCKER_CLI_BUILD: 1
+        DOCKER_BUILDKIT: 1
+    ports:
+      - "${API_PORT}:${API_PORT}"
+      - "${VITE_PORT}:${VITE_PORT}"
+    volumes: 
+      - .:/app
+      - /app/node_modules
+    logging: 
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: '3'
+    environment:
+      CLIENT_URL: "${API_PROTOCOL}://localhost:${VITE_PORT}"
+      VITE_API_URL: "${API_PROTOCOL}://localhost:${API_PORT}"
+      VITE_HOST: ${VITE_HOST}
+      API_HOST: ${API_HOST}
+      NODE_ENV: development
+      PORT: ${API_PORT}
+      # DB
+      DB_NAME: ${DB_NAME}
+      TEST_DB_NAME: ${TEST_DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db 
+      # AUTH
+      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      # OUTPUT
+      DEBUG: "app:*"
+    depends_on: 
+      db:
+        condition: service_healthy    
+
+    healthcheck:
+      test: [
+        "CMD-SHELL", 
+        "curl -f ${API_PROTOCOL}://localhost:${VITE_PORT} > /dev/null 2>&1 && curl -f '${API_PROTOCOL}://localhost:${API_PORT}/ping?batch=1&input=%7B%7D' > /dev/null 2>&1"
+      ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+    command: ./docker/init-app.sh
+
+  db: 
+    image: postgres:latest
+    ports: 
+      - "5433:5432"
+    environment: 
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - TEST_DB_NAME=${TEST_DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    healthcheck: 
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes: 
+  postgres_data: 

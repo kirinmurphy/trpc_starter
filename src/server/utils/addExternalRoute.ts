@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { publicProcedure } from "../trpcRouter";
+import { procedures } from "../trpcRouter";
 
 type EndpointType<T> = {
   url: string; 
@@ -10,7 +10,7 @@ export async function addExternalRoute<T extends z.ZodType> (
   { endpoint }: { endpoint: EndpointType<T> }
 ) {
   const { url, schema } = endpoint;
-  return publicProcedure
+  return procedures.publicQuery
     .output(schema)
     .query(async (): Promise<T> => {
       const response = await fetch(url);

@@ -30,11 +30,15 @@ export function SignUp ({ onSignUpSuccess }: SignUpProps) {
   });
 
   const onSubmit = () => {
-    mutate({ 
-      email: email.trim(), 
-      password: password.trim(), 
-      name: name.trim() 
-    });
+    try {
+      mutate({ 
+        email: email.trim(), 
+        password: password.trim(), 
+        name: name.trim() 
+      });
+    } catch (err) {
+      console.error('Mutation error:', err);
+    }
   }
 
   return (

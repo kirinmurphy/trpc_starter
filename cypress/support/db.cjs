@@ -1,15 +1,8 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const testPool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  password: process.env.DB_PASSWORD,
-  port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.TEST_DB_NAME
-});
-
 async function cleanupTestUsers () {
+  const testPool = createTestPool();
   const client = await testPool.connect();
   try {
     await client.query(`
@@ -18,11 +11,14 @@ async function cleanupTestUsers () {
     `);
   } finally {
     client.release();
+    await testPool.end();
   }
 }
 
 async function verifyTestEnvironment () {
+  const testPool = createTestPool();
   const client = await testPool.connect();
+
   try {
     const { rows } = await client.query('SELECT current_database()');
     const dbName = rows[0].current_database; 
@@ -31,10 +27,21 @@ async function verifyTestEnvironment () {
     }
   } finally {
     client.release();
+    await testPool.end();
   }
 }
 
 module.exports = {
   cleanupTestUsers,
   verifyTestEnvironment  
+}
+
+function createTestPool () {
+  return new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    password: process.env.DB_PASSWORD,
+    port: parseInt(process.env.DB_PORT || '5432'),
+    database: process.env.TEST_DB_NAME
+  });
 }

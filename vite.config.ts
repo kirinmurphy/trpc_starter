@@ -6,4 +6,11 @@ export default defineConfig({
   css: {
     postcss: './postcss.config.js',
   },
-})
+  server: {
+    host: process.env.VITE_HOST || '0.0.0.0',
+    port: parseInt(process.env.VITE_PORT || '5173'),
+    watch: {
+      usePolling: true,
+    }
+  },
+});

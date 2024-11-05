@@ -10,10 +10,10 @@ Cypress.Commands.add('verifyTestEnvironment', () => {
 
 Cypress.Commands.add('signUp', ({ demoUser }: AuthActionProps) => {
   cy.visit('/');
-  cy.contains('a', 'SIGN UP').click();
-  cy.get('input[type="name"]').type(demoUser.name);
-  cy.get('input[type="email"]').type(demoUser.email);
-  cy.get('input[type="password"]').type(demoUser.password);
+  cy.contains('a', 'SIGN UP').click();  
+  cy.get('input[type="name"]').type(demoUser.name, { delay: 100 });
+  cy.get('input[type="email"]').type(demoUser.email, { delay: 100 });
+  cy.get('input[type="password"]').type(demoUser.password, { delay: 100 });
   cy.get('button[type="submit"]').click();
   cy.url().should('include', '/home');
 });
