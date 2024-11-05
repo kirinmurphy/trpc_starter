@@ -3,11 +3,12 @@ Some general web things that are generally used for other web things.
 
 - tRPC / Zod authentication api and UI shell
 - JWT auth and refresh token sessions
-- native Postgres DB migration workflow
-- cypress e2e harness with test DB integration 
-- security strategy including helmet headers/csp, csrf and cors enforcement
-- tanstack client router implementation
-- tailwind yo
+- native Postgres DB migration flow
+- cypress e2e harness with test DB
+- security strategy w/ helmet headers/csp, csrf and cors enforcement     
+- served with docker
+- Tanstack client router implementation
+- Tailwind yo 
 
 ### On Deck: 
 - Dockerizing & remote build
@@ -42,31 +43,26 @@ REFRESH_TOKEN_SECRET=your_refresh_JWT_token_secret
 
 # Running App With Docker
 
-### Docker Development 
-```bash
-# Start containers
-docker compose up -d
+### Available commands:
+Application commands:
+- **make app**                    - Start the application      
+- **make build-app**              - Clean and build application container      
+- **make build-app-no-cache**     - Clear image cache, then clean and build app container      
+- **make logs-app**               - View application logs      
+- **make app-all**                - Run build, start, and logs in sequence      
 
-# Stop containers
-docker compose down
+Testing commands:
+- **make test**                   - Run cypress tests      
+- **make build-cypress**          - Clean and build cypress container      
+- **make build-cypress-no-cache** - Clear image cache, then clean and build cypress container      
+- **make logs-cypress**           - View cypress logs      
+- **make cypress-all**            - Clean, build, test, and logs in sequence      
 
-# View logs
-docker compose logs -f
-``` 
+Utility commands:
+- **make clean**                  - Clean up containers and volumes
 
-### Running Tests in Docker 
-```bash
-# TODO: ADD MAKE COMMANDS 
-# interactive test interface 
-docker compose exec app bun run test:dev
-
-# headless testing
-docker compose exec app bun run test
-
-# Run specific test
-docker compose exec app bun run cypress run --spec "cypress/e2e/your-test.cy.ts"
-```
-
+Notes: 
+- DB Migration is run on every app start
 
 # Running app locally (no Docker)
 ### Prerequisites
@@ -99,5 +95,8 @@ bun dev
 
 ### Run Tests
 ```bash
+# first terminal window
+bun dev
+# secood terminal window
 bun run test:dev
 ``` 

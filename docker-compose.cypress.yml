@@ -30,7 +30,7 @@ services:
       DB_PORT: 5432
       TEST_DB_NAME: ${TEST_DB_NAME}
       # OUTPUT
-      CYPRESS_QUIET: 1
+      # CYPRESS_QUIET: 1
       FORCE_COLOR: 1
       DEBUG: cypress:user:log
       NODE_DEBUG: console
