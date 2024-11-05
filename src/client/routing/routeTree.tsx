@@ -9,32 +9,32 @@ import { redirectIfAuthenticated, redirectIfNotAuthenticated } from './authentic
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';
 import { SignUpRedirectWrapper } from './SignUpRedirectWrapper';
 
-export const rootRoute = createRootRoute({
+const rootRoute = createRootRoute({
   component: App,
 });
 
-export const publicHomepageRoute = createRoute({
+const publicHomepageRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.publicHomepage,
   beforeLoad: redirectIfAuthenticated,
   component: () => <PublicApp><PublicHomepage/></PublicApp>,
 });
 
-export const signUpPageRoute = createRoute({
+const signUpPageRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.signUp,
   beforeLoad: redirectIfAuthenticated,
   component: () => <PublicApp><SignUpRedirectWrapper/></PublicApp>,
 });
 
-export const loginPageRoute = createRoute({
+const loginPageRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.login,
   beforeLoad: redirectIfAuthenticated,
   component: () => <PublicApp><LoginRedirectWrapper/></PublicApp>,
 });
 
-export const authenticatedHomepageRoute = createRoute({
+const authenticatedHomepageRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.authenticatedHomepage,
   beforeLoad:  redirectIfNotAuthenticated,

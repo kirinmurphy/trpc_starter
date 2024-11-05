@@ -6,13 +6,14 @@ Some general web things that are generally used for other web things.
 - native Postgres DB migration flow
 - cypress e2e harness with test DB
 - security strategy w/ helmet headers/csp, csrf and cors enforcement     
-- served with docker
+- Dockerized app and test CI versions
 - Tanstack client router implementation
 - Tailwind yo 
 
 ### On Deck: 
-- Dockerizing & remote build
-- API Rate limiting
+- Production build
+- nginx proxy
+- api rate limiting
 
 
 ## Setup
@@ -25,33 +26,34 @@ API_PORT=3000
 VITE_PORT=5173
 # API_HOST=0.0.0.0
 # VITE_HOST=0.0.0.0
-# CLIENT_URL=http://localhost:5137 - required for non-docker local environment
 
 # DB
 DB_NAME=your_db_name
 TEST_DB_NAME=your_other_test_db_name
 DB_USER=your_username
 DB_PASSWORD=your_password
-# DB_HOST=localhost - not needed with docker 
+# DB_HOST=localhost 
 # DB_PORT=5432
 
 # AUTH
 AUTH_TOKEN_SECRET=your_JTW_token_secret
 REFRESH_TOKEN_SECRET=your_refresh_JWT_token_secret
+
+# Reqiuired for non-docker local dev
+CLIENT_URL=http://localhost:5137 
 ``` 
 
 
 # Running App With Docker
 
-### Available commands:
-Application commands:
+### Application commands:
 - **make app**                    - Start the application      
 - **make build-app**              - Clean and build application container      
 - **make build-app-no-cache**     - Clear image cache, then clean and build app container      
 - **make logs-app**               - View application logs      
 - **make app-all**                - Run build, start, and logs in sequence      
 
-Testing commands:
+### Testing commands:
 - **make test**                   - Run cypress tests      
 - **make build-cypress**          - Clean and build cypress container      
 - **make build-cypress-no-cache** - Clear image cache, then clean and build cypress container      

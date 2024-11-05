@@ -1,8 +1,8 @@
-import { trpcService } from '../../trpcService/trpcClientService';
-import { SimpleForm } from '../../components/forms/SimpleForm';
-import { InputField } from '../../components/forms/InputField';
-import { useFormState } from '../../components/forms/utils/useFormState';
-import { invalidateAuthCheckQuery } from '../../trpcService/invalidateQueries';
+import { trpcService } from '../../../trpcService/trpcClientService';
+import { SimpleForm } from '../../../components/forms/SimpleForm';
+import { InputField } from '../../../components/forms/InputField';
+import { useFormState } from '../../../components/forms/utils/useFormState';
+import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries';
 
 interface SignUpProps {
   onSignUpSuccess?: () => void;
@@ -69,5 +69,3 @@ export function SignUp ({ onSignUpSuccess }: SignUpProps) {
     </SimpleForm> 
   );
 };
-
-export default SignUp;
