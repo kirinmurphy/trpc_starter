@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router'
 import { ROUTE_URLS } from './routeUrls';
-import SignUp from '../modules/authenticating/SignUp';
+import { SignUp } from '../modules/public/authenticating/SignUp';
 
 export function SignUpRedirectWrapper () {
   const navigate = useNavigate();
