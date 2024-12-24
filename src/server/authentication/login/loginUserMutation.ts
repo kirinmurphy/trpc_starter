@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
 import { z } from 'zod';
 import { TRPCError } from "@trpc/server";
-import { pool } from '../db/pool';
-import { SQL_GET_MEMBER_BY_EMAIL } from "../db/sql";
-import { setAccessTokenCookie, setRefreshTokenCookie } from "./jwtActions";
-import { MutationPropsWithInput } from "./types";
+import { pool } from '../../db/pool';
+import { SQL_GET_MEMBER_BY_EMAIL } from "../../db/sql";
+import { setAccessTokenCookie, setRefreshTokenCookie } from "../jwtActions";
+import { MutationPropsWithInput } from "../types";
 
 export const loginUserSchema = z.object({
   email: z.string()

@@ -1,10 +1,10 @@
 
 import { router, procedures } from "../trpcRouter";
-import { loginUserMutation, loginUserSchema } from "./loginUserMutation";
-import { logoutUserMutation } from "./logoutUserMutation";
+import { loginUserMutation, loginUserSchema } from "./login/loginUserMutation";
+import { logoutUserMutation } from "./logout/logoutUserMutation";
 import { getUserQuery } from "./getUserQuery";
 import { refreshTokenMutation } from "./refreshTokenMutation";
-import { registerUserMutation, registerUserSchema } from "./registerUserMutation";
+import { registerUserMutation, registerUserSchema } from "./register/registerUserMutation";
 
 const { publicQuery,  protectedQuery,  publicMutation } = procedures;
 

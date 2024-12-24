@@ -1,11 +1,12 @@
 import bcrypt from "bcrypt";
 import { z } from 'zod';
-import { escapeHTML } from "../utils/escapeHtml";
-import { pool } from '../db/pool';
-import { SQL_CREATE_MEMBER } from "../db/sql";
-import { ContextType } from "./types";
-import { setAccessTokenCookie, setRefreshTokenCookie } from "./jwtActions";
-import { createEmailSchema, createPasswordSchema, inputIsUnsafe } from "./sharedSchema";
+import { escapeHTML } from "../../utils/escapeHtml";
+import { pool } from '../../db/pool';
+import { SQL_CREATE_MEMBER } from "../../db/sql";
+import { ContextType } from "../types";
+import { setAccessTokenCookie, setRefreshTokenCookie } from "../jwtActions";
+import { createEmailSchema, createPasswordSchema, inputIsUnsafe } from "../sharedSchema";
+import { sendVerificationEmail } from "./sendVerificationEmail";
 
 
 export const registerUserSchema = z.object({
@@ -40,6 +41,8 @@ export async function registerUserMutation (props: RegisterUserMutationProps) {
       [name, email, hashedPassword]
     );
     const userId = result.rows[0].id;
+
+    sendVerificationEmail({ to: email, token: 'asdf' });
 
     setAccessTokenCookie({ res, userId });
     setRefreshTokenCookie({ res, userId });
