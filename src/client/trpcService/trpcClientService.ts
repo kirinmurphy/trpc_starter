@@ -14,4 +14,3 @@ export const trpcReactClient = trpcService.createClient({
 export const trpcVanillaClient = createTRPCProxyClient<AppRouter>({
   links: [getAuthLink()]
 });
-

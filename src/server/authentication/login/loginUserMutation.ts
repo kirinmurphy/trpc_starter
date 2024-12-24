@@ -25,19 +25,23 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
     const { email, password } = input;  
     
     const result = await pool.query(SQL_GET_MEMBER_BY_EMAIL, [email]);
-    const user = result.rows[0];
+    const member = result.rows[0];
     
-    if (!user) {
+    if (!member) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
     }
-    
-    const validPassword = await bcrypt.compare(password, user.password);
+
+    const validPassword = await bcrypt.compare(password, member.password);
     if (!validPassword) {
       throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid password' });
     }
 
-    setAccessTokenCookie({ res, userId: user.id });
-    setRefreshTokenCookie({ res, userId: user.id });
+    if ( !member.verified ) {
+      return { success: false, message: 'account_not_verified' };      
+    }
+    
+    setAccessTokenCookie({ res, userId: member.id });
+    setRefreshTokenCookie({ res, userId: member.id });
 
     return { success: true, message: "Logged in successfully" };
 

@@ -1,7 +1,15 @@
+import { ROUTE_URLS } from "../../../client/routing/routeUrls";
 import { sendEmail } from "../../email/sendEmail";
 
-export async function sendVerificationEmail ({ to, token }: { to: string; token: string; }) {
-  const verificationUrl = `http://localhost:3000/verify?token=${token}`;
+interface SendVerificationEmailProps { 
+  to: string; 
+  verificationToken: string; 
+}
+
+export async function sendVerificationEmail (props: SendVerificationEmailProps) {
+  const { to, verificationToken } = props;
+
+  const verificationUrl = getVerificationUrl({ verificationToken });
 
   return sendEmail({
     to,
@@ -18,4 +26,12 @@ export async function sendVerificationEmail ({ to, token }: { to: string; token:
     </body>
     </html>`
   });
+}
+
+function getVerificationUrl ({ verificationToken }: { verificationToken: string }): string {
+  const route = ROUTE_URLS.verifyAccount;
+  const port = process.env.VITE_PORT || '5173';
+  const protocol = process.env.API_PROTOCOL || 'http'
+
+  return `${protocol}://localhost:${port}/${route}?token=${verificationToken}`;
 }

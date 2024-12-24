@@ -7,7 +7,7 @@ export function SignUpRedirectWrapper () {
 
   return (
     <SignUp onSignUpSuccess={() => {
-      navigate({ to: ROUTE_URLS.authenticatedHomepage })    
+      navigate({ to: ROUTE_URLS.verifyAccountInstructions })    
     }}/>    
   );
 }

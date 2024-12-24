@@ -3,6 +3,8 @@ import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries
 import { SimpleForm } from '../../../components/forms/SimpleForm';
 import { InputField } from '../../../components/forms/InputField';
 import { useFormState } from '../../../components/forms/utils/useFormState';
+import { useNavigate } from '@tanstack/react-router';
+import { ROUTE_URLS } from '../../../routing/routeUrls';
 
 interface LoginProps {
   onLoginSuccess?: () => void;
@@ -14,6 +16,9 @@ interface LoginFormProps {
 }
 
 export function Login ({ onLoginSuccess }: LoginProps) {
+
+  const navigate = useNavigate();
+
   const { 
     formData: { email, password },
     handleFieldChange 
@@ -24,7 +29,10 @@ export function Login ({ onLoginSuccess }: LoginProps) {
       if ( data?.success ) {
         await invalidateAuthCheckQuery();
         if ( onLoginSuccess ) onLoginSuccess();
-      } 
+        // TODO: make message key a shared constant
+      } else if ( data?.message === 'account_not_verified' ) {
+        navigate({ to: ROUTE_URLS.verifyAccountInstructions });
+      }
     },
   });
 
