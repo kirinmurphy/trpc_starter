@@ -1,3 +1,4 @@
+import { z } from "zod";
 
 import { router, procedures } from "../trpcRouter";
 import { loginUserMutation, loginUserSchema } from "./login/loginUserMutation";
@@ -6,9 +7,9 @@ import { getUserQuery } from "./getUserQuery";
 import { refreshTokenMutation } from "./refreshTokenMutation";
 import { registerUserMutation, registerUserSchema } from "./register/registerUserMutation";
 import { verifyAccountQuery } from "./register/verifyAccountQuery";
-import { z } from "zod";
+import { resendVerificationEmailMutation, ResendVerificationEmailSchema } from "./register/resendVerificationEmailMutation";
 
-const { publicQuery,  protectedQuery,  publicMutation } = procedures;
+const { publicQuery, protectedQuery, publicMutation } = procedures;
 
 export const authRouter = router({
   signUp: publicMutation
@@ -24,6 +25,10 @@ export const authRouter = router({
     .query(({ input: { token }, ctx }) => {
       return verifyAccountQuery({ ctx, token });
     }),
+
+  resendVerificationEmail: publicMutation
+    .input(ResendVerificationEmailSchema)
+    .mutation(resendVerificationEmailMutation),
 
   logout: publicMutation  
     .mutation(logoutUserMutation),

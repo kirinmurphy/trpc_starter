@@ -15,9 +15,8 @@ export async function initVerifyAccountFlow (props: InitVerifyAccountFlowProps):
 
   await pool.query(
     SQL_CREATE_VERIFICATION_TOKEN,
-    [verificationToken, userId]
+    [verificationToken, userId, email]
   );
 
-  console.log('SENDING EMAIL!!!');
   sendVerificationEmail({ to: email, verificationToken });
 }

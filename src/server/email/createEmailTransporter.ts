@@ -10,6 +10,7 @@ interface EmailConfigProps {
   }
 }
 
+// TODO: turn these all into env vars
 const emailConfig: Record<string, EmailConfigProps> = {
   production: {
     host: 'smtp.postmarkapp.com',
