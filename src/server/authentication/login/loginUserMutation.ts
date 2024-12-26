@@ -37,13 +37,21 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
     }
 
     if ( !member.verified ) {
-      return { success: false, message: 'account_not_verified' };      
+      return { 
+        success: false, 
+        userId: member.userId,
+        message: 'account_not_verified' 
+      };      
     }
     
     setAccessTokenCookie({ res, userId: member.id });
     setRefreshTokenCookie({ res, userId: member.id });
 
-    return { success: true, message: "Logged in successfully" };
+    return { 
+      success: true, 
+      userId: member.userId, 
+      message: "login_success" 
+    };
 
   } catch (err: unknown) {
     console.log('err', err);

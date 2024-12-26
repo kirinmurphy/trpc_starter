@@ -1,15 +1,25 @@
 import { useState } from "react";
 import { trpcService } from "../../../trpcService/trpcClientService";
+import { Button } from "../../../components/Button";
 
-export function ResendVerificationEmail (props: { userId: string; }) {
-  const { userId } = props;
+export type ResendEmailViewType = 'confirmedExpired' | 'default'; 
+
+const userPromptCopy: Record<ResendEmailViewType, string>  = {
+  confirmedExpired: "Your verification code has expired.  Click here to request another verification email.",
+  default: "Your account is not yet verified.  Please check your email or request another verification email message."
+};
+
+interface ResendVerificationEmailProps {
+  userId: string;
+  viewType?: ResendEmailViewType;
+}
+
+export function ResendVerificationEmail (props: ResendVerificationEmailProps) {
+  const { userId, viewType } = props;
   const [emailWasSent, setEmailWasSent] = useState<boolean>(false);
 
   const resendEmailMutation = trpcService.auth.resendVerificationEmail.useMutation({
-    onSuccess: async data => {
-      setEmailWasSent(true);
-      console.log('resendEmailMutationData', data);
-    }
+    onSuccess: async () => { setEmailWasSent(true); }
   });
 
   const handleResendEmail = async () => {
@@ -21,18 +31,19 @@ export function ResendVerificationEmail (props: { userId: string; }) {
   }
 
   return (
-    <>
+    <div className="text-center">
       {!emailWasSent && (
         <>
-          <div>Your verification code has expired. Click here to send another email.</div>
-          <div>{userId}</div>
-          <button onClick={handleResendEmail}>Resend email</button>
+          <p>{userPromptCopy[viewType || 'default']}</p>
+          <div>
+            <Button onClick={handleResendEmail}>Resend email</Button>
+          </div>
         </>
       )}
 
       {emailWasSent && (
         <div>Check your email.</div>
       )}
-    </>
+    </div>
   );
 }

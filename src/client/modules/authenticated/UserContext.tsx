@@ -6,7 +6,7 @@ interface UserContextProps {
   verified: boolean;
 }
 
-export const UserContext = createContext<UserContextProps | null>({ 
+export const UserContext = createContext<UserContextProps>({ 
   email: null, 
   name: null, 
   verified: false 

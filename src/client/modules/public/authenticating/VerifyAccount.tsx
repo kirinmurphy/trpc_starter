@@ -43,10 +43,13 @@ export function VerifyAccount () {
   }
 
   if ( userId && tokenExpired ) {
-    return <ResendVerificationEmail userId={userId} /> 
+    return <ResendVerificationEmail 
+      userId={userId} 
+      viewType="confirmedExpired" 
+    />;
   }
 
   return (
-    <>Success! Redirecting...</>
+    <>Account verified! Redirecting...</>
   );
 }

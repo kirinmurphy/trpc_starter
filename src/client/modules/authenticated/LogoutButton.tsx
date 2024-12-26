@@ -2,6 +2,7 @@ import { clearAuthQueries } from "../../trpcService/invalidateQueries";
 import { trpcService } from "../../trpcService/trpcClientService"
 import { ROUTE_URLS } from "../../routing/routeUrls";
 import { csrfStore } from "../../trpcService/createHttpLink";
+import { Button } from "../../components/Button";
 
 export function LogoutButton () {
   const logoutMutation = trpcService.auth.logout.useMutation({
@@ -23,6 +24,6 @@ export function LogoutButton () {
   };
 
   return (
-    <button onClick={handleLogout}>Logout</button>            
+    <Button onClick={handleLogout}>Logout</Button>            
   );
 }
