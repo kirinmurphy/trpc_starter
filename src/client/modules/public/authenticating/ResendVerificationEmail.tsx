@@ -43,7 +43,7 @@ export function ResendVerificationEmail (props: ResendVerificationEmailProps) {
           <p className="text-xl">{messages[0]}</p>
           <p>{messages[1]}</p>
           <div className="pt-4 flex justify-center">
-            <Button onClick={handleResendEmail}>Resend email</Button>
+            <Button onClick={handleResendEmail}>Resend verification email</Button>
           </div>
         </div>
       )}

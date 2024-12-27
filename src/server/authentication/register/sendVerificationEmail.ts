@@ -33,5 +33,5 @@ function getVerificationUrl ({ verificationToken }: { verificationToken: string 
   const port = process.env.VITE_PORT || '5173';
   const protocol = process.env.API_PROTOCOL || 'http'
 
-  return `${protocol}://localhost:${port}/${route}?token=${verificationToken}`;
+  return `${protocol}://localhost:${port}${route}?token=${verificationToken}`;
 }

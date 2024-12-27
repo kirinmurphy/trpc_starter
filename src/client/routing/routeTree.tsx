@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { createRootRoute, createRoute } from '@tanstack/react-router'
 import App from '../App'
 import { PublicApp } from '../modules/public/PublicApp';
@@ -33,6 +34,9 @@ const loginPageRoute = createRoute({
   path: ROUTE_URLS.login,
   beforeLoad: redirectIfAuthenticated,
   component: () => <PublicApp><LoginRedirectWrapper/></PublicApp>,
+  validateSearch: z.object({
+    notification: z.enum(['verification_failed'] as const).optional()
+  }),
 });
 
 const authenticatedHomepageRoute = createRoute({

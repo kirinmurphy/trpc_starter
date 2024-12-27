@@ -1,10 +1,18 @@
+import { useState } from 'react';
+import { useSearch } from '@tanstack/react-router';
 import { trpcService } from '../../../trpcService/trpcClientService';
 import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries';
 import { SimpleForm } from '../../../components/forms/SimpleForm';
 import { InputField } from '../../../components/forms/InputField';
 import { useFormState } from '../../../components/forms/utils/useFormState';
 import { ResendVerificationEmail } from './ResendVerificationEmail';
-import { useState } from 'react';
+import { InlineNotification } from '../../../components/InlineNotification';
+
+const loginNotifications = {
+  verification_failed: 'There was a problem verifying your account.  Login to request another verification email.'
+} as const;
+
+type LoginNotificationType = keyof typeof loginNotifications;
 
 interface LoginProps {
   onLoginSuccess?: () => void;
@@ -17,6 +25,9 @@ interface LoginFormProps {
 
 export function Login ({ onLoginSuccess }: LoginProps) {
   const [isUnverified, setIsUnverified] = useState(false);
+
+  const search = useSearch({ from: '/login' });
+  const notification = search.notification as LoginNotificationType;
 
   const { 
     formData: { email, password },
@@ -43,25 +54,30 @@ export function Login ({ onLoginSuccess }: LoginProps) {
   return (
     <>
       {!isUnverified && (
-        <SimpleForm 
-          onSubmit={onSubmit}
-          isLoading={isLoading}
-          error={error}
-          title="Login">
+        <>         
 
-          <InputField 
-            name="email" 
-            value={email}
-            label="Email" 
-            onChange={handleFieldChange('email')}
-          />
-          <InputField 
-            name="password" 
-            value={password}
-            label="Password" 
-            onChange={handleFieldChange('password')}
-          />
-        </SimpleForm>
+          <SimpleForm 
+            onSubmit={onSubmit}
+            isLoading={isLoading}
+            error={error}
+            title="Login">
+
+            <InlineNotification message={loginNotifications[notification]} />
+  
+            <InputField 
+              name="email" 
+              value={email}
+              label="Email" 
+              onChange={handleFieldChange('email')}
+            />
+            <InputField 
+              name="password" 
+              value={password}
+              label="Password" 
+              onChange={handleFieldChange('password')}
+            />
+          </SimpleForm>        
+        </>
       )}
 
       {data && isUnverified && (

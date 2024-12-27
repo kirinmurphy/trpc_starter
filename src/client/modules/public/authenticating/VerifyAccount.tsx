@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { trpcService } from "../../../trpcService/trpcClientService";
 import { ROUTE_URLS } from "../../../routing/routeUrls";
 import { ResendVerificationEmail } from "./ResendVerificationEmail";
+
+const loginRedirectConfig = {
+  to: ROUTE_URLS.login,   
+  search: { notification: 'verification_failed' }
+};
 
 export function VerifyAccount () {
   const router = useRouter();
@@ -10,16 +15,20 @@ export function VerifyAccount () {
   const navigate = useNavigate();
   const [tokenExpired, setTokenExpired] = useState<boolean>(false);
 
-  if ( !token ) {
-    navigate({ to: ROUTE_URLS.login });
-  }
+  useEffect(() => {
+    if ( !token ) { navigate(loginRedirectConfig); }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const { data, isLoading } = trpcService.auth.verifyAccount.useQuery({ token }, {
     retry: false,
     enabled: Boolean(token),
     onSuccess: (data) => {
+      
       if ( data?.success ) {
         navigate({ to: ROUTE_URLS.authenticatedHomepage })
+      } else {
+        navigate(loginRedirectConfig);
       }
 
       if ( data?.error ) {
@@ -28,15 +37,12 @@ export function VerifyAccount () {
           setTokenExpired(true);
         }
       }
-
-      console.log('DATAAAAA', data);
-      if ( data && !data?.userId ) {
-        navigate({ to: ROUTE_URLS.login });
-      }
     }
   })
 
   const userId = data?.userId?.toString();
+
+  
   
   if ( isLoading ) {
     return <>Verifying...</>;
