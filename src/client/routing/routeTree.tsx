@@ -2,14 +2,13 @@ import { createRootRoute, createRoute } from '@tanstack/react-router'
 import App from '../App'
 import { PublicApp } from '../modules/public/PublicApp';
 import { PublicHomepage } from '../modules/public/PublicHomepage';
+import { VerifyAccount } from '../modules/public/authenticating/VerifyAccount';
 import { AuthenticatedApp } from '../modules/authenticated/AuthenticatedApp';
 import { AuthenticatedHomepage } from '../modules/authenticated/AuthenticatedHomepage';
-import { VerifyAccountInstructions } from '../modules/public/authenticating/VerifyAccountInstructions';
 import { ROUTE_URLS } from './routeUrls';
 import { redirectIfAuthenticated, redirectIfNotAuthenticated } from './authenticationRedirects';
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';
-import { SignUpRedirectWrapper } from './SignUpRedirectWrapper';
-import { VerifyAccount } from '../modules/public/authenticating/VerifyAccount';
+import { SignUp } from '../modules/public/authenticating/SignUp';
 
 const rootRoute = createRootRoute({
   component: App,
@@ -26,7 +25,7 @@ const signUpPageRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.signUp,
   beforeLoad: redirectIfAuthenticated,
-  component: () => <PublicApp><SignUpRedirectWrapper/></PublicApp>,
+  component: () => <PublicApp><SignUp/></PublicApp>,
 });
 
 const loginPageRoute = createRoute({
@@ -43,13 +42,6 @@ const authenticatedHomepageRoute = createRoute({
   component: () => <AuthenticatedApp><AuthenticatedHomepage/></AuthenticatedApp>,
 });
 
-const verifyAccountInstructionsRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: ROUTE_URLS.verifyAccountInstructions,
-  beforeLoad: redirectIfAuthenticated, 
-  component: () => <PublicApp><VerifyAccountInstructions/></PublicApp>
-});
-
 const verifyAccountRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.verifyAccount,
@@ -62,6 +54,5 @@ export const routeTree = rootRoute.addChildren([
   loginPageRoute,
   signUpPageRoute,
   authenticatedHomepageRoute,
-  verifyAccountInstructionsRoute,
   verifyAccountRoute
 ]);  

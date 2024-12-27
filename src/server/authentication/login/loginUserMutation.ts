@@ -26,6 +26,7 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
     
     const result = await pool.query(SQL_GET_MEMBER_BY_EMAIL, [email]);
     const member = result.rows[0];
+    const userId = member.id.toString();
     
     if (!member) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
@@ -39,7 +40,7 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
     if ( !member.verified ) {
       return { 
         success: false, 
-        userId: member.userId,
+        userId,
         message: 'account_not_verified' 
       };      
     }
@@ -49,7 +50,7 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
 
     return { 
       success: true, 
-      userId: member.userId, 
+      userId, 
       message: "login_success" 
     };
 

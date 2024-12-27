@@ -5,7 +5,6 @@ import { InputField } from '../../../components/forms/InputField';
 import { useFormState } from '../../../components/forms/utils/useFormState';
 import { ResendVerificationEmail } from './ResendVerificationEmail';
 import { useState } from 'react';
-import { Button } from '../../../components/Button';
 
 interface LoginProps {
   onLoginSuccess?: () => void;
@@ -67,10 +66,10 @@ export function Login ({ onLoginSuccess }: LoginProps) {
 
       {data && isUnverified && (
         <>
-          <ResendVerificationEmail userId={data.userId} />
-          <div className="pt-8">
-            <Button onClick={() => { setIsUnverified(false); }}>Login Again</Button>
-          </div>
+          <ResendVerificationEmail 
+            userId={data.userId} 
+            loginRedirectOverride={() => { setIsUnverified(false); }} 
+          />
         </>
       )}
     </>

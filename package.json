@@ -26,6 +26,7 @@
     "@trpc/react-query": "10.45.1",
     "@trpc/server": "10.45.1",
     "bcrypt": "^5.1.1",
+    "clsx": "^2.1.1",
     "cookie": "^1.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

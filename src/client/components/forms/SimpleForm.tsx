@@ -27,7 +27,7 @@ export function SimpleForm (props: AuthFormProps) {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 rounded-lg shadow-xl">
+    <div className="max-w-md mx-auto mt-8 p-6">
       <h2 className="text-2xl font-bold mb-6">{title}</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {children}
