@@ -23,26 +23,23 @@ export function VerifyAccount () {
   const { data, isLoading } = trpcService.auth.verifyAccount.useQuery({ token }, {
     retry: false,
     enabled: Boolean(token),
-    onSuccess: (data) => {
-      
+    onSuccess: (data) => {      
       if ( data?.success ) {
         navigate({ to: ROUTE_URLS.authenticatedHomepage })
-      } else {
-        navigate(loginRedirectConfig);
       }
-
+      
       if ( data?.error ) {
         console.log('Data errr', data.error);
         if ( data?.error === 'account_verification_token_expired' ) {
           setTokenExpired(true);
+        } else {
+          navigate(loginRedirectConfig);
         }
       }
     }
   })
 
   const userId = data?.userId?.toString();
-
-  
   
   if ( isLoading ) {
     return <>Verifying...</>;

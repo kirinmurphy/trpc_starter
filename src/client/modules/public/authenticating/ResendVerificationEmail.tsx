@@ -2,12 +2,13 @@ import { useState } from "react";
 import { trpcService } from "../../../trpcService/trpcClientService";
 import { Button } from "../../../components/Button";
 import { VerifyAccountInstructions } from "./VerifyAccountInstructions";
+import { LoginRedirectLink } from "./LoginRedirectLink";
 
 export type ResendEmailViewType = 'confirmedExpired' | 'default'; 
 
 const userPromptCopy: Record<ResendEmailViewType, [string, string]>  = {
-  confirmedExpired: ["Your verification code has expired.",  "Click here to request another verification email."],
-  default: ["Your account is not yet verified.", "Check your email or request another verification message."]
+  confirmedExpired: ["Your verification code has expired.",  "Click here to request another verification link."],
+  default: ["Your account is not yet verified.", "Check your email or request another verification link."]
 };
 
 interface ResendVerificationEmailProps {
@@ -45,6 +46,12 @@ export function ResendVerificationEmail (props: ResendVerificationEmailProps) {
           <div className="pt-4 flex justify-center">
             <Button onClick={handleResendEmail}>Resend verification email</Button>
           </div>
+          <div className="max-w-[350px] mx-auto pt-10 pb-6">
+            <hr></hr>
+          </div>
+          <p className="max-w-[350px] mx-auto text-sm"> 
+            Return to <LoginRedirectLink loginRedirectOverride={loginRedirectOverride} /> form.
+          </p>
         </div>
       )}
 

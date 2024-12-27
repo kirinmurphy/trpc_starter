@@ -1,18 +1,10 @@
-import { useNavigate } from "@tanstack/react-router";
-import { Button } from "../../../components/Button";
-import { ROUTE_URLS } from "../../../routing/routeUrls";
+import { LoginRedirectLink } from "./LoginRedirectLink";
 
 interface Props {
   loginRedirectOverride?: () => void;
 }
 
 export function VerifyAccountInstructions ({ loginRedirectOverride }: Props) {
-  const navigate = useNavigate();
-
-  const handleLoginRedirect = () => {
-    if ( loginRedirectOverride ) { loginRedirectOverride(); }
-    else { navigate({ to: ROUTE_URLS.login }); }
-  };
 
   return (
     <div className="max-w-[600px] mx-auto text-center py-[4vw]">
@@ -23,7 +15,7 @@ export function VerifyAccountInstructions ({ loginRedirectOverride }: Props) {
       </div>
 
       <p className="max-w-[350px] mx-auto text-sm">If you are unable to access the verification email, please 
-        {' '}<Button type="inline" onClick={handleLoginRedirect}>login</Button>{' '}
+        {' '}<LoginRedirectLink loginRedirectOverride={loginRedirectOverride} />{' '}
         again to request a new one.
       </p>
     </div>

@@ -31,12 +31,14 @@ export function AuthenticatedApp ({ children }: AuthenticatedAppProps) {
         
         <div className="flex flex-col items-end">
           <div>{user.email}</div>
-          <LogoutButton />        
+          <LogoutButton />
         </div>
       </header>
 
       <UserContext.Provider value={user}>
-        {children}
+        <main>
+          {children}
+        </main>
       </UserContext.Provider>
     </>
   ); 

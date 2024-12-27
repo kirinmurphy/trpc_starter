@@ -3,7 +3,7 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-a {
+main a {
   text-decoration: underline;
 }
 

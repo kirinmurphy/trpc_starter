@@ -50,7 +50,7 @@ const verifyAccountRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.verifyAccount,
   beforeLoad: redirectIfAuthenticated, 
-  component: VerifyAccount
+  component: () => <PublicApp><VerifyAccount/></PublicApp>,
 });
 
 export const routeTree = rootRoute.addChildren([
