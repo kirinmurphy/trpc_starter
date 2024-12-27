@@ -27,7 +27,7 @@ const VerifyAccountReturnSchema = z.object({
 type VerifyAccountQueryReturnProps = z.infer<typeof VerifyAccountReturnSchema>;
 
 
-export async function verifyAccountQuery (
+export async function verifyAccountMutation (
   props: VerifyAccountProps
 ): Promise<VerifyAccountQueryReturnProps> {
 
@@ -46,8 +46,8 @@ export async function verifyAccountQuery (
 
     const { user_id: userId, expires_at: expiresAt } = tokenDetails;
 
-    if (  expiresAt !== undefined ) {
-    // if ( new Date(expiresAt) < new Date() ) {
+    // if (  expiresAt !== undefined ) {
+    if ( new Date(expiresAt) < new Date() ) {
       return { success: false, userId, error: 'account_verification_token_expired' };
     }
 

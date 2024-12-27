@@ -15,14 +15,7 @@ export function VerifyAccount () {
   const navigate = useNavigate();
   const [tokenExpired, setTokenExpired] = useState<boolean>(false);
 
-  useEffect(() => {
-    if ( !token ) { navigate(loginRedirectConfig); }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
-
-  const { data, isLoading } = trpcService.auth.verifyAccount.useQuery({ token }, {
-    retry: false,
-    enabled: Boolean(token),
+  const { mutate, data, isLoading } = trpcService.auth.verifyAccount.useMutation({
     onSuccess: (data) => {      
       if ( data?.success ) {
         navigate({ to: ROUTE_URLS.authenticatedHomepage })
@@ -36,8 +29,18 @@ export function VerifyAccount () {
           navigate(loginRedirectConfig);
         }
       }
+    },
+    onError: (err) => {
+      console.error('Verification error', err);
+      navigate(loginRedirectConfig);
     }
   })
+
+  useEffect(() => {
+    if ( !token ) { navigate(loginRedirectConfig); return; }
+    mutate({ token });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const userId = data?.userId?.toString();
   
