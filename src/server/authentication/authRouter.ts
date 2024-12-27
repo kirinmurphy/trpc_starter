@@ -22,9 +22,7 @@ export const authRouter = router({
 
   verifyAccount: publicMutation
     .input(z.object({ token: z.string() }))
-    .mutation(({ input: { token }, ctx }) => {
-      return verifyAccountMutation({ ctx, token });
-    }),
+    .mutation(verifyAccountMutation),
 
   resendVerificationEmail: publicMutation
     .input(ResendVerificationEmailSchema)

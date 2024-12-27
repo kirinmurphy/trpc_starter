@@ -1,5 +1,7 @@
 import { createEmailTransporter } from "./createEmailTransporter";
 
+const defaultFrom = '"codethings.net" <noreply@codethings.net>';
+
 interface EmailOptions {
   to: string;
   subject: string;
@@ -8,21 +10,18 @@ interface EmailOptions {
 }
 
 export async function sendEmail (options: EmailOptions) {
+  const { from = defaultFrom, subject } = options;
   const transporter = createEmailTransporter();
-  const defaultFrom = '"codethings.net" <noreply@codethings.net>';
 
   try {
     const info = await transporter.sendMail({
-      ...options,
-      from: options.from || defaultFrom,
-      subject: 'JAMOFERAPP',
+      ...options, from, subject,
     });
 
     if ( process.env.NODE_ENV !== 'production' ) {
       console.log('Email sent: ', info.messageId);
     }
 
-    
     return info;
   } catch (error) {
     console.error("Error sending email: ", error);

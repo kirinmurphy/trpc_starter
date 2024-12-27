@@ -31,15 +31,17 @@ export function SimpleForm (props: AuthFormProps) {
       <h2 className="text-2xl font-bold mb-6">{title}</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {children}
-        <button 
-          type="submit" 
-          className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Submitting...' : (title || 'Submit')}
-        </button>
+        <div className="pt-8">
+          <button 
+            type="submit" 
+            className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Submitting...' : (title || 'Submit')}
+          </button>
+        </div>
       </form>
-      {errorMessage && <p className="mt-4 text-red-600">{errorMessage}</p>}
+      {errorMessage && <p className="mt-4 text-red-400">{errorMessage}</p>}
     </div>
   );  
 }

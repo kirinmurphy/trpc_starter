@@ -4,27 +4,23 @@ import { Button } from "../../../components/Button";
 import { VerifyAccountInstructions } from "./VerifyAccountInstructions";
 import { LoginRedirectLink } from "./LoginRedirectLink";
 
-export type ResendEmailViewType = 'confirmedExpired' | 'default'; 
-
-const userPromptCopy: Record<ResendEmailViewType, [string, string]>  = {
+const userPromptCopy = {
   confirmedExpired: ["Your verification code has expired.",  "Click here to request another verification link."],
   default: ["Your account is not yet verified.", "Check your email or request another verification link."]
 };
 
 interface ResendVerificationEmailProps {
   userId: string;
-  viewType?: ResendEmailViewType;
+  viewType?: keyof typeof userPromptCopy;
   loginRedirectOverride?: () => void;
 }
 
 export function ResendVerificationEmail (props: ResendVerificationEmailProps) {
   const { userId, viewType, loginRedirectOverride } = props;
-  const [emailWasSent, setEmailWasSent] = useState<boolean>(false);
-
-  console.log('userId', userId);
+  const [requestSubmitted, setRequestSubmitted] = useState<boolean>(false);
   
   const resendEmailMutation = trpcService.auth.resendVerificationEmail.useMutation({
-    onSuccess: async () => { setEmailWasSent(true); }
+    onSuccess: async () => { setRequestSubmitted(true); }
   });
 
   const handleResendEmail = async () => {
@@ -39,7 +35,7 @@ export function ResendVerificationEmail (props: ResendVerificationEmailProps) {
 
   return (
     <div className="text-center">
-      {!emailWasSent && (
+      {!requestSubmitted && (
         <div className="max-w-[600px] mx-auto py-[4vw]">
           <p className="text-xl">{messages[0]}</p>
           <p>{messages[1]}</p>
@@ -55,7 +51,7 @@ export function ResendVerificationEmail (props: ResendVerificationEmailProps) {
         </div>
       )}
 
-      {emailWasSent && (
+      {requestSubmitted && (
         <VerifyAccountInstructions 
           loginRedirectOverride={loginRedirectOverride}  
         />

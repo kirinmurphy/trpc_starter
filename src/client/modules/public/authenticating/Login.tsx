@@ -5,8 +5,8 @@ import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries
 import { SimpleForm } from '../../../components/forms/SimpleForm';
 import { InputField } from '../../../components/forms/InputField';
 import { useFormState } from '../../../components/forms/utils/useFormState';
-import { ResendVerificationEmail } from './ResendVerificationEmail';
 import { InlineNotification } from '../../../components/InlineNotification';
+import { ResendVerificationEmail } from './ResendVerificationEmail';
 
 const loginNotifications = {
   verification_failed: 'There was a problem verifying your account.  Login to request another verification email.'
@@ -34,7 +34,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
     handleFieldChange 
   } = useFormState<LoginFormProps>({ email: '', password: '' });
 
-  const {mutate, data, isLoading, error } = trpcService.auth.login.useMutation({
+  const { mutate, data, isLoading, error } = trpcService.auth.login.useMutation({
     onSuccess: async (data) => {
       if ( data?.success ) {
         await invalidateAuthCheckQuery();

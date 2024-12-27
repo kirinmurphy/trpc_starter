@@ -12,7 +12,9 @@ import { VerificationTokenSchema } from "./types";
 
 const VerifyAccountPropsSchema = z.object({
   ctx: z.custom<ContextType>(),
-  token: z.string()
+  input: z.object({
+    token: z.string()
+  })
 });
 
 type VerifyAccountProps = z.infer<typeof VerifyAccountPropsSchema>;
@@ -24,15 +26,15 @@ const VerifyAccountReturnSchema = z.object({
   error: z.string().optional(),
 });
 
-type VerifyAccountQueryReturnProps = z.infer<typeof VerifyAccountReturnSchema>;
+type VerifyAccountReturnProps = z.infer<typeof VerifyAccountReturnSchema>;
 
 
 export async function verifyAccountMutation (
   props: VerifyAccountProps
-): Promise<VerifyAccountQueryReturnProps> {
+): Promise<VerifyAccountReturnProps> {
 
   const validatedProps = VerifyAccountPropsSchema.parse(props);
-  const { ctx: { res }, token } = validatedProps;
+  const { ctx: { res }, input: { token } } = validatedProps;
 
   const client = await pool.connect();
 

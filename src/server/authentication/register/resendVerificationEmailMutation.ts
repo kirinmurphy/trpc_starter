@@ -1,16 +1,13 @@
 import { z } from "zod";
-import { escapeHTML } from "../../utils/escapeHtml";
-import { ContextType } from "../types";
-import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
 import { pool } from "../../db/pool";
 import { SQL_DELETE_VERIFICATION_TOKEN, SQL_GET_MEMBER_EMAIL, SQL_GET_VERIFICATION_TOKEN_BY_USERID } from "../../db/sql";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
+import { ContextType } from "../types";
+import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
 import { MemberEmailSchema, VerificationTokenMinimalSchema } from "./types";
 
 export const ResendVerificationEmailSchema = z.object({
-  userId: z.string()
-    // TODO: do i need this? 
-    .transform(html => escapeHTML(html))
+  userId: z.string().regex(/^\d+$/)
 });
 
 type ResendVerificationEmailInput = z.infer<typeof ResendVerificationEmailSchema>;
@@ -40,6 +37,11 @@ export async function resendVerificationEmailMutation (props: ResendVerification
       const { email: memberEmail } = parseDBQueryResult(result, MemberEmailSchema) || {};
       email = memberEmail;
     }
+
+    if ( !email ) {
+      throw new Error('email not found');
+    }
+
     await client.query('COMMIT');
   } catch (err) {
     await client.query('ROLLBACK');
