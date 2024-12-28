@@ -31,11 +31,6 @@ async function verifyTestEnvironment () {
   }
 }
 
-module.exports = {
-  cleanupTestUsers,
-  verifyTestEnvironment  
-}
-
 function createTestPool () {
   return new Pool({
     user: process.env.DB_USER,
@@ -45,3 +40,10 @@ function createTestPool () {
     database: process.env.TEST_DB_NAME
   });
 }
+
+module.exports = {
+  createTestPool,
+  cleanupTestUsers,
+  verifyTestEnvironment  
+}
+

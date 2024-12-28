@@ -1,5 +1,6 @@
 import { createEmailTransporter } from "./createEmailTransporter";
 
+// TODO: move to config 
 const defaultFrom = '"codethings.net" <noreply@codethings.net>';
 
 interface EmailOptions {

@@ -21,11 +21,6 @@ const emailConfig: Record<string, EmailConfigProps> = {
       pass: process.env.POSTMARK_API_TOKEN!
     }
   },
-  test: {
-    host: 'localhost',
-    port: 1025,
-    secure: false,
-  },
   development: {
     host: 'mailhog',
     port: 1025,
@@ -34,6 +29,18 @@ const emailConfig: Record<string, EmailConfigProps> = {
 };
 
 export function createEmailTransporter () {
+  if ( process.env.NODE_ENV === 'test' ) {
+    return {
+      sendMail: async () => { 
+        return { 
+          messageId: 'mock-email-id',
+        }
+      },
+      close: () => {}
+    }
+  } 
+  
   const config = emailConfig[process.env.NODE_ENV || 'development'];
+
   return nodemailer.createTransport(config);
 }
