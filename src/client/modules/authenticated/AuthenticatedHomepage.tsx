@@ -7,7 +7,7 @@ export function AuthenticatedHomepage () {
   return (
     <>
       <header>
-        Welcome back, {user?.name}
+        Welcome back, {user.name}
       </header>
     </>
   )

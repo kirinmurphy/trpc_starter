@@ -1,12 +1,15 @@
+import { z } from "zod";
 
 import { router, procedures } from "../trpcRouter";
-import { loginUserMutation, loginUserSchema } from "./loginUserMutation";
-import { logoutUserMutation } from "./logoutUserMutation";
+import { loginUserMutation, loginUserSchema } from "./login/loginUserMutation";
+import { logoutUserMutation } from "./logout/logoutUserMutation";
 import { getUserQuery } from "./getUserQuery";
 import { refreshTokenMutation } from "./refreshTokenMutation";
-import { registerUserMutation, registerUserSchema } from "./registerUserMutation";
+import { registerUserMutation, registerUserSchema } from "./register/registerUserMutation";
+import { verifyAccountMutation } from "./register/verifyAccountMutation";
+import { resendVerificationEmailMutation, ResendVerificationEmailSchema } from "./register/resendVerificationEmailMutation";
 
-const { publicQuery,  protectedQuery,  publicMutation } = procedures;
+const { publicQuery, protectedQuery, publicMutation } = procedures;
 
 export const authRouter = router({
   signUp: publicMutation
@@ -16,6 +19,14 @@ export const authRouter = router({
   login: publicMutation
     .input(loginUserSchema)
     .mutation(loginUserMutation),
+
+  verifyAccount: publicMutation
+    .input(z.object({ token: z.string() }))
+    .mutation(verifyAccountMutation),
+
+  resendVerificationEmail: publicMutation
+    .input(ResendVerificationEmailSchema)
+    .mutation(resendVerificationEmailMutation),
 
   logout: publicMutation  
     .mutation(logoutUserMutation),
