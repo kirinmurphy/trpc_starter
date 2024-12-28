@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useSearch } from '@tanstack/react-router';
+import { ERR_ACCOUNT_NOT_VERIFIED, ERR_VERIFICATION_FAILED } from '../../../../utils/messageCodes';
 import { trpcService } from '../../../trpcService/trpcClientService';
 import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries';
 import { SimpleForm } from '../../../components/forms/SimpleForm';
@@ -9,7 +10,7 @@ import { InlineNotification } from '../../../components/InlineNotification';
 import { ResendVerificationEmail } from './ResendVerificationEmail';
 
 const loginNotifications = {
-  verification_failed: 'There was a problem verifying your account.  Login to request another verification email.'
+  [ERR_VERIFICATION_FAILED]: 'There was a problem verifying your account.  Login to request another verification email.'
 } as const;
 
 type LoginNotificationType = keyof typeof loginNotifications;
@@ -40,7 +41,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
         await invalidateAuthCheckQuery();
         if ( onLoginSuccess ) onLoginSuccess();
         // TODO: make message key a shared constant
-      } else if ( data?.message === 'account_not_verified' ) {
+      } else if ( data?.message === ERR_ACCOUNT_NOT_VERIFIED ) {
         handleFieldChange('password')('');
         setIsUnverified(true);
       }

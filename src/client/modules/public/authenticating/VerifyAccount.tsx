@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
+import { ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED, ERR_VERIFICATION_FAILED } from "../../../../utils/messageCodes";
 import { trpcService } from "../../../trpcService/trpcClientService";
 import { ROUTE_URLS } from "../../../routing/routeUrls";
 import { ResendVerificationEmail } from "./ResendVerificationEmail";
 
 const loginRedirectConfig = {
   to: ROUTE_URLS.login,   
-  search: { notification: 'verification_failed' }
+  search: { notification: ERR_VERIFICATION_FAILED }
 };
 
 export function VerifyAccount () {
@@ -23,7 +24,7 @@ export function VerifyAccount () {
       
       if ( data?.error ) {
         console.log('Data errr', data.error);
-        if ( data?.error === 'account_verification_token_expired' ) {
+        if ( data?.error === ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED ) {
           setTokenExpired(true);
         } else {
           navigate(loginRedirectConfig);

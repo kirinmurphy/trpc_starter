@@ -7,6 +7,7 @@ import { setAccessTokenCookie, setRefreshTokenCookie } from "../jwtActions";
 import { MutationPropsWithInput } from "../types";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { UserSchema } from "../schemas";
+import { ERR_ACCOUNT_NOT_VERIFIED, LOGIN_SUCCESS } from "../../../utils/messageCodes";
 
 export const loginUserSchema = z.object({
   email: z.string()
@@ -44,7 +45,7 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
       return { 
         success: false, 
         userId,
-        message: 'account_not_verified' 
+        message: ERR_ACCOUNT_NOT_VERIFIED 
       };      
     }
     
@@ -54,7 +55,7 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
     return { 
       success: true, 
       userId, 
-      message: "login_success" 
+      message: LOGIN_SUCCESS 
     };
 
   } catch (err: unknown) {

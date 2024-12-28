@@ -1,42 +1,40 @@
-import { z } from "zod";
+import { 
+  ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED, 
+  ERR_NO_ACCOUNT_VERIFICATION_TOKEN, 
+  ERR_VERIFICATION_FAILED
+} from "../../../utils/messageCodes";
 import { pool } from "../../db/pool";
 import { 
   SQL_DELETE_VERIFICATION_TOKEN, 
   SQL_SET_MEMBER_AS_VERIFIED, 
   SQL_VERIFY_ACCOUNT 
 } from "../../db/sql";
+import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { setAccessTokenCookie, setRefreshTokenCookie } from "../jwtActions";
 import { ContextType } from "../types";
-import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { VerificationTokenSchema } from "../schemas";
 
-const VerifyAccountPropsSchema = z.object({
-  ctx: z.custom<ContextType>(),
-  input: z.object({
-    token: z.string()
-  })
-});
+interface VerifyAccountProps {
+  ctx: ContextType;
+  input: {
+    token: string;
+  }
+}
 
-type VerifyAccountProps = z.infer<typeof VerifyAccountPropsSchema>;
-
-// TODO: consolidate types here for userId
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const VerifyAccountReturnSchema = z.object({
-  success: z.boolean(),
-  userId: z.union([z.string(), z.number()]).optional(),
-  error: z.string().optional(),
-});
-
-type VerifyAccountReturnProps = z.infer<typeof VerifyAccountReturnSchema>;
-
+interface VerifyAccountReturnProps {
+  success: boolean;
+  userId?: string | number;
+  error?: string;
+}
 
 export async function verifyAccountMutation (
   props: VerifyAccountProps
 ): Promise<VerifyAccountReturnProps> {
 
-  // TOOD: make sure all mutation/query props are parsed like this 
-  const validatedProps = VerifyAccountPropsSchema.parse(props);
-  const { ctx: { res }, input: { token } } = validatedProps;
+  const { 
+    ctx: { res }, 
+    input: { token } 
+  } = props;
 
   const client = await pool.connect();
 
@@ -45,14 +43,14 @@ export async function verifyAccountMutation (
     const tokenDetails = parseDBQueryResult(tokenResult, VerificationTokenSchema);
 
     if ( !tokenDetails ) {
-      return { success: false, error: 'no_account_verification_token' }; 
+      return { success: false, error: ERR_NO_ACCOUNT_VERIFICATION_TOKEN }; 
     }
 
     const { user_id: userId, expires_at: expiresAt } = tokenDetails;
 
     // if (  expiresAt !== undefined ) {
     if ( new Date(expiresAt) < new Date() ) {
-      return { success: false, userId, error: 'account_verification_token_expired' };
+      return { success: false, userId, error: ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED };
     }
 
     await client.query('BEGIN');
@@ -72,7 +70,7 @@ export async function verifyAccountMutation (
 
   } catch (err: unknown) {
     console.log('auth error', err);
-    return { success: false, error: 'Verification failed' };
+    return { success: false, error: ERR_VERIFICATION_FAILED };
 
   } finally {
     client.release();
