@@ -8,7 +8,7 @@ import {
 import { setAccessTokenCookie, setRefreshTokenCookie } from "../jwtActions";
 import { ContextType } from "../types";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
-import { VerificationTokenSchema } from "./types";
+import { VerificationTokenSchema } from "../schemas";
 
 const VerifyAccountPropsSchema = z.object({
   ctx: z.custom<ContextType>(),
@@ -19,6 +19,7 @@ const VerifyAccountPropsSchema = z.object({
 
 type VerifyAccountProps = z.infer<typeof VerifyAccountPropsSchema>;
 
+// TODO: consolidate types here for userId
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const VerifyAccountReturnSchema = z.object({
   success: z.boolean(),
@@ -33,6 +34,7 @@ export async function verifyAccountMutation (
   props: VerifyAccountProps
 ): Promise<VerifyAccountReturnProps> {
 
+  // TOOD: make sure all mutation/query props are parsed like this 
   const validatedProps = VerifyAccountPropsSchema.parse(props);
   const { ctx: { res }, input: { token } } = validatedProps;
 

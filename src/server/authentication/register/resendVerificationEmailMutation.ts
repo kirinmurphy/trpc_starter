@@ -4,7 +4,7 @@ import { SQL_DELETE_VERIFICATION_TOKEN, SQL_GET_MEMBER_EMAIL, SQL_GET_VERIFICATI
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { ContextType } from "../types";
 import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
-import { MemberEmailSchema, VerificationTokenMinimalSchema } from "./types";
+import { MemberEmailSchema, VerificationTokenMinimalSchema } from "../schemas";
 
 export const ResendVerificationEmailSchema = z.object({
   userId: z.string().regex(/^\d+$/)
@@ -34,8 +34,8 @@ export async function resendVerificationEmailMutation (props: ResendVerification
       await client.query(SQL_DELETE_VERIFICATION_TOKEN, [tokenDetails.token]);
     } else {
       const result = await client.query(SQL_GET_MEMBER_EMAIL, [userId]);
-      const { email: memberEmail } = parseDBQueryResult(result, MemberEmailSchema) || {};
-      email = memberEmail;
+      const parsedResult = parseDBQueryResult(result, MemberEmailSchema);
+      email = parsedResult?.email;
     }
 
     if ( !email ) {
@@ -51,6 +51,6 @@ export async function resendVerificationEmailMutation (props: ResendVerification
   if ( email ) {
     await initVerifyAccountFlow({ userId, email });
   } else {
-    throw 'Missing email';
+    throw new Error('Missing email');
   }
 }
