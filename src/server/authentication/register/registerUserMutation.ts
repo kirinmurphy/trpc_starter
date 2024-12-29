@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { z } from 'zod';
 import { escapeHTML } from "../../utils/escapeHtml";
-import { pool } from '../../db/pool';
+import { getPool } from '../../db/pool';
 import { SQL_CREATE_MEMBER } from "../../db/sql";
 import { ContextType } from "../types";
 import { createEmailSchema, createPasswordSchema, inputIsUnsafe } from "../sharedSchema";
@@ -33,7 +33,7 @@ export async function registerUserMutation (props: RegisterUserMutationProps) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    const result = await pool.query(
+    const result = await getPool().query(
       SQL_CREATE_MEMBER,
       [name, email, hashedPassword]
     );

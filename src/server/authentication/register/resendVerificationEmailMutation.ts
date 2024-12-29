@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { pool } from "../../db/pool";
+import { getPool } from "../../db/pool";
 import { SQL_DELETE_VERIFICATION_TOKEN, SQL_GET_MEMBER_EMAIL, SQL_GET_VERIFICATION_TOKEN_BY_USERID } from "../../db/sql";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { ContextType } from "../types";
@@ -19,7 +19,7 @@ interface ResendVerificationEmailMutationProps {
 
 export async function resendVerificationEmailMutation (props: ResendVerificationEmailMutationProps) {
   const { input: { userId }} = props;
-  const client = await pool.connect();
+  const client = await getPool().connect();
 
   const result = await client.query(SQL_GET_VERIFICATION_TOKEN_BY_USERID, [userId])
   const tokenDetails = parseDBQueryResult(result, VerificationTokenMinimalSchema);

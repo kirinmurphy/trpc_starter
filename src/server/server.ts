@@ -1,5 +1,5 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
-import { pool } from './db/pool';
+import { getPool } from './db/pool';
 import { procedures, router } from "./trpcRouter";
 import { authRouter } from './authentication/authRouter';
 import { createContext } from './authentication/createContext';
@@ -17,14 +17,14 @@ const server = createHTTPServer({
 });
 
 const port = parseInt(process.env.API_PORT || '3000');
-const host = process.env.API_HOST || '0.0.0.0'; 
+const host = process.env.API_HOST || '0.0.0.0';
 const protocol = process.env.API_PROTOCOL || 'http';
 
 server.listen(port, host);
 console.log(`Server running on ${protocol}://${host}:${port}`);
 
 process.on('SIGINT', () => {
-  pool.end().then(() => {
+  getPool().end().then(() => {
     console.log('Database pool has ended');
     process.exit(0);
   });

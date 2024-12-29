@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt";
 import { z } from 'zod';
 import { TRPCError } from "@trpc/server";
-import { pool } from '../../db/pool';
+import { getPool } from '../../db/pool';
 import { SQL_GET_MEMBER_BY_EMAIL } from "../../db/sql";
 import { setAccessTokenCookie, setRefreshTokenCookie } from "../jwtActions";
 import { MutationPropsWithInput } from "../types";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
-import { UserSchema } from "../schemas";
+import { LoginUserSchema } from "../schemas";
 import { ERR_ACCOUNT_NOT_VERIFIED, LOGIN_SUCCESS } from "../../../utils/messageCodes";
 
 export const loginUserSchema = z.object({
@@ -27,8 +27,8 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
   try {
     const { email, password } = input;  
     
-    const result = await pool.query(SQL_GET_MEMBER_BY_EMAIL, [email]);
-    const member = parseDBQueryResult(result, UserSchema);
+    const result = await getPool().query(SQL_GET_MEMBER_BY_EMAIL, [email]);
+    const member = parseDBQueryResult(result, LoginUserSchema);
     
     if ( !member ) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });

@@ -3,7 +3,7 @@ import {
   ERR_NO_ACCOUNT_VERIFICATION_TOKEN, 
   ERR_VERIFICATION_FAILED
 } from "../../../utils/messageCodes";
-import { pool } from "../../db/pool";
+import { getPool } from "../../db/pool";
 import { 
   SQL_DELETE_VERIFICATION_TOKEN, 
   SQL_SET_MEMBER_AS_VERIFIED, 
@@ -36,7 +36,7 @@ export async function verifyAccountMutation (
     input: { token } 
   } = props;
 
-  const client = await pool.connect();
+  const client = await getPool().connect();
 
   try {
     const tokenResult = await client.query(SQL_VERIFY_ACCOUNT, [token]);

@@ -4,12 +4,17 @@ export const UserSchema = z.object({
   id: z.union([z.string(), z.number()]),
   name: z.string(),
   email: z.string(),
-  password: z.string().optional(),
   verified: z.boolean(),
   created_at: z.union([
     z.string().datetime(),
     z.date()
-  ]).optional()
+  ])
+});
+
+export const LoginUserSchema = z.object({
+  id: z.union([z.string(), z.number()]),
+  password: z.string(),
+  verified: z.boolean(),
 });
 
 export const VerificationTokenSchema = z.object({
