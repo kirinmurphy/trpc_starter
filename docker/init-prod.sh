@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 echo "Starting production server..."
@@ -19,6 +18,9 @@ if [[ -n "$DB_HOST" ]]; then
   fi
   echo "Database is ready!"
 fi
+
+echo "Building application..."
+bun run build
 
 echo "Running database migrations..."
 bun run migrate 

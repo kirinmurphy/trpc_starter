@@ -23,9 +23,7 @@ CMD ["bun", "run", "dev"]
 FROM base AS production
 COPY package.json bun.lockb ./
 RUN --mount=type=cache,target=/root/.bun \
-    bun install && \
+    bun install --production && \
     bun add mock-aws-s3 aws-sdk nock
 COPY . .
-# TODO: this builds the devDependencies in the container
-# optimally, the devDependencies should not be included 
 CMD ["./docker/init-prod.sh"]
