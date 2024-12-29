@@ -8,7 +8,10 @@
     "server:dev": "nodemon --watch src/server -e ts,json --exec 'bun run server'",
     "test:dev": "NODE_ENV=test bun run dev & sleep 5 && bun run cypress:open",
 
-    "build": "bun build src/server/server.ts --outdir=dist/server --target=node && bun run vite build",
+    "build:server": "NODE_OPTIONS='--max-old-space-size=384' bun build src/server/server.ts --outdir=dist/server --target=node",
+    "build:client": "NODE_OPTIONS='--max-old-space-size=384' bun run vite build",
+    "build": "bun run build:server && bun run build:client",
+
     "start": "bun run server & bun run preview",
 
     "server": "bun run src/server/server.ts",

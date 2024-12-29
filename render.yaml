@@ -10,3 +10,4 @@ services:
   - type: postgres
     name: trpc-starter-postgres
     ipAllowList: []
+    plan: free
