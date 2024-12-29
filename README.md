@@ -5,20 +5,15 @@ Some general web things that are generally used for other web things.
 - JWT auth and refresh token sessions
 - native Postgres DB migration flow
 - cypress e2e harness with test DB
-- security policy w/ helmet headers/csp, csrf and cors enforcement     
+- security strategy w/ helmet headers/csp, csrf and cors enforcement     
 - Dockerized app and test CI versions
 - Tanstack client router implementation
 - Tailwind yo 
 
-### On Deck: 
-- Production build
-- nginx proxy
-
-
 ## Setup
 ### ENV Variables
 ```env 
-# commented variables are optional
+# commented variables available for overrides
 
 API_PROTOCOL=http
 API_PORT=3000
@@ -45,25 +40,29 @@ CLIENT_URL=http://localhost:5137
 
 # Running App With Docker
 
-### Application commands:
-- **make app**                    - Start the application      
-- **make build-app**              - Clean and build application container      
-- **make build-app-no-cache**     - Clear image cache, then clean and build app container      
-- **make logs-app**               - View application logs      
-- **make app-all**                - Run build, start, and logs in sequence      
+### Development commands:
+- **make app**                    - Run the application
+- **make build-app**              - Clean and build application container
+- **make build-app-no-cache**     - Clear cache, clean and build app container
+- **make logs-app**               - View application logs
+- **make app-all**                - Run build, start, and logs in sequence
 
-### Testing commands:
-- **make test**                   - Run cypress tests      
-- **make build-cypress**          - Clean and build cypress container      
-- **make build-cypress-no-cache** - Clear image cache, then clean and build cypress container      
-- **make logs-cypress**           - View cypress logs      
-- **make cypress-all**            - Clean, build, test, and logs in sequence      
+### CI / Testing commands:
+- **make test**                   - Run cypress tests
+- **make build-cypress**          - Clean and build cypress container
+- **make build-cypress-no-cache** - Clear cache, clean and build cypress container
+- **make logs-cypress**           - View cypress logs
+- **make cypress-all**            - Clean, build, test, and logs in sequence
 
-Utility commands:
-- **make clean**                  - Clean up containers and volumes
+### Production commands:
+- **make prod**                   - Start the application in production
+- **make build-prod**             - Clean and build production container
+- **make build-prod-no-cache**    - Clear cache and build production container
+- **make logs-prod**              - View production logs
+- **make prod-all**               - Run prod build, start, and logs in sequence
 
 Notes: 
-- DB Migration is run on every app start
+- DB Migration is run on every app/production  start
 
 # Running app locally (no Docker)
 ### Prerequisites

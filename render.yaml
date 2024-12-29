@@ -1,0 +1,12 @@
+services: 
+  - type: web
+    name: trpc-starter
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: ./docker/init-prod.sh
+    envVars: 
+      - key: NODE_ENV
+        value: production
+  - type: postgres
+    name: trpc-starter-postgres
+    ipAllowList: []
