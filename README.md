@@ -10,12 +10,6 @@ Some general web things that are generally used for other web things.
 - Tanstack client router implementation
 - Tailwind yo 
 
-### On Deck: 
-- Production build
-- nginx proxy
-- api rate limiting
-
-
 ## Setup
 ### ENV Variables
 ```env 

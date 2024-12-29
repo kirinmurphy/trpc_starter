@@ -3,4 +3,5 @@ export const ROUTE_URLS = {
   authenticatedHomepage: '/home',
   signUp: '/signup',
   login: '/login',
+  verifyAccount: '/verify-account'
 } as const;

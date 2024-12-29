@@ -20,10 +20,7 @@ describe("Create Account", () => {
   before(() => {
     cy.verifyTestEnvironment();
     cy.cleanupTestUsers();  // in case prior tests don't complete
-  });
-
-  beforeEach(() => {
-    cy.signUp({ demoUser: DEMO_USER });
+    cy.signUpAndVerify({ demoUser: DEMO_USER });
   });
 
   afterEach(() => {
@@ -31,12 +28,9 @@ describe("Create Account", () => {
   });
 
   describe('successful sign up', () => {
-    it('renders the authenticated homepage', () => {
+    it('renders the authenticated homepage and successfully logs out ', () => {
       cy.contains(DEMO_USER.name).should('be.visible');
       cy.contains(DEMO_USER.email).should('be.visible');
-    });
-    
-    it('redirects back to / on logout', () => {
       cy.contains('button', 'Logout').click();
       cy.location('pathname').should('eq', '/');
     });
@@ -45,12 +39,13 @@ describe("Create Account", () => {
 
 describe('Loggin in', () => {
   before(() => {
-    cy.signUp({ demoUser: DEMO_USER });    
+    cy.signUpAndVerify({ demoUser: DEMO_USER });    
     cy.contains('button', 'Logout').click();
   });
 
   beforeEach(() => {
     cy.login({ demoUser: DEMO_USER });
+    cy.url().should('include', '/home');
   });  
 
   after(() => {
@@ -88,5 +83,39 @@ describe('Loggin in', () => {
       cy.reload();
       cy.location('pathname').should('eq', '/home');
     });
+  });
+});
+
+describe("Account verification edge cases", () => {
+  afterEach(() => {
+    cy.cleanupTestUsers();
+  });
+
+  it('prompts user to resend verification email if token expired', () => {
+    cy.signUp({ demoUser: DEMO_USER });    
+    cy.wait(4000);
+    cy.getVerificationToken({ email: DEMO_USER.email }).should('exist').then(token => {
+      cy.visit(`/verify-account?token=${token}`);
+      cy.contains('Your verification code has expired.');
+      cy.contains('Click here to request another verification link.');
+      cy.contains('Resend verification email').click();
+      cy.verifyAccount({ email: DEMO_USER.email });
+    });
+  });
+
+  it('prompts user to resend verification email if logging in without verifying first', () => {
+    cy.signUp({ demoUser: DEMO_USER });    
+    cy.login({ demoUser: DEMO_USER });
+    cy.contains('Your account is not yet verified.');
+    cy.contains('Check your email or request another verification link.');
+    cy.contains('Resend verification email');
+
+  });
+
+  it('redirects user to login page with notification if attempting to verify an invalid token', () => {
+    cy.visit(`/verify-account?token=23ijook2j3FAKEFAKEk32jk3`);
+    cy.contains('Verifying...').should('be.visible');
+    cy.url().should('include', '/login');
+    cy.contains('There was a problem verifying your account. Login to request another verification email.');
   });
 });

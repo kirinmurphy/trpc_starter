@@ -1,12 +1,10 @@
+import { useState } from 'react';
 import { trpcService } from '../../../trpcService/trpcClientService';
 import { SimpleForm } from '../../../components/forms/SimpleForm';
 import { InputField } from '../../../components/forms/InputField';
 import { useFormState } from '../../../components/forms/utils/useFormState';
 import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries';
-
-interface SignUpProps {
-  onSignUpSuccess?: () => void;
-}
+import { VerifyAccountInstructions } from './VerifyAccountInstructions';
 
 interface SubmitFormDataProps {
   email: string;
@@ -14,7 +12,9 @@ interface SubmitFormDataProps {
   password: string;
 }
 
-export function SignUp ({ onSignUpSuccess }: SignUpProps) {
+export function SignUp () {
+  const [registrationComplete, setRegistrationComplete] = useState<boolean>(false);
+  
   const { 
     formData: { email, name, password }, 
     handleFieldChange 
@@ -24,7 +24,8 @@ export function SignUp ({ onSignUpSuccess }: SignUpProps) {
     onSuccess: async (data) => {
       if ( data?.success ) {
         await invalidateAuthCheckQuery();
-        if ( onSignUpSuccess ) onSignUpSuccess();
+        setRegistrationComplete(true);
+
       } 
     },
   });
@@ -42,30 +43,37 @@ export function SignUp ({ onSignUpSuccess }: SignUpProps) {
   }
 
   return (
-    <SimpleForm 
-      onSubmit={onSubmit}
-      isLoading={isLoading}
-      error={error}
-      title="Sign Up">
+    <>
+      {!registrationComplete && (
+        <SimpleForm 
+          onSubmit={onSubmit}
+          isLoading={isLoading}
+          error={error}
+          title="Sign Up">
 
-      <InputField 
-        name="name" 
-        value={name}
-        label="Name" 
-        onChange={handleFieldChange('name')}
-      />
-      <InputField 
-        name="email" 
-        value={email}
-        label="Email" 
-        onChange={handleFieldChange('email')}
-      />
-      <InputField 
-        name="password" 
-        value={password}
-        label="Password" 
-        onChange={handleFieldChange('password')}
-      />
-    </SimpleForm> 
+          <InputField 
+            name="name" 
+            value={name}
+            label="Name" 
+            onChange={handleFieldChange('name')}
+          />
+          <InputField 
+            name="email" 
+            value={email}
+            label="Email" 
+            onChange={handleFieldChange('email')}
+          />
+          <InputField 
+            name="password" 
+            value={password}
+            label="Password" 
+            onChange={handleFieldChange('password')}
+          />
+        </SimpleForm>     
+      )}
+      {registrationComplete && (
+        <VerifyAccountInstructions />
+      )}
+    </>
   );
 };

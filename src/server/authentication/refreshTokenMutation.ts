@@ -14,7 +14,7 @@ export async function refreshTokenMutation ({ ctx }: { ctx: ContextType }) {
   
   const refreshToken = getRefreshTokenCookie({ req });
 
-  if (!refreshToken ) {
+  if ( !refreshToken ) {
     return { 
       success: false,
       message: AUTH_ERROR_MESSAGES[AUTH_STATUSES.noRefreshToken]

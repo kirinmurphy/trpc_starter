@@ -1,5 +1,5 @@
-import { clearAccessTokenCookie, clearRefreshTokenCookie } from "./jwtActions";
-import { ContextType, SimpleMutationReturnType } from "./types";
+import { clearAccessTokenCookie, clearRefreshTokenCookie } from "../jwtActions";
+import { ContextType, SimpleMutationReturnType } from "../types";
 
 interface LogoutMutationType { 
   ctx: ContextType 

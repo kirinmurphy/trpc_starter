@@ -1,6 +1,10 @@
 const { defineConfig } = require('cypress');
 const { verifyTestEnvironment, cleanupTestUsers } = require('./cypress/support/db.cjs');
+const { createTestPool } = require('./cypress/support/db.cjs');
+
 require('dotenv').config();
+
+const pool = createTestPool();
 
 module.exports = defineConfig({
   e2e: {
@@ -39,6 +43,13 @@ module.exports = defineConfig({
         async verifyTestEnvironment() {
           await verifyTestEnvironment();
           return null;
+        },
+        async getVerificationToken({ email }) {
+          const result = await pool.query(
+            'SELECT token FROM verification_tokens WHERE email = $1 ORDER BY expires_at DESC LIMIT 1',
+            [email]
+          );
+          return result.rows[0]?.token || null;
         }
       });
 

@@ -15,7 +15,21 @@ Cypress.Commands.add('signUp', ({ demoUser }: AuthActionProps) => {
   cy.get('input[type="email"]').type(demoUser.email, { delay: 100 });
   cy.get('input[type="password"]').type(demoUser.password, { delay: 100 });
   cy.get('button[type="submit"]').click();
-  cy.url().should('include', '/home');
+  const msg = "We have sent a verification link to the email you provided.";
+  cy.contains(msg).should('be.visible');
+});
+
+Cypress.Commands.add('verifyAccount', ({ email }: { email: string }) => {
+  cy.getVerificationToken({ email }).should('exist').then(token => {
+    cy.visit(`/verify-account?token=${token}`);
+    cy.contains('Verifying...').should('be.visible');
+    cy.url().should('include', '/home');
+  });
+});
+
+Cypress.Commands.add('signUpAndVerify', ({ demoUser }: AuthActionProps) => {
+  cy.signUp({ demoUser });
+  cy.verifyAccount({ email: demoUser.email });
 });
 
 Cypress.Commands.add('login', ({ demoUser }: AuthActionProps) => {
@@ -24,5 +38,8 @@ Cypress.Commands.add('login', ({ demoUser }: AuthActionProps) => {
   cy.get('input[type="email"]').type(demoUser.email);
   cy.get('input[type="password"]').type(demoUser.password);
   cy.get('button[type="submit"]').click();
-  cy.url().should('include', '/home');
+});
+
+Cypress.Commands.add('getVerificationToken', ({ email }: { email: string; }) => {
+  return cy.task('getVerificationToken', { email });
 });
