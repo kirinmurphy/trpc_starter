@@ -2,12 +2,18 @@ import bcrypt from "bcrypt";
 import { z } from 'zod';
 import { escapeHTML } from "../../utils/escapeHtml";
 import { getPool } from '../../db/pool';
+import { isDuplicateDBValue } from "../../db/isPostgresError";
 import { SQL_CREATE_MEMBER } from "../../db/sql";
 import { ContextType } from "../types";
 import { createEmailSchema, createPasswordSchema, inputIsUnsafe } from "../sharedSchema";
 import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
 
-export const registerUserSchema = z.object({
+const copy = {
+  duplicateEmail: 'An account with this email already exists.',
+  registrationFailed: 'Registration failed.',
+}
+
+export const createAccountSchema = z.object({
   name: z.string()
     .min(2, 'Name must be at least 2 characters')
     .max(70, 'Name cannot exceed 70 characters')
@@ -18,14 +24,14 @@ export const registerUserSchema = z.object({
   password: createPasswordSchema
 });
 
-type RegisterInput = z.infer<typeof registerUserSchema>;
+type CreateAccountInput = z.infer<typeof createAccountSchema>;
 
-interface RegisterUserMutationProps {
-  input: RegisterInput;
+interface CreateAccountMutationProps {
+  input: CreateAccountInput;
   ctx: ContextType
 }
 
-export async function registerUserMutation (props: RegisterUserMutationProps) {
+export async function createAccountMutation (props: CreateAccountMutationProps) {
   const { 
     input: { name, email, password }
   } = props;
@@ -42,8 +48,9 @@ export async function registerUserMutation (props: RegisterUserMutationProps) {
     await initVerifyAccountFlow({ userId, email });
 
     return { success: true, userId };
-  } catch (err) {
-    console.log('auth error', err);
-    return { success: false, error: 'Registration failed' };
+  } catch (err: unknown) {
+    const isDupeError = isDuplicateDBValue({ err, property: 'members_email_key' });
+    const errMessage = isDupeError ? copy.duplicateEmail : copy.registrationFailed;
+    throw errMessage;
   }
 }
