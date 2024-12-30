@@ -1,5 +1,6 @@
 x-test-app-defaults: &test-app-defaults 
-  CLIENT_URL: "${API_PROTOCOL}://app:${VITE_PORT}"
+  INTERNAL_CLIENT_URL: "${API_PROTOCOL}://app:${VITE_PORT}"
+  CLIENT_DOMAIN: 'localhost'
   VITE_API_URL: "${API_PROTOCOL}://app:${API_PORT}"
   NODE_ENV: test
 

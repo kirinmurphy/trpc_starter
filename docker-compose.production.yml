@@ -15,7 +15,9 @@ services:
       - "4173:4173"
     environment:
       NODE_ENV: production
-      CLIENT_URL: "${API_PROTOCOL}://localhost:4173"
+      # TODO: move to env variable 
+      CLIENT_DOMAIN: "localhost"
+      INTERNAL_CLIENT_URL: "${API_PROTOCOL}://localhost:4173"
       VITE_API_URL: "${API_PROTOCOL}://localhost:${API_PORT}"
       PORT: ${API_PORT}
 

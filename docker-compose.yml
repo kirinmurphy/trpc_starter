@@ -5,9 +5,9 @@ services:
       target: development
       args:
         DOCKER_BUILDKIT: 1
-    ports:
-      - "${API_PORT}:${API_PORT}"
-      - "${VITE_PORT}:${VITE_PORT}"
+    # ports:
+    #   - "${API_PORT}:${API_PORT}"
+    #   - "${VITE_PORT}:${VITE_PORT}"
     volumes: 
       - .:/app
       - /app/node_modules
@@ -16,9 +16,15 @@ services:
       options:
         max-size: "10m"
         max-file: '3'
+    expose:
+      - "3000"
+      - "5173"
     environment:
-      CLIENT_URL: "${API_PROTOCOL}://localhost:${VITE_PORT}"
-      VITE_API_URL: "${API_PROTOCOL}://localhost:${API_PORT}"
+      # INTERNAL_CLIENT_URL: "${API_PROTOCOL}://localhost:${VITE_PORT}"
+      # VITE_API_URL: "${API_PROTOCOL}://localhost:${API_PORT}"
+      CLIENT_DOMAIN: "localhost"
+      INTERNAL_CLIENT_URL: "http://app:5173"  
+      VITE_API_URL: "http://localhost"
       VITE_HOST: ${VITE_HOST}
       API_HOST: ${API_HOST}
       NODE_ENV: development
@@ -40,8 +46,9 @@ services:
 
     healthcheck:
       test: [
-        "CMD-SHELL", 
-        "curl -f ${API_PROTOCOL}://localhost:${VITE_PORT} && curl -f '${API_PROTOCOL}://localhost:${API_PORT}/ping?batch=1&input=%7B%7D'"
+        "CMD-SHELL",
+        "curl -f http://localhost:${VITE_PORT} && curl -f 'http://localhost:${API_PORT}/ping?batch=1&input=%7B%7D'",
+        # "curl -f ${API_PROTOCOL}://localhost:${VITE_PORT} && curl -f '${API_PROTOCOL}://localhost:${API_PORT}/ping?batch=1&input=%7B%7D'"
       ]
       interval: 10s
       timeout: 5s
