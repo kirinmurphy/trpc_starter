@@ -22,16 +22,16 @@ VITE_PORT=5173
 # VITE_HOST=0.0.0.0
 
 # DB
-DB_NAME=your_db_name
-TEST_DB_NAME=your_other_test_db_name
+DB_NAME=db_for_your_app
+TEST_DB_NAME=db_for_cypress_tests
 DB_USER=your_username
 DB_PASSWORD=your_password
 # DB_HOST=localhost 
 # DB_PORT=5432
 
 # AUTH
-AUTH_TOKEN_SECRET=your_JTW_token_secret
-REFRESH_TOKEN_SECRET=your_refresh_JWT_token_secret
+AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
+REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
 # Reqiuired for non-docker local dev
 CLIENT_URL=http://localhost:5137 
