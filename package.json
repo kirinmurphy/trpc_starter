@@ -7,13 +7,10 @@
     "dev": "bun run server:dev & bun run vite",
     "server:dev": "nodemon --watch src/server -e ts,json --exec 'bun run server'",
     "test:dev": "NODE_ENV=test bun run dev & sleep 5 && bun run cypress:open",
-
     "build:server": "NODE_OPTIONS='--max-old-space-size=384' bun build src/server/server.ts --outdir=dist/server --target=node",
     "build:client": "NODE_OPTIONS='--max-old-space-size=384' bun run vite build",
     "build": "bun run build:server && bun run build:client",
-
     "start": "bun run server & bun run preview",
-
     "server": "bun run src/server/server.ts",
     "test": "NODE_ENV=test bun run server & bun run vite & sleep 5 && bun run cypress:run",
     "test:docker": "npx cypress run --config-file cypress.config.cjs --browser chrome --headless",
@@ -43,7 +40,6 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.4.0",
-    "react-youtube": "^10.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
