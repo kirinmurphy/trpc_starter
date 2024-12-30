@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ROUTE_URLS } from "../../routing/routeUrls";
-import { StyledButton } from "../../components/Button";
-import { ActiveLink } from "../../components/ActiveLink";
+import { StyledButton } from "../../widgets/Button";
+import { ActiveLink } from "../../widgets/ActiveLink";
 
 export function PublicApp ({ children }: { children: ReactNode }) {
 

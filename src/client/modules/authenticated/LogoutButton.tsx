@@ -2,7 +2,7 @@ import { clearAuthQueries } from "../../trpcService/invalidateQueries";
 import { trpcService } from "../../trpcService/trpcClientService"
 import { ROUTE_URLS } from "../../routing/routeUrls";
 import { csrfStore } from "../../trpcService/createHttpLink";
-import { Button } from "../../components/Button";
+import { Button } from "../../widgets/Button";
 
 export function LogoutButton () {
   const logoutMutation = trpcService.auth.logout.useMutation({

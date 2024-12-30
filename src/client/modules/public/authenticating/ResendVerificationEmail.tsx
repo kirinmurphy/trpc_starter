@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { trpcService } from "../../../trpcService/trpcClientService";
-import { Button } from "../../../components/Button";
+import { Button } from "../../../widgets/Button";
 import { VerifyAccountInstructions } from "./VerifyAccountInstructions";
 import { LoginRedirectLink } from "./LoginRedirectLink";
 

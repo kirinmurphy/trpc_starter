@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { Button } from "../../../components/Button";
+import { Button } from "../../../widgets/Button";
 import { ROUTE_URLS } from "../../../routing/routeUrls";
 
 interface Props {

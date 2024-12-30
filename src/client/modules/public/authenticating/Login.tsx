@@ -3,10 +3,10 @@ import { useSearch } from '@tanstack/react-router';
 import { ERR_ACCOUNT_NOT_VERIFIED, ERR_VERIFICATION_FAILED } from '../../../../utils/messageCodes';
 import { trpcService } from '../../../trpcService/trpcClientService';
 import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries';
-import { SimpleForm } from '../../../components/forms/SimpleForm';
-import { InputField } from '../../../components/forms/InputField';
-import { useFormState } from '../../../components/forms/utils/useFormState';
-import { InlineNotification } from '../../../components/InlineNotification';
+import { SimpleForm } from '../../../widgets/forms/SimpleForm';
+import { InputField } from '../../../widgets/forms/InputField';
+import { useFormState } from '../../../widgets/forms/utils/useFormState';
+import { InlineNotification } from '../../../widgets/InlineNotification';
 import { ResendVerificationEmail } from './ResendVerificationEmail';
 
 const loginNotifications = {
