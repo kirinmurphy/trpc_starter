@@ -49,7 +49,7 @@ export async function createAccountMutation (props: CreateAccountMutationProps) 
 
     return { success: true, userId };
   } catch (err: unknown) {
-    const isDupeError = isDuplicateDBValue({ err, property: 'members_email_key' });
+    const isDupeError = isDuplicateDBValue({ err, property: 'users_email_key' });
     const errMessage = isDupeError ? copy.duplicateEmail : copy.registrationFailed;
     throw errMessage;
   }
