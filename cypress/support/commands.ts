@@ -8,7 +8,7 @@ Cypress.Commands.add('verifyTestEnvironment', () => {
   cy.task('verifyTestEnvironment');
 });
 
-Cypress.Commands.add('signUp', ({ demoUser }: AuthActionProps) => {
+Cypress.Commands.add('createAccount', ({ demoUser }: AuthActionProps) => {
   cy.visit('/');
   cy.contains('a', 'SIGN UP').click();  
   cy.get('input[type="name"]').type(demoUser.name, { delay: 100 });
@@ -28,7 +28,7 @@ Cypress.Commands.add('verifyAccount', ({ email }: { email: string }) => {
 });
 
 Cypress.Commands.add('signUpAndVerify', ({ demoUser }: AuthActionProps) => {
-  cy.signUp({ demoUser });
+  cy.createAccount({ demoUser });
   cy.verifyAccount({ email: demoUser.email });
 });
 

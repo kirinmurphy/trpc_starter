@@ -92,7 +92,7 @@ describe("Account verification edge cases", () => {
   });
 
   it('prompts user to resend verification email if token expired', () => {
-    cy.signUp({ demoUser: DEMO_USER });    
+    cy.createAccount({ demoUser: DEMO_USER });    
     cy.wait(4000);
     cy.getVerificationToken({ email: DEMO_USER.email }).should('exist').then(token => {
       cy.visit(`/verify-account?token=${token}`);
@@ -104,7 +104,7 @@ describe("Account verification edge cases", () => {
   });
 
   it('prompts user to resend verification email if logging in without verifying first', () => {
-    cy.signUp({ demoUser: DEMO_USER });    
+    cy.createAccount({ demoUser: DEMO_USER });    
     cy.login({ demoUser: DEMO_USER });
     cy.contains('Your account is not yet verified.');
     cy.contains('Check your email or request another verification link.');

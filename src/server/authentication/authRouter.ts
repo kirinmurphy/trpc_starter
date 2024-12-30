@@ -12,7 +12,7 @@ import { resendVerificationEmailMutation, ResendVerificationEmailSchema } from "
 const { publicQuery, protectedQuery, publicMutation } = procedures;
 
 export const authRouter = router({
-  signUp: publicMutation
+  createAccount: publicMutation
     .input(createAccountSchema)
     .mutation(createAccountMutation),
 

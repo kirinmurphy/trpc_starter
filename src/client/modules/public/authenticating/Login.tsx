@@ -40,7 +40,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
       if ( data?.success ) {
         await invalidateAuthCheckQuery();
         if ( onLoginSuccess ) onLoginSuccess();
-        // TODO: make message key a shared constant
+
       } else if ( data?.message === ERR_ACCOUNT_NOT_VERIFIED ) {
         handleFieldChange('password')('');
         setIsUnverified(true);
@@ -62,21 +62,26 @@ export function Login ({ onLoginSuccess }: LoginProps) {
             isLoading={isLoading}
             error={error}
             title="Login">
-
-            <InlineNotification message={loginNotifications[notification]} />
-  
-            <InputField 
-              name="email" 
-              value={email}
-              label="Email" 
-              onChange={handleFieldChange('email')}
-            />
-            <InputField 
-              name="password" 
-              value={password}
-              label="Password" 
-              onChange={handleFieldChange('password')}
-            />
+              {({ fieldErrors }) => (
+                <>
+                  <InlineNotification message={loginNotifications[notification]} />
+        
+                  <InputField 
+                    name="email" 
+                    value={email}
+                    label="Email" 
+                    onChange={handleFieldChange('email')}
+                    fieldErrors={fieldErrors?.email}
+                  />
+                  <InputField 
+                    name="password" 
+                    value={password}
+                    label="Password" 
+                    onChange={handleFieldChange('password')}
+                    fieldErrors={fieldErrors?.password}
+                  />                
+                </>
+              )}
           </SimpleForm>        
         </>
       )}

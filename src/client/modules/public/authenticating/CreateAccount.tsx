@@ -20,17 +20,14 @@ export function CreateAccount () {
     handleFieldChange 
   } = useFormState<SubmitFormDataProps>({ email: '', name: '', password: '' });
 
-  const { mutate, error, isLoading } = trpcService.auth.signUp.useMutation({
+  const { mutate, error, isLoading } = trpcService.auth.createAccount.useMutation({
     onSuccess: async (data) => {
       if ( data?.success ) {
         await invalidateAuthCheckQuery();
         setAccountCreated(true);
-
       } 
     },
   });
-
-  console.log('WHOOOOOO', error);
 
   const onSubmit = () => {
     if ( !email || !password || !name ) { return; }
@@ -61,29 +58,28 @@ export function CreateAccount () {
                   value={name}
                   label="Name" 
                   onChange={handleFieldChange('name')}
-                  fieldErrors={fieldErrors && fieldErrors['name']}
+                  fieldErrors={fieldErrors?.name}
                 />
                 <InputField 
                   name="email" 
                   value={email}
                   label="Email" 
                   onChange={handleFieldChange('email')}
-                  fieldErrors={fieldErrors && fieldErrors['email']}
+                  fieldErrors={fieldErrors?.email}
                 />
                 <InputField 
                   name="password" 
                   value={password}
                   label="Password" 
                   onChange={handleFieldChange('password')}
-                  fieldErrors={fieldErrors && fieldErrors['password']}
+                  fieldErrors={fieldErrors?.password}
                 />              
               </>
             )}
         </SimpleForm>     
       )}
-      {accountCreated && (
-        <VerifyAccountInstructions />
-      )}
+
+      {accountCreated && <VerifyAccountInstructions />}
     </>
   );
 };

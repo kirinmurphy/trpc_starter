@@ -25,7 +25,7 @@ const publicHomepageRoute = createRoute({
 
 const signUpPageRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: ROUTE_URLS.signUp,
+  path: ROUTE_URLS.createAccount,
   beforeLoad: redirectIfAuthenticated,
   component: () => <PublicApp><CreateAccount/></PublicApp>,
 });

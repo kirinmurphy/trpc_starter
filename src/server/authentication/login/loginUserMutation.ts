@@ -9,6 +9,8 @@ import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { LoginUserSchema } from "../schemas";
 import { ERR_ACCOUNT_NOT_VERIFIED, LOGIN_SUCCESS } from "../../../utils/messageCodes";
 
+const errorLoginFailed: Omit<TRPCError, 'name'> = { code: 'NOT_FOUND', message: 'User not found' };
+
 export const loginUserSchema = z.object({
   email: z.string()
     .trim()
@@ -23,25 +25,20 @@ type LoginInputType = z.infer<typeof loginUserSchema>;
 
 export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<LoginInputType>) {
   const { res } = ctx;
+  const { email, password } = input;  
 
-  try {
-    const { email, password } = input;  
-    
+  try {    
     const result = await getPool().query(SQL_GET_MEMBER_BY_EMAIL, [email]);
-    const member = parseDBQueryResult(result, LoginUserSchema);
+    const user = parseDBQueryResult(result, LoginUserSchema);
     
-    if ( !member ) {
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' });
-    }
+    if ( !user ) { throw new TRPCError(errorLoginFailed); }
+    
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) { throw new TRPCError(errorLoginFailed); }
 
-    const userId = member.id.toString();
-
-    const validPassword = await bcrypt.compare(password, member.password);
-    if (!validPassword) {
-      throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid password' });
-    }
-
-    if ( !member.verified ) {
+    const userId = user.id.toString();
+    
+    if ( !user.verified ) {
       return { 
         success: false, 
         userId,
@@ -49,8 +46,8 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
       };      
     }
     
-    setAccessTokenCookie({ res, userId: member.id });
-    setRefreshTokenCookie({ res, userId: member.id });
+    setAccessTokenCookie({ res, userId });
+    setRefreshTokenCookie({ res, userId });
 
     return { 
       success: true, 
@@ -60,5 +57,13 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
 
   } catch (err: unknown) {
     console.log('err', err);
+
+    if ( err instanceof TRPCError ) { throw err; }
+
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'An unexpected error occured.',
+      cause: err
+    });
   }
 }

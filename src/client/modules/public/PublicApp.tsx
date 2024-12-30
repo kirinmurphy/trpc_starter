@@ -18,7 +18,7 @@ export function PublicApp ({ children }: { children: ReactNode }) {
             <StyledButton>LOGIN</StyledButton>
           </ActiveLink>
 
-          <ActiveLink to={ROUTE_URLS.signUp}>
+          <ActiveLink to={ROUTE_URLS.createAccount}>
             <StyledButton>SIGN UP</StyledButton>
           </ActiveLink>
         </div>
