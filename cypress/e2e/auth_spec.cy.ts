@@ -23,65 +23,86 @@ describe("Create Account", () => {
     cy.signUpAndVerify({ demoUser: DEMO_USER });
   });
 
-  afterEach(() => {
+  after(() => {
     cy.cleanupTestUsers();
   });
 
   describe('successful sign up', () => {
-    it('renders the authenticated homepage and successfully logs out ', () => {
+    it('renders the authenticated homepage and then successfully logs out ', () => {
       cy.contains(DEMO_USER.name).should('be.visible');
       cy.contains(DEMO_USER.email).should('be.visible');
       cy.contains('button', 'Logout').click();
       cy.location('pathname').should('eq', '/');
     });
   });
+
+  describe('sign up failure', () => {
+    it('throws an error if user attempts to sign up with email already used', () => {
+      cy.createAccountAttempt({ demoUser: DEMO_USER });
+      cy.contains('An account with this email already exists.').should('be.visible');            
+    });
+  });
 });
 
-describe('Loggin in', () => {
+describe('Login', () => {
   before(() => {
     cy.signUpAndVerify({ demoUser: DEMO_USER });    
     cy.contains('button', 'Logout').click();
   });
 
-  beforeEach(() => {
-    cy.login({ demoUser: DEMO_USER });
-    cy.url().should('include', '/home');
-  });  
-
   after(() => {
     cy.cleanupTestUsers();
   });
-  
-  describe('Authenticated', () => {
-    it('renders the authenticated homepage', () => {
-      cy.contains(DEMO_USER.name).should('be.visible');
-      cy.contains(DEMO_USER.email).should('be.visible');
-    });
-  
-    it('redirects users from / to /home', () => {
-      cy.visit('/');
-      cy.url().should('include', '/home');
-      cy.contains('Wilkommmen').should('not.exist');
-    });
 
-    it('redirects users from /login to /home', () => {
-      cy.visit('/login');
+  describe('login success', () => {
+    beforeEach(() => {
+      cy.login({ demoUser: DEMO_USER });
       cy.url().should('include', '/home');
-      cy.contains('Wilkommmen').should('not.exist');
+    });  
+
+    describe('Authenticated', () => {
+      it('renders the authenticated homepage', () => {
+        cy.contains(DEMO_USER.name).should('be.visible');
+        cy.contains(DEMO_USER.email).should('be.visible');
+      });
+    
+      it('redirects users from / to /home', () => {
+        cy.visit('/');
+        cy.url().should('include', '/home');
+        cy.contains('Wilkommmen').should('not.exist');
+      });
+  
+      it('redirects users from /login to /home', () => {
+        cy.visit('/login');
+        cy.url().should('include', '/home');
+        cy.contains('Wilkommmen').should('not.exist');
+      });
+    });
+    
+    describe('token expiry', () => {
+      it('redirects to / after token expired', () => {
+        cy.wait(8000);
+        cy.reload();
+        cy.location('pathname').should('eq', '/');
+      });
+      
+      it('remains at /home before token expiry', () => {
+        cy.wait(5000);
+        cy.reload();
+        cy.location('pathname').should('eq', '/home');
+      });
     });
   });
-
-  describe('token expiry', () => {
-    it('redirects to / after token expired', () => {
-      cy.wait(8000);
-      cy.reload();
-      cy.location('pathname').should('eq', '/');
+  
+  describe('login error', () => {
+    it('throws an error if user does not exist', () => {
+      cy.login({ demoUser: { email: 'fake@email.com', password: 'someFakePassword' } });
+      cy.contains('User not found').should('be.visible');            
     });
-
-    it('remains at /home before token expiry', () => {
-      cy.wait(5000);
-      cy.reload();
-      cy.location('pathname').should('eq', '/home');
+    
+    it('throws an error if password is invalid', () => {
+      cy.login({ demoUser: { ...DEMO_USER, password: 'someInvalidPassword' }});
+      cy.contains('User not found').should('be.visible');            
     });
   });
 });
@@ -92,7 +113,7 @@ describe("Account verification edge cases", () => {
   });
 
   it('prompts user to resend verification email if token expired', () => {
-    cy.signUp({ demoUser: DEMO_USER });    
+    cy.createAccount({ demoUser: DEMO_USER });    
     cy.wait(4000);
     cy.getVerificationToken({ email: DEMO_USER.email }).should('exist').then(token => {
       cy.visit(`/verify-account?token=${token}`);
@@ -104,7 +125,7 @@ describe("Account verification edge cases", () => {
   });
 
   it('prompts user to resend verification email if logging in without verifying first', () => {
-    cy.signUp({ demoUser: DEMO_USER });    
+    cy.createAccount({ demoUser: DEMO_USER });    
     cy.login({ demoUser: DEMO_USER });
     cy.contains('Your account is not yet verified.');
     cy.contains('Check your email or request another verification link.');

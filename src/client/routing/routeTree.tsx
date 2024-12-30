@@ -10,7 +10,7 @@ import { AuthenticatedHomepage } from '../modules/authenticated/AuthenticatedHom
 import { ROUTE_URLS } from './routeUrls';
 import { redirectIfAuthenticated, redirectIfNotAuthenticated } from './authenticationRedirects';
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';
-import { SignUp } from '../modules/public/authenticating/SignUp';
+import { CreateAccount } from '../modules/public/authenticating/CreateAccount';
 
 const rootRoute = createRootRoute({
   component: App,
@@ -25,9 +25,9 @@ const publicHomepageRoute = createRoute({
 
 const signUpPageRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: ROUTE_URLS.signUp,
+  path: ROUTE_URLS.createAccount,
   beforeLoad: redirectIfAuthenticated,
-  component: () => <PublicApp><SignUp/></PublicApp>,
+  component: () => <PublicApp><CreateAccount/></PublicApp>,
 });
 
 const loginPageRoute = createRoute({

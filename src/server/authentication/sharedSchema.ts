@@ -2,14 +2,14 @@ import { z } from "zod";
 import { escapeHTML } from "../utils/escapeHtml";
 
 const errorMessages = {
-  localPartMax: 'Email value before @ cannot exceed 64 characters',
-  domainPartMax: 'Email value after @ cannot exceed 255 characters',
-  unsafeEmailContent: 'Email contains potentially unsafe content',
-  invalidEmailCharacters: 'Email contains invalid characters',
-  unsafePasswordContent: 'Password contains potentially unsafe content',
-  repeatCharacters: 'Password cannot include 3 ore more consecutive characters',
+  localPartMax: 'Email value before @ cannot exceed 64 characters.',
+  domainPartMax: 'Email value after @ cannot exceed 255 characters.',
+  unsafeEmailContent: 'Email contains potentially unsafe content.',
+  invalidEmailCharacters: 'Email contains invalid characters.',
+  unsafePasswordContent: 'Password contains potentially unsafe content.',
+  repeatCharacters: 'Password cannot include 3 ore more consecutive characters.',
   insecurePassword: 'This password is not secure, please select a more secure password.',
-  passwordFormat: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+  passwordFormat: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
 }
 
 

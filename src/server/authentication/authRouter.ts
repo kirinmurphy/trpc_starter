@@ -5,16 +5,16 @@ import { loginUserMutation, loginUserSchema } from "./login/loginUserMutation";
 import { logoutUserMutation } from "./logout/logoutUserMutation";
 import { getUserQuery } from "./getUserQuery";
 import { refreshTokenMutation } from "./refreshTokenMutation";
-import { registerUserMutation, registerUserSchema } from "./register/registerUserMutation";
-import { verifyAccountMutation } from "./register/verifyAccountMutation";
-import { resendVerificationEmailMutation, ResendVerificationEmailSchema } from "./register/resendVerificationEmailMutation";
+import { createAccountMutation, createAccountSchema } from "./createAccount/createAccountMutation";
+import { verifyAccountMutation } from "./createAccount/verifyAccountMutation";
+import { resendVerificationEmailMutation, ResendVerificationEmailSchema } from "./createAccount/resendVerificationEmailMutation";
 
 const { publicQuery, protectedQuery, publicMutation } = procedures;
 
 export const authRouter = router({
-  signUp: publicMutation
-    .input(registerUserSchema)
-    .mutation(registerUserMutation),
+  createAccount: publicMutation
+    .input(createAccountSchema)
+    .mutation(createAccountMutation),
 
   login: publicMutation
     .input(loginUserSchema)
