@@ -1,5 +1,5 @@
 -- UP
-CREATE TABLE IF NOT EXISTS members (
+CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS members (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_members_email ON members(email);
+CREATE INDEX idx_users_email ON users(email);
 
 -- DOWN
-DROP TABLE IF EXISTS members;
-DROP INDEX IF EXISTS idx_members_email;
+DROP TABLE IF EXISTS users;
+DROP INDEX IF EXISTS idx_users_email;

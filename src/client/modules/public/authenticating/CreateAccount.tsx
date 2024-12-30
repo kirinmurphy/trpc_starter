@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { trpcService } from '../../../trpcService/trpcClientService';
-import { SimpleForm } from '../../../components/forms/SimpleForm';
-import { InputField } from '../../../components/forms/InputField';
-import { useFormState } from '../../../components/forms/utils/useFormState';
+import { SimpleForm } from '../../../widgets/forms/SimpleForm';
+import { InputField } from '../../../widgets/forms/InputField';
+import { useFormState } from '../../../widgets/forms/utils/useFormState';
 import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries';
 import { VerifyAccountInstructions } from './VerifyAccountInstructions';
 

@@ -6,7 +6,7 @@ async function cleanupTestUsers () {
   const client = await testPool.connect();
   try {
     await client.query(`
-      DELETE FROM members
+      DELETE FROM users
       WHERE email LIKE 'test%@%'  
     `);
   } finally {

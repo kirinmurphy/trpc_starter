@@ -50,6 +50,10 @@ describe('Login', () => {
     cy.contains('button', 'Logout').click();
   });
 
+  after(() => {
+    cy.cleanupTestUsers();
+  });
+
   describe('login success', () => {
     beforeEach(() => {
       cy.login({ demoUser: DEMO_USER });
@@ -74,14 +78,14 @@ describe('Login', () => {
         cy.contains('Wilkommmen').should('not.exist');
       });
     });
-  
+    
     describe('token expiry', () => {
       it('redirects to / after token expired', () => {
         cy.wait(8000);
         cy.reload();
         cy.location('pathname').should('eq', '/');
       });
-  
+      
       it('remains at /home before token expiry', () => {
         cy.wait(5000);
         cy.reload();
@@ -89,23 +93,18 @@ describe('Login', () => {
       });
     });
   });
-
+  
   describe('login error', () => {
     it('throws an error if user does not exist', () => {
       cy.login({ demoUser: { email: 'fake@email.com', password: 'someFakePassword' } });
       cy.contains('User not found').should('be.visible');            
     });
-
+    
     it('throws an error if password is invalid', () => {
       cy.login({ demoUser: { ...DEMO_USER, password: 'someInvalidPassword' }});
       cy.contains('User not found').should('be.visible');            
     });
   });
-
-  after(() => {
-    cy.cleanupTestUsers();
-  });
-  
 });
 
 describe("Account verification edge cases", () => {
