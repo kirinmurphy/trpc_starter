@@ -8,13 +8,17 @@ Cypress.Commands.add('verifyTestEnvironment', () => {
   cy.task('verifyTestEnvironment');
 });
 
-Cypress.Commands.add('createAccount', ({ demoUser }: AuthActionProps) => {
+Cypress.Commands.add('createAccountAttempt', ({ demoUser }: AuthActionProps) => {
   cy.visit('/');
   cy.contains('a', 'SIGN UP').click();  
   cy.get('input[type="name"]').type(demoUser.name, { delay: 100 });
   cy.get('input[type="email"]').type(demoUser.email, { delay: 100 });
   cy.get('input[type="password"]').type(demoUser.password, { delay: 100 });
   cy.get('button[type="submit"]').click();
+});
+
+Cypress.Commands.add('createAccount', ({ demoUser }: AuthActionProps) => {
+  cy.createAccountAttempt({ demoUser });
   const msg = "We have sent a verification link to the email you provided.";
   cy.contains(msg).should('be.visible');
 });

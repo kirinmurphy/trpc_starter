@@ -13,6 +13,7 @@ declare global {
     interface Chainable {
       cleanupTestUsers: () => Chainable<void>;
       verifyTestEnvironment: () => Chainable<void>;
+      createAccountAttempt: (props: AuthProps) => Chainable<void>;
       createAccount: (props: AuthProps) => Chainable<void>;
       verifyAccount: (props: { email: string }) => Chainable<void>;
       signUpAndVerify: (props: AuthProps) => Chainable<void>;
