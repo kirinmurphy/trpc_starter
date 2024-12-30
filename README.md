@@ -1,17 +1,46 @@
 # tRPC web app starter
-Some general web things that are generally used for other web things.
+App starter built in Typescript, tRPC, Node and React 
 
-- tRPC / Zod authentication api and UI shell
-- JWT auth and refresh token sessions
-- native Postgres DB migration flow
-- cypress e2e harness with test DB
-- security strategy w/ helmet headers/csp, csrf and cors enforcement     
-- Dockerized app and test CI versions
-- Tanstack client router implementation
-- Tailwind yo 
+#### Authentication
+- account creation with email verification
+- authentication (& refresh) session management 
 
-## Setup
-### ENV Variables
+#### Security
+- helmet headers/csp, csrf and cors enforcement 
+- form field input sanitization
+- rate limiting mutation endpoints     
+
+#### Infra / Devops
+- e2e test support with Cypress
+- Dockerized dev, test and production actions 
+- Email service support for dev, test and production environments
+- Postgres migration workflow 
+
+#### Client
+- Simple form library w/ tRPC integration 
+
+
+# Stack
+- Node.js 
+- Typescript
+- Bun / Vite 
+- tRPC
+- Zod
+- Postgres
+- React
+- React Query  
+- React Icons
+- Tanstack router 
+- Tailwind 
+- Docker 
+- Nginx
+- Mailhog
+- Cypress 
+- #Github Actions 
+
+
+# Setup
+## ENV Variables
 ```env 
 # commented variables available for overrides
 
@@ -32,29 +61,26 @@ DB_PASSWORD=your_password
 # AUTH
 AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
 REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
-
-# Reqiuired for non-docker local dev
-CLIENT_URL=http://localhost:5137 
 ``` 
 
 
-# Running App With Docker
+## Running App With Docker
 
-### Development commands:
+#### Development commands:
 - **make app**                    - Run the application
 - **make build-app**              - Clean and build application container
 - **make build-app-no-cache**     - Clear cache, clean and build app container
 - **make logs-app**               - View application logs
 - **make app-all**                - Run build, start, and logs in sequence
 
-### CI / Testing commands:
+#### CI / Testing commands:
 - **make test**                   - Run cypress tests
 - **make build-cypress**          - Clean and build cypress container
 - **make build-cypress-no-cache** - Clear cache, clean and build cypress container
 - **make logs-cypress**           - View cypress logs
 - **make cypress-all**            - Clean, build, test, and logs in sequence
 
-### Production commands:
+#### Production commands:
 - **make prod**                   - Start the application in production
 - **make build-prod**             - Clean and build production container
 - **make build-prod-no-cache**    - Clear cache and build production container
@@ -63,40 +89,3 @@ CLIENT_URL=http://localhost:5137
 
 Notes: 
 - DB Migration is run on every app/production  start
-
-# Running app locally (no Docker)
-### Prerequisites
-- PostgreSQL installed and running locally
-- Bun installed (https://bun.sh/docs/installation)
-
-### Install Dependencies
-```bash 
-bun install
-```
-
-### DB Setup 
-create postgres databases for DB_NAME and TEST_DB_NAME
-
-```bash
-# Create databases
-psql -U postgres
-CREATE DATABASE your_db_name;
-CREATE DATABASE your_other_test_db_name;
-\q
-
-# Run migrations
-bun run migrate:local
-```
-
-### Run App
-```bash
-bun dev
-``` 
-
-### Run Tests
-```bash
-# first terminal window
-bun dev
-# secood terminal window
-bun run test:dev
-``` 

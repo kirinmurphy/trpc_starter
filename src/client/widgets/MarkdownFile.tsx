@@ -75,10 +75,10 @@ function getMarkdownStyles() {
       prose-slate 
       prose-headings:font-bold
       prose-h1:text-2xl 
-      prose-h1:mb-8
+      prose-h1:mb-4
       prose-h2:text-xl 
-      prose-h2:mt-12 
-      prose-h2:mb-4
+      prose-h2:mt-6 
+      prose-h2:mb-2
       prose-p:leading-7 
       prose-p:mb-4
       prose-a:text-gray-200
