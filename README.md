@@ -1,25 +1,40 @@
 # tRPC web app starter
 App starter built in Typescript, tRPC, Node and React 
 
-#### Authentication
-- account creation with email verification
-- authentication (& refresh) session management 
 
-#### Security
-- helmet headers/csp, csrf and cors protections 
-- rate limited mutation endpoints
-- form input sanitization
-
-#### Infra / Devops
-- e2e test support with Cypress
-- Dockerized dev, test and production actions 
-- Email service support for dev, test and production environments
-- Postgres migration workflow 
-
-#### Client
-- Simple form library w/ tRPC integration 
-- Icon library 
-
+<table>
+  <tr>
+    <td style="vertical-align: top;">Authentication</td>
+    <td>
+      • Account creation with email verification<br>
+      • Authentication (& refresh) session management
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Security</td>
+    <td>
+      • Helmet headers/csp, csrf and cors protections<br>
+      • Rate limited mutation endpoints<br>
+      • Form input sanitization
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Infra / Devops</td>
+    <td>
+      • Cypress e2e test harness<br>
+      • Docker containers for dev, testing, and production environments<br>
+      • Email integration for dev, test and production environments<br>
+      • Postgres migration workflow
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Client</td>
+    <td>
+      • Simple form library w/ tRPC integration<br>
+      • Icon library
+    </td>
+  </tr>
+</table>
 
 # Stack
 - **Runtime**: Node.js, Bun, Vite
@@ -54,21 +69,26 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
 ## Running App With Docker
 
-#### Development commands:
-- **make app**                    - Run the application (loads at http://localhost)
+### Development commands:
+- **make app**                    - Run the application 
 - **make build-app**              - Clean and build application container
 - **make build-app-no-cache**     - Clear cache, clean and build app container
 - **make logs-app**               - View application logs
 - **make app-all**                - Run build, start, and logs in sequence
 
-#### CI / Testing commands:
+#### Dev URLs
+- website: `http://localhost`     
+- email server: `http://localhost:8025`    
+
+
+### CI / Testing commands:
 - **make test**                   - Run cypress tests
 - **make build-cypress**          - Clean and build cypress container
 - **make build-cypress-no-cache** - Clear cache, clean and build cypress container
 - **make logs-cypress**           - View cypress logs
 - **make cypress-all**            - Clean, build, test, and logs in sequence
 
-#### Production commands:
+### Production commands:
 - **make prod**                   - Start the application in production
 - **make build-prod**             - Clean and build production container
 - **make build-prod-no-cache**    - Clear cache and build production container

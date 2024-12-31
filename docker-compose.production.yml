@@ -1,3 +1,4 @@
+# NOTES: 
 # API_PROTOCOL deafults to https but can be overriden in .env to test locally 
 
 services:

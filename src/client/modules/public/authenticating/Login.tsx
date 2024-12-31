@@ -46,9 +46,6 @@ export function Login ({ onLoginSuccess }: LoginProps) {
         setIsUnverified(true);
       }
     },
-    onError: async (error) => {
-      console.log('errrrrrorrr', error);
-    }
   });
 
   const onSubmit = () => {

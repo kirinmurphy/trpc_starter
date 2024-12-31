@@ -28,7 +28,6 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
   const { email, password } = input;  
 
   try {    
-    console.log('LOGIN ATTEMPT!!!!');
     const result = await getPool().query(SQL_GET_MEMBER_BY_EMAIL, [email]);
     const user = parseDBQueryResult(result, LoginUserSchema);
     
