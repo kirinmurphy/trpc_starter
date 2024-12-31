@@ -69,6 +69,10 @@ prod-all: build-prod prod logs-prod
 
 
 ## -- UTILITIES ------- ## 
+.PHONY: reload-nginx
+reload-nginx:
+	$(DC) exec nginx nginx -s reload
+
 .PHONY: clean
 clean:
 	docker compose down -v 
@@ -103,4 +107,5 @@ help:
 
 	@echo ""
 	@echo "Utility commands:"
+	@echo "  make reload-nginx           - Update nginx config (w/o restarting)"
 	@echo "  make clean                  - Clean up containers and volumes"

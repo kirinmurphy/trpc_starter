@@ -13,6 +13,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 # DEVELOPMENT 
 FROM base AS development    
+COPY nginx/includes /etc/nginx/includes
 COPY package.json bun.lockb ./
 RUN --mount=type=cache,target=/root/.bun \
     bun install
@@ -21,6 +22,7 @@ CMD ["bun", "run", "dev"]
 
 
 FROM base as builder 
+COPY nginx/includes /etc/nginx/includes
 ENV NODE_OPTIONS="--max-old-space-size=384"
 ENV BUN_JS_HEAP_SIZE_MB=384
 
