@@ -6,9 +6,9 @@ App starter built in Typescript, tRPC, Node and React
 - authentication (& refresh) session management 
 
 #### Security
-- helmet headers/csp, csrf and cors enforcement 
-- form field input sanitization
-- rate limiting mutation endpoints     
+- helmet headers/csp, csrf and cors protections 
+- rate limited mutation endpoints
+- form input sanitization
 
 #### Infra / Devops
 - e2e test support with Cypress
@@ -18,25 +18,14 @@ App starter built in Typescript, tRPC, Node and React
 
 #### Client
 - Simple form library w/ tRPC integration 
+- Icon library 
 
 
 # Stack
-- Node.js 
-- Typescript
-- Bun / Vite 
-- tRPC
-- Zod
-- Postgres
-- React
-- React Query  
-- React Icons
-- Tanstack router 
-- Tailwind 
-- Docker 
-- Nginx
-- Mailhog
-- Cypress 
-- #Github Actions 
+- **Runtime**: Node.js, Bun, Vite
+- **Server**: tRPC, Zod, Postgres, Nginx
+- **Client**: React, React Query, Tanstack Router, Tailwind, React Icons
+- **Devops**: Docker, Cypress, Mailhog, Github Actions 
 
 
 # Setup
@@ -44,7 +33,6 @@ App starter built in Typescript, tRPC, Node and React
 ```env 
 # commented variables available for overrides
 
-API_PROTOCOL=http
 API_PORT=3000
 VITE_PORT=5173
 # API_HOST=0.0.0.0
@@ -67,7 +55,7 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 ## Running App With Docker
 
 #### Development commands:
-- **make app**                    - Run the application
+- **make app**                    - Run the application (loads at http://localhost)
 - **make build-app**              - Clean and build application container
 - **make build-app-no-cache**     - Clear cache, clean and build app container
 - **make logs-app**               - View application logs
