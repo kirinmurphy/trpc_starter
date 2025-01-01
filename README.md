@@ -75,6 +75,7 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 - **make build-app-no-cache**     - Clear cache, clean and build app container
 - **make logs-app**               - View application logs
 - **make app-all**                - Run build, start, and logs in sequence
+- **make reload-nginx**           - Update nginx config (no restart needed)
 
 #### Dev URLs
 - website: `http://localhost`     
@@ -83,10 +84,10 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
 ### CI / Testing commands:
 - **make test**                   - Run cypress tests
-- **make build-cypress**          - Clean and build cypress container
-- **make build-cypress-no-cache** - Clear cache, clean and build cypress container
-- **make logs-cypress**           - View cypress logs
-- **make cypress-all**            - Clean, build, test, and logs in sequence
+- **make build tests**          - Clean and build cypress container
+- **make build tests-no-cache** - Clear cache, clean and build cypress container
+- **make logs-tests**           - View cypress logs
+- **make tests-all**            - Clean, build, test, and logs in sequence
 
 ### Production commands:
 - **make prod**                   - Start the application in production
