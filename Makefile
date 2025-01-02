@@ -1,7 +1,7 @@
 
 DC=docker compose
 
-## -- APP ------- ## 
+## -- DEV ------- ## 
 .PHONY: app
 app:
 	$(DC) up
@@ -25,24 +25,24 @@ app-all: build-app app logs-app
 ## -- TESTING ------- ## 
 DCT=docker compose -f docker-compose.yml -f docker-compose.cypress.yml
 
-.PHONY: test
-test:
+.PHONY: tests
+tests:
 	$(DCT) up --exit-code-from cypress --abort-on-container-exit
 
-.PHONY: build-cypress
-build-cypress: clean
+.PHONY: build-tests
+build-tests: clean
 	$(DCT) build cypress
 
-.PHONY: build-cypress-no-cache
-build-cypress-no-cache: clean
+.PHONY: build-tests-no-cache
+build-tests-no-cache: clean
 	$(DCT) build cypress --no-cache
 
-.PHONY: logs-cypress
-logs-cypress:
+.PHONY: logs-tests
+logs-tests:
 	$(DCT) logs cypress
 
-.PHONY: cypress-all
-cypress-all: clean build-cypress test logs-cypress
+.PHONY: tests-all
+tests-all: clean build tests test logs-cypress
 
 
 ## -- PRODUCTION ------- ##
@@ -69,6 +69,10 @@ prod-all: build-prod prod logs-prod
 
 
 ## -- UTILITIES ------- ## 
+.PHONY: reload-nginx
+reload-nginx:
+	$(DC) exec nginx nginx -s reload
+
 .PHONY: clean
 clean:
 	docker compose down -v 
@@ -87,11 +91,11 @@ help:
 	@echo "  make app-all                - Run build, start, and logs in sequence"
 	@echo ""
 	@echo "CI / Testing commands:"
-	@echo "  make test                   - Run cypress tests"
-	@echo "  make build-cypress          - Clean and build cypress container"
-	@echo "  make build-cypress-no-cache - Clear cache and build cypress container"
-	@echo "  make logs-cypress           - View cypress logs"
-	@echo "  make cypress-all            - Clean, build, test, and logs in sequence"
+	@echo "  make tests                   - Run cypress tests"
+	@echo "  make build-tests          - Clean and build cypress container"
+	@echo "  make build-tests-no-cache - Clear cache and build cypress container"
+	@echo "  make logs-tests           - View cypress logs"
+	@echo "  make tests-all            - Clean, build, test, and logs in sequence"
 
 	@echo ""
 	@echo "Production commands:"
@@ -103,4 +107,5 @@ help:
 
 	@echo ""
 	@echo "Utility commands:"
+	@echo "  make reload-nginx           - Update nginx config (w/o restarting)"
 	@echo "  make clean                  - Clean up containers and volumes"

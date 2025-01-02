@@ -55,7 +55,7 @@ module.exports = defineConfig({
 
       return config;
     },
-    baseUrl: process.env.CLIENT_URL,
+    baseUrl: process.env.INTERNAL_CLIENT_URL,
     specPattern: 'cypress/e2e/**/*.{ts,tsx}',
     supportFile: 'cypress/support/e2e.ts',   
     defaultCommandTimeout: 10000,

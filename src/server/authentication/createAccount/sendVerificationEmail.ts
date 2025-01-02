@@ -30,8 +30,8 @@ export async function sendVerificationEmail (props: SendVerificationEmailProps) 
 
 function getVerificationUrl ({ verificationToken }: { verificationToken: string }): string {
   const route = ROUTE_URLS.verifyAccount;
-  const port = process.env.VITE_PORT || '5173';
-  const protocol = process.env.API_PROTOCOL || 'http'
+  const domain = process.env.CLIENT_DOMAIN || 'localhost';
+  const protocol = process.env.API_PROTOCOL || 'http';
 
-  return `${protocol}://localhost:${port}${route}?token=${verificationToken}`;
+  return `${protocol}://${domain}${route}?token=${verificationToken}`;
 }

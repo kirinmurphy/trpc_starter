@@ -4,7 +4,7 @@ export const runHelmet = helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      connectSrc: ["'self'", process.env.CLIENT_URL!],
+      connectSrc: ["'self'", process.env.INTERNAL_CLIENT_URL!],
       scriptSrc: ["'self'"],
       styleSrc: ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],

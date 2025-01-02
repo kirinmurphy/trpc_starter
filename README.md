@@ -1,42 +1,47 @@
 # tRPC web app starter
 App starter built in Typescript, tRPC, Node and React 
 
-#### Authentication
-- account creation with email verification
-- authentication (& refresh) session management 
 
-#### Security
-- helmet headers/csp, csrf and cors enforcement 
-- form field input sanitization
-- rate limiting mutation endpoints     
-
-#### Infra / Devops
-- e2e test support with Cypress
-- Dockerized dev, test and production actions 
-- Email service support for dev, test and production environments
-- Postgres migration workflow 
-
-#### Client
-- Simple form library w/ tRPC integration 
-
+<table>
+  <tr>
+    <td style="vertical-align: top;">Authentication</td>
+    <td>
+      • Account creation with email verification<br>
+      • Authentication (& refresh) session management
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Security</td>
+    <td>
+      • Helmet headers/csp, csrf and cors protections<br>
+      • Reverse-proxied api<br>
+      • Rate limited mutation endpoints<br>
+      • Form input sanitization
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Infra / Devops</td>
+    <td>
+      • Cypress e2e test harness<br>
+      • Docker containers for dev, testing, and production environments<br>
+      • Email integration for dev, test and production environments<br>
+      • Postgres migration workflow
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">Client</td>
+    <td>
+      • Simple form library w/ tRPC integration<br>
+      • Icon library
+    </td>
+  </tr>
+</table>
 
 # Stack
-- Node.js 
-- Typescript
-- Bun / Vite 
-- tRPC
-- Zod
-- Postgres
-- React
-- React Query  
-- React Icons
-- Tanstack router 
-- Tailwind 
-- Docker 
-- Nginx
-- Mailhog
-- Cypress 
-- #Github Actions 
+- **Runtime**: Node.js, Bun, Vite
+- **Server**: tRPC, Zod, Postgres, Nginx
+- **Client**: React, React Query, Tanstack Router, Tailwind, React Icons
+- **Devops**: Docker, Cypress, Mailhog, Github Actions 
 
 
 # Setup
@@ -44,7 +49,6 @@ App starter built in Typescript, tRPC, Node and React
 ```env 
 # commented variables available for overrides
 
-API_PROTOCOL=http
 API_PORT=3000
 VITE_PORT=5173
 # API_HOST=0.0.0.0
@@ -66,21 +70,27 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
 ## Running App With Docker
 
-#### Development commands:
-- **make app**                    - Run the application
+### Development commands:
+- **make app**                    - Run the application 
 - **make build-app**              - Clean and build application container
 - **make build-app-no-cache**     - Clear cache, clean and build app container
 - **make logs-app**               - View application logs
 - **make app-all**                - Run build, start, and logs in sequence
+- **make reload-nginx**           - Update nginx config (no restart needed)
 
-#### CI / Testing commands:
+#### Dev URLs
+- website: `http://localhost`     
+- email server: `http://localhost:8025`    
+
+
+### CI / Testing commands:
 - **make test**                   - Run cypress tests
-- **make build-cypress**          - Clean and build cypress container
-- **make build-cypress-no-cache** - Clear cache, clean and build cypress container
-- **make logs-cypress**           - View cypress logs
-- **make cypress-all**            - Clean, build, test, and logs in sequence
+- **make build tests**          - Clean and build cypress container
+- **make build tests-no-cache** - Clear cache, clean and build cypress container
+- **make logs-tests**           - View cypress logs
+- **make tests-all**            - Clean, build, test, and logs in sequence
 
-#### Production commands:
+### Production commands:
 - **make prod**                   - Start the application in production
 - **make build-prod**             - Clean and build production container
 - **make build-prod-no-cache**    - Clear cache and build production container

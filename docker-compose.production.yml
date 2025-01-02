@@ -1,3 +1,6 @@
+# NOTES: 
+# API_PROTOCOL deafults to https but can be overriden in .env to test locally 
+
 services:
   app: 
     build: 
@@ -15,8 +18,10 @@ services:
       - "4173:4173"
     environment:
       NODE_ENV: production
-      CLIENT_URL: "${API_PROTOCOL}://localhost:4173"
-      VITE_API_URL: "${API_PROTOCOL}://localhost:${API_PORT}"
+      # TODO: move to env variable 
+      CLIENT_DOMAIN: "localhost"
+      INTERNAL_CLIENT_URL: "${API_PROTOCOL:-https}://localhost:4173"
+      VITE_API_URL: "${API_PROTOCOL:-https}://localhost:${API_PORT}"
       PORT: ${API_PORT}
 
       # DB
@@ -31,7 +36,7 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL", 
-        "curl -f ${API_PROTOCOL}://localhost:${VITE_PORT} && curl -f '${API_PROTOCOL}://localhost:${API_PORT}/ping?batch=1&input=%7B%7D'"
+        "curl -f ${API_PROTOCOL:-https}://localhost:${VITE_PORT} && curl -f '${API_PROTOCOL:-https}://localhost:${API_PORT}/ping?batch=1&input=%7B%7D'"
       ]
       interval: 30s
       timeout: 10s
