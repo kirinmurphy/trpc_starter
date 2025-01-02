@@ -4,15 +4,17 @@ const DEMO_USER = {
   password: 'P@ssword-123'
 } as const; 
 
+const publicHomepageIntroText = 'tRPC web app starter';
+
 describe('Public Pages', () => {
   it('loads the public homepage', () => {
     cy.visit('/');
-    cy.contains('Wilkommmen', { timeout: 10000 }).should('be.visible');
+    cy.contains(publicHomepageIntroText, { timeout: 10000 }).should('be.visible');
   });
 
   it('redirects to / if visiting an authenticated route', () => {
     cy.visit('/home');
-    cy.contains('Wilkommmen', { timeout: 10000 }).should('be.visible');
+    cy.contains(publicHomepageIntroText, { timeout: 10000 }).should('be.visible');
   });
 });
 

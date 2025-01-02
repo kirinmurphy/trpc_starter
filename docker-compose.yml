@@ -79,6 +79,9 @@ services:
 
   nginx:
     image: nginx:alpine
+    environment:
+      AUTH_RATE: "${AUTH_RATE:-2r/m}"
+      VERIFY_RATE: "${VERIFY_RATE:-1r/m}"
     ports:
       - "80:80"
       - "443:443"
