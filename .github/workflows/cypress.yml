@@ -10,10 +10,13 @@ jobs:
 
     env: 
       API_PORT: 3000
+      POSTGRES_USER: postgres       
+      POSTGRES_PASSWORD: password1  
+      POSTGRES_DB: testdb        
       DB_NAME: testdb
       TEST_DB_NAME: testdbname
-      DB_USER: testuser
-      DB_PASSWORD: testpass
+      DB_USER: postgres
+      DB_PASSWORD: password1
       AUTH_TOKEN_SECRET: test-secret
       REFRESH_TOKEN_SECRET: test-refresh-secret
       VITE_PORT: 4173

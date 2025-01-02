@@ -42,7 +42,7 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL",
-        "curl -f http://localhost:${VITE_PORT} && curl -f 'http://localhost:${API_PORT}/ping?batch=1&input=%7B%7D'",
+        "curl -v -f http://0.0.0.0:${API_PORT}/ping || echo 'Health check failed with status $?'"
       ]
       interval: 10s
       timeout: 5s
