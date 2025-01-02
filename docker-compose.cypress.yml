@@ -10,8 +10,8 @@ services:
     environment: 
       AUTH_RATE: "1000r/m"
       VERIFY_RATE: "500r/m"
-    # logging: 
-    #   driver: "none"
+    logging: 
+      driver: "none"
     volumes: 
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/includes:/etc/nginx/includes

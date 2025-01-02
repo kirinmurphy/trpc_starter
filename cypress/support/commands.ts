@@ -27,11 +27,13 @@ Cypress.Commands.add('verifyAccount', ({ email }: { email: string }) => {
   cy.getVerificationToken({ email }).should('exist').then(token => {
     cy.visit(`/verify-account?token=${token}`);
     cy.contains('Verifying...').should('be.visible');
+    // cy.contains('Verifying...').should('not.exist');
+    // cy.contains('Account verified! Redirecting...').should('exist');
     cy.url().should('include', '/home');
   });
 });
 
-Cypress.Commands.add('signUpAndVerify', ({ demoUser }: AuthActionProps) => {
+Cypress.Commands.add('createAccountAndVerify', ({ demoUser }: AuthActionProps) => {
   cy.createAccount({ demoUser });
   cy.verifyAccount({ email: demoUser.email });
 });

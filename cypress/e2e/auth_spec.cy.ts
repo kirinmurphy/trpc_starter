@@ -22,7 +22,7 @@ describe("Create Account", () => {
   before(() => {
     cy.verifyTestEnvironment();
     cy.cleanupTestUsers();  // in case prior tests don't complete
-    cy.signUpAndVerify({ demoUser: DEMO_USER });
+    cy.createAccountAndVerify({ demoUser: DEMO_USER });
   });
 
   after(() => {
@@ -30,7 +30,11 @@ describe("Create Account", () => {
   });
 
   describe('successful sign up', () => {
+<<<<<<< Updated upstream
     it('renders the authenticated homepage and then successfully logs out ', () => {
+=======
+    it('renders the authenticated homepage and then successfully logs out ', () => {      
+>>>>>>> Stashed changes
       cy.contains(DEMO_USER.name).should('be.visible');
       cy.contains(DEMO_USER.email).should('be.visible');
       cy.contains('button', 'Logout').click();
@@ -48,7 +52,7 @@ describe("Create Account", () => {
 
 describe('Login', () => {
   before(() => {
-    cy.signUpAndVerify({ demoUser: DEMO_USER });    
+    cy.createAccountAndVerify({ demoUser: DEMO_USER });    
     cy.contains('button', 'Logout').click();
   });
 

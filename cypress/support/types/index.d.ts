@@ -16,7 +16,7 @@ declare global {
       createAccountAttempt: (props: AuthProps) => Chainable<void>;
       createAccount: (props: AuthProps) => Chainable<void>;
       verifyAccount: (props: { email: string }) => Chainable<void>;
-      signUpAndVerify: (props: AuthProps) => Chainable<void>;
+      createAccountAndVerify: (props: AuthProps) => Chainable<void>;
       getVerificationToken: (options: { email: string }) => Chainable<string | null>;
       login: (props: AuthProps) => Chainable<void>;
     }

@@ -15,6 +15,7 @@ export function AuthenticatedApp ({ children }: AuthenticatedAppProps) {
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+    // onSuccess: (data) => cy.log('[AUTH_APP] User data:', data),
     onError: (err: unknown) => {
       console.error('failed to fetch user', err);
     }

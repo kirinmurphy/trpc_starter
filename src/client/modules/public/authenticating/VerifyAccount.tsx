@@ -18,10 +18,12 @@ export function VerifyAccount () {
 
   const { mutate, data, isLoading } = trpcService.auth.verifyAccount.useMutation({
     onSuccess: (data) => {      
-      if ( data?.success ) {
+      // cy.log('[VERIFY] Success:', data, new Date().toISOString());
+      if (data?.success) {
+        // cy.log('[VERIFY] Navigating to homepage');
         navigate({ to: ROUTE_URLS.authenticatedHomepage })
       }
-      
+            
       if ( data?.error ) {
         console.log('Data errr', data.error);
         if ( data?.error === ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED ) {
