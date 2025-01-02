@@ -13,8 +13,8 @@ App starter built in Typescript, tRPC, Node and React
   <tr>
     <td style="vertical-align: top;">Security</td>
     <td>
-      • Helmet headers/csp, csrf and cors protections<br>
       • Reverse-proxied api<br>
+      • Helmet headers/csp, csrf and cors protections<br>
       • Rate limited mutation endpoints<br>
       • Form input sanitization
     </td>
@@ -22,7 +22,7 @@ App starter built in Typescript, tRPC, Node and React
   <tr>
     <td style="vertical-align: top;">Infra / Devops</td>
     <td>
-      • Cypress e2e test harness<br>
+      • e2e test framework with Github actions integration<br>
       • Docker containers for dev, testing, and production environments<br>
       • Email integration for dev, test and production environments<br>
       • Postgres migration workflow

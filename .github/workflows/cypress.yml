@@ -16,8 +16,6 @@ jobs:
       DB_PASSWORD: testpass
       AUTH_TOKEN_SECRET: test-secret
       REFRESH_TOKEN_SECRET: test-refresh-secret
-      # TODO: I think this can be removed
-      API_PROTOCOL: http
       VITE_PORT: 4173
 
     steps: 
