@@ -1,11 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { FaLink } from 'react-icons/fa';
 import Markdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import DOMPurify from 'dompurify';
 
 export interface ReadmeFileProps {
   markdownUrl: string;
   externalLink?: string;
 }
+
 
 type QueryKey = ['markdown', string];
 
@@ -39,6 +42,8 @@ export function MarkdownFile (props: ReadmeFileProps) {
     return null;
   }
  
+  const sanitizedContent = DOMPurify.sanitize(mdText);
+
   return (
     <article className={styles.wrapper}>
       {externalLink && <a 
@@ -46,7 +51,8 @@ export function MarkdownFile (props: ReadmeFileProps) {
         href={externalLink} target="_blank" rel="noreferrer">
         <FaLink className="size-6" />
       </a>}
-      <Markdown>{mdText}</Markdown>       
+
+      <Markdown rehypePlugins={[rehypeRaw]}>{sanitizedContent}</Markdown>       
     </article>
   );
 }
