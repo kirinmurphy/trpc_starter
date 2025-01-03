@@ -1,6 +1,9 @@
 name: Cypress Tests
 
 on: 
+  push: 
+    # comment
+    branches: ['main']
   pull_request:
     types: [opened, synchronize, reopened]
 
