@@ -26,7 +26,6 @@ services:
       PORT: ${API_PORT}
       # DB
       DB_NAME: ${DB_NAME}
-      TEST_DB_NAME: ${TEST_DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: db 

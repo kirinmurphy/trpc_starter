@@ -13,13 +13,13 @@ jobs:
 
     env: 
       API_PORT: 3000
+      VITE_PORT: 4173
       DB_NAME: testdb
       TEST_DB_NAME: testdbname
       DB_USER: postgres
       DB_PASSWORD: password1
       AUTH_TOKEN_SECRET: test-secret
       REFRESH_TOKEN_SECRET: test-refresh-secret
-      VITE_PORT: 4173
 
     steps: 
       - uses: actions/checkout@v4
