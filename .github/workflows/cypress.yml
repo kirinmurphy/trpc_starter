@@ -13,9 +13,6 @@ jobs:
 
     env: 
       API_PORT: 3000
-      POSTGRES_USER: postgres       
-      POSTGRES_PASSWORD: password1  
-      POSTGRES_DB: testdb        
       DB_NAME: testdb
       TEST_DB_NAME: testdbname
       DB_USER: postgres
