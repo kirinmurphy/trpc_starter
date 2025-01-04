@@ -1,0 +1,6 @@
+limit_req_zone $binary_remote_addr zone=auth_limit:10m rate=${AUTH_RATE};
+limit_req_zone $binary_remote_addr zone=verify_limit:10m rate=${VERIFY_RATE};
+
+map $status $retry_after {
+  429   60;
+}

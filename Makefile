@@ -76,6 +76,7 @@ reload-nginx:
 .PHONY: clean
 clean:
 	docker compose down -v 
+	$(DC) down -v
 	$(DCT) down -v
 	$(DCP) down -v
 	docker system prune -f

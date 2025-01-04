@@ -81,10 +81,16 @@ services:
     environment:
       AUTH_RATE: "${AUTH_RATE:-2r/m}"
       VERIFY_RATE: "${VERIFY_RATE:-1r/m}"
+      ALLOWED_ORIGINS: "http://localhost:5173,http://localhost:3000"
+    command: > 
+      sh -c "envsubst '$$AUTH_RATE $$VERIFY_RATE $$ALLOWED_ORIGINS' < /etc/nginx/templates/rate_limits.template > /etc/nginx/includes/rate_limits.conf &&
+             envsubst '$$ALLOWED_ORIGINS' < /etc/nginx/templates/cors_options.template > /etc/nginx/includes/cors_options.conf &&
+             nginx -g 'daemon off;'"
     ports:
       - "80:80"
       - "443:443"
     volumes:
+      - ./nginx/templates:/etc/nginx/templates:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/includes:/etc/nginx/includes:ro
