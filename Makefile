@@ -1,5 +1,6 @@
-
-DC=docker compose
+DC=docker compose -f docker-compose.nginx.yml -f docker-compose.yml 
+DCT=${DC} -f docker-compose.cypress.yml
+DCP=docker compose -f docker-compose.nginx.yml -f docker-compose.production.yml
 
 ## -- DEV ------- ## 
 .PHONY: app
@@ -23,8 +24,6 @@ app-all: build-app app logs-app
 
 
 ## -- TESTING ------- ## 
-DCT=docker compose -f docker-compose.yml -f docker-compose.cypress.yml
-
 .PHONY: tests
 tests:
 	$(DCT) up --exit-code-from cypress --abort-on-container-exit
@@ -47,8 +46,6 @@ tests-all: clean build tests test logs-cypress
 
 
 ## -- PRODUCTION ------- ##
-DCP=docker compose -f docker-compose.production.yml
-
 .PHONY: prod
 prod:
 	$(DCP) up
