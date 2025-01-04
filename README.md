@@ -22,10 +22,10 @@ App starter built in Typescript, tRPC, Node and React
   <tr>
     <td style="vertical-align: top;">Infra / Devops</td>
     <td>
-      • e2e test framework with Github actions integration<br>
+      • e2e test framework with Github Actions integration<br>
       • Docker containers for dev, testing, and production environments<br>
       • Email integration for dev, test and production environments<br>
-      • Postgres migration workflow
+      • Postgres migration task
     </td>
   </tr>
   <tr>
