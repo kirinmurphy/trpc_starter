@@ -97,5 +97,10 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 - **make logs-prod**              - View production logs
 - **make prod-all**               - Run prod build, start, and logs in sequence
 
+### General 
+- **make help**                   - Show all commands 
+- **make reload-nginx**           - Restart nginx container
+- **make clean**                  - compose down containers and prune volumes/system
+
 Notes: 
 - DB Migration is run on every app/production  start

@@ -27,6 +27,7 @@ app-all: build-app app logs-app
 .PHONY: tests
 tests:
 	$(DCT) up --exit-code-from cypress --abort-on-container-exit
+	# Toggle to hide nginx logs in terminal
 	# $(DCT) up --exit-code-from cypress --abort-on-container-exit | grep -v "nginx.*\|.*nginx"
 
 .PHONY: build-tests
@@ -69,7 +70,7 @@ prod-all: build-prod prod logs-prod
 ## -- UTILITIES ------- ## 
 .PHONY: reload-nginx
 reload-nginx:
-	$(DC) exec nginx nginx -s reload
+	$(DC) restart nginx
 
 .PHONY: clean
 clean:

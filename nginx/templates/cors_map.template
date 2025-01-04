@@ -1,1 +1,1 @@
-"${ALLOWED_ORIGINS}" "$http_origin";
+"${ALLOWED_ORIGINS}" "${ALLOWED_ORIGINS}";

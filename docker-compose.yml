@@ -14,11 +14,11 @@ services:
         max-size: "10m"
         max-file: '3'
     expose:
-      - "3000"
-      - "5173"
+      - "${API_PORT}"
+      - "${VITE_PORT}"
     environment:
       CLIENT_DOMAIN: "localhost"
-      INTERNAL_CLIENT_URL: "http://app:5173"  
+      INTERNAL_CLIENT_URL: "http://app:${VITE_PORT}"  
       VITE_API_URL: "http://localhost"
       VITE_HOST: ${VITE_HOST:-0.0.0.0}
       API_HOST: ${API_HOST:-0.0.0.0}

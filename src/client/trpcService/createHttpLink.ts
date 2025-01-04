@@ -18,7 +18,10 @@ export function createHttpLink () {
   return httpBatchLink({
     url,
     fetch: async (url, options) => {
-      return await customFetch(url, { ...options, credentials: 'include' });
+      return await customFetch(url, { 
+        ...options, 
+        credentials: 'include',
+      });
     },
     headers: () => ({
       ['x-csrf-token']: csrfStore.getToken() || ''

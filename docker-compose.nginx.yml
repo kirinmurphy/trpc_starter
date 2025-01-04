@@ -2,9 +2,9 @@ services:
   nginx: 
     image: nginx:alpine
     environment: 
-      AUTH_RATE: "${AUTH_RATE:-2r/m}"
-      VERIFY_RATE: "${VERIFY_RATE:-1r/m}"
-      ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:3000}"
+      AUTH_RATE: "${AUTH_RATE:-10r/m}"
+      VERIFY_RATE: "${VERIFY_RATE:-3r/m}"
+      ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-http://localhost,http://localhost:3000}"
     command: sh -c "cp /init-nginx.sh /tmp/init-nginx.sh && chmod +x /tmp/init-nginx.sh && /tmp/init-nginx.sh"
     ports: 
       - "80:80"
