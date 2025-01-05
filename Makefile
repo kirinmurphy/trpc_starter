@@ -28,6 +28,7 @@ DCT=docker compose -f docker-compose.yml -f docker-compose.cypress.yml
 .PHONY: tests
 tests:
 	$(DCT) up --exit-code-from cypress --abort-on-container-exit
+	# $(DCT) up --exit-code-from cypress --abort-on-container-exit | grep -v "nginx.*\|.*nginx"
 
 .PHONY: build-tests
 build-tests: clean

@@ -3,7 +3,7 @@ import { getPool } from '../../db/pool';
 import { SQL_CREATE_VERIFICATION_TOKEN } from "../../db/sql";
 import { sendVerificationEmail } from "./sendVerificationEmail";
 
-const expiryInterval = process.env.NODE_ENV === 'test' ? '3 seconds' : '30 minutes';
+const expiryInterval = process.env.NODE_ENV === 'test' ? '3 seconds' : '20 minutes';
 
 interface Props { 
   email: string;
