@@ -17,13 +17,13 @@ export function VerifyAccount () {
   const [tokenExpired, setTokenExpired] = useState<boolean>(false);
 
   const { mutate, data, isLoading } = trpcService.auth.verifyAccount.useMutation({
-    onSuccess: (data) => {      
+    onSuccess: (data) => {
       if ( data?.success ) {
-        navigate({ to: ROUTE_URLS.authenticatedHomepage })
+        navigate({ to: ROUTE_URLS.authenticatedHomepage });
+        return;
       }
       
       if ( data?.error ) {
-        console.log('Data errr', data.error);
         if ( data?.error === ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED ) {
           setTokenExpired(true);
         } else {
@@ -37,7 +37,7 @@ export function VerifyAccount () {
     }
   })
 
-  useEffect(() => {
+  useEffect(() => {    
     if ( !token ) { navigate(loginRedirectConfig); return; }
     mutate({ token });
   // eslint-disable-next-line react-hooks/exhaustive-deps
