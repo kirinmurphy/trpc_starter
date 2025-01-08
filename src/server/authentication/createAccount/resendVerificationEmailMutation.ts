@@ -7,7 +7,7 @@ import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
 import { MemberEmailSchema, VerificationTokenMinimalSchema } from "../schemas";
 
 export const ResendVerificationEmailSchema = z.object({
-  userId: z.string().regex(/^\d+$/)
+  userId: z.string().uuid()
 });
 
 type ResendVerificationEmailInput = z.infer<typeof ResendVerificationEmailSchema>;

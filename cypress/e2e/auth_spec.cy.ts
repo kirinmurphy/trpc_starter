@@ -132,7 +132,6 @@ describe("Account verification edge cases", () => {
     cy.contains('Your account is not yet verified.');
     cy.contains('Check your email or request another verification link.');
     cy.contains('Resend verification email');
-
   });
 
   it('redirects user to login page with notification if attempting to verify an invalid token', () => {
