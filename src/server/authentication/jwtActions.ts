@@ -1,25 +1,23 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { IncomingMessage, ServerResponse } from 'http';
 import { clearCookie, getCookieValue, setCookie } from "../utils/cookieActions";
+import { 
+  ACCESS_COOKIE_EXPIRY,
+  ACCESS_TOKEN_EXPIRY,
+  REFRESH_COOKIE_EXPIRY,
+  REFRESH_TOKEN_EXPIRY
+} from "./expiryConstants";
 
-const fifteenMinutes = 15 * 60 * 1000;
-const sevenDays = 7 * 24 * 60 * 60 * 1000;
 
 interface GetCookieProps { req: IncomingMessage }
 type GetCookieReturnType = string | undefined;
 interface SetCookieProps { res: ServerResponse, userId: string | number }
 
-const isTestEnv = process.env.NODE_ENV === 'test';
-
 const ACCESS_COOKIE_NAME = 'auth_token';
 const ACCESS_TOKEN_SECRET = process.env.AUTH_TOKEN_SECRET!;
-const ACCESS_TOKEN_EXPIRY = isTestEnv ? '3s' : '15m';
-const ACCESS_COOKIE_EXPIRY = isTestEnv ? (3*1000) : fifteenMinutes;
 
 const REFRESH_COOKIE_NAME = 'refresh_token';
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET!;
-const REFRESH_TOKEN_EXPIRY = isTestEnv ? '7s' : '7d';
-const REFRESH_COOKIE_EXPIRY = isTestEnv ? (7*1000) : sevenDays;
 
 // -- ACCESS TOKEN ------------ //
 export function getAccessTokenCookie({ req }: GetCookieProps): GetCookieReturnType {

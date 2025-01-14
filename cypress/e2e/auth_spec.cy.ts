@@ -83,13 +83,13 @@ describe('Login', () => {
     
     describe('token expiry', () => {
       it('redirects to / after token expired', () => {
-        cy.wait(8000);
+        cy.wait(10000);
         cy.reload();
         cy.location('pathname').should('eq', '/');
       });
       
       it('remains at /home before token expiry', () => {
-        cy.wait(5000);
+        cy.wait(6000);
         cy.reload();
         cy.location('pathname').should('eq', '/home');
       });
@@ -116,7 +116,7 @@ describe("Account verification edge cases", () => {
 
   it('prompts user to resend verification email if token expired', () => {
     cy.createAccount({ demoUser: DEMO_USER });    
-    cy.wait(4000);
+    cy.wait(16000);
     cy.getVerificationToken({ email: DEMO_USER.email }).should('exist').then(token => {
       cy.visit(`/verify-account?token=${token}`);
       cy.contains('Your verification code has expired.');
