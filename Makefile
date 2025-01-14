@@ -1,5 +1,6 @@
-
-DC=docker compose
+DC=docker compose -f docker-compose.nginx.yml -f docker-compose.yml 
+DCT=${DC} -f docker-compose.cypress.yml
+DCP=docker compose -f docker-compose.nginx.yml -f docker-compose.production.yml
 
 ## -- DEV ------- ## 
 .PHONY: app
@@ -23,12 +24,11 @@ app-all: build-app app logs-app
 
 
 ## -- TESTING ------- ## 
-DCT=docker compose -f docker-compose.yml -f docker-compose.cypress.yml
-
 .PHONY: tests
 tests:
-	$(DCT) up --exit-code-from cypress --abort-on-container-exit
-	# $(DCT) up --exit-code-from cypress --abort-on-container-exit | grep -v "nginx.*\|.*nginx"
+	# $(DCT) up --exit-code-from cypress --abort-on-container-exit
+	# Toggle to hide nginx logs in terminal
+	$(DCT) up --exit-code-from cypress --abort-on-container-exit | grep -v "nginx.*\|.*nginx"
 
 .PHONY: build-tests
 build-tests: clean
@@ -47,8 +47,6 @@ tests-all: clean build tests test logs-cypress
 
 
 ## -- PRODUCTION ------- ##
-DCP=docker compose -f docker-compose.production.yml
-
 .PHONY: prod
 prod:
 	$(DCP) up
@@ -72,11 +70,12 @@ prod-all: build-prod prod logs-prod
 ## -- UTILITIES ------- ## 
 .PHONY: reload-nginx
 reload-nginx:
-	$(DC) exec nginx nginx -s reload
+	$(DC) restart nginx
 
 .PHONY: clean
 clean:
 	docker compose down -v 
+	$(DC) down -v
 	$(DCT) down -v
 	$(DCP) down -v
 	docker system prune -f

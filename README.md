@@ -22,10 +22,10 @@ App starter built in Typescript, tRPC, Node and React
   <tr>
     <td style="vertical-align: top;">Infra / Devops</td>
     <td>
-      • e2e test framework with Github actions integration<br>
+      • e2e test framework with Github Actions integration<br>
       • Docker containers for dev, testing, and production environments<br>
       • Email integration for dev, test and production environments<br>
-      • Postgres migration workflow
+      • Postgres migration task
     </td>
   </tr>
   <tr>
@@ -96,6 +96,11 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 - **make build-prod-no-cache**    - Clear cache and build production container
 - **make logs-prod**              - View production logs
 - **make prod-all**               - Run prod build, start, and logs in sequence
+
+### General 
+- **make help**                   - Show all commands 
+- **make reload-nginx**           - Restart nginx container
+- **make clean**                  - compose down containers and prune volumes/system
 
 Notes: 
 - DB Migration is run on every app/production  start

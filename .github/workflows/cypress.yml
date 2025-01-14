@@ -2,27 +2,27 @@ name: Cypress Tests
 
 on: 
   push: 
-    # comment
     branches: ['main']
   pull_request:
     types: [opened, synchronize, reopened]
+
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs: 
   cypress-tests:
     runs-on: ubuntu-latest
 
     env: 
-      API_PORT: 3000
-      POSTGRES_USER: postgres       
-      POSTGRES_PASSWORD: password1  
-      POSTGRES_DB: testdb        
-      DB_NAME: testdb
-      TEST_DB_NAME: testdbname
+      API_PORT: ${API_PORT}
+      VITE_PORT: 4173
+      DB_NAME: nottestdb
+      TEST_DB_NAME: testdb
       DB_USER: postgres
       DB_PASSWORD: password1
       AUTH_TOKEN_SECRET: test-secret
       REFRESH_TOKEN_SECRET: test-refresh-secret
-      VITE_PORT: 4173
 
     steps: 
       - uses: actions/checkout@v4

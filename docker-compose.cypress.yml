@@ -3,35 +3,9 @@ x-test-app-defaults: &test-app-defaults
   CLIENT_DOMAIN: 'localhost'
   VITE_API_URL: "http://nginx:80"
   NODE_ENV: test
+  TEST_DB_NAME: ${TEST_DB_NAME}  
 
 services: 
-  nginx:
-    image: nginx:alpine
-    environment: 
-      AUTH_RATE: "1000r/m"
-      VERIFY_RATE: "500r/m"
-    volumes: 
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/includes:/etc/nginx/includes
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - /tmp/nginx:/tmp/nginx
-    command: >
-      /bin/sh -c "envsubst '$$AUTH_RATE $$VERIFY_RATE' < /etc/nginx/includes/rate_limits.conf > /tmp/nginx/rate_limits.conf &&
-      cp /tmp/nginx/rate_limits.conf /etc/nginx/includes/rate_limits.conf &&
-      nginx -g 'daemon off;'"
-    ports: 
-      - "80:80"
-      - "443:443"
-    depends_on: 
-      app:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "curl -k -f http://localhost:80/ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
-
   app:
     environment:
       <<: *test-app-defaults
@@ -57,7 +31,6 @@ services:
       DB_HOST: db
       DB_PASSWORD: ${DB_PASSWORD}
       DB_PORT: 5432
-      TEST_DB_NAME: ${TEST_DB_NAME}
       # OUTPUT
       # CYPRESS_QUIET: 1
       FORCE_COLOR: 1
@@ -82,5 +55,10 @@ services:
     
     command: bun run test:docker
 
-volumes: 
+  nginx:
+    environment: 
+      AUTH_RATE: "1000r/m"
+      VERIFY_RATE: "500r/m"
+      
+volumes:  
   postgres_data: 
