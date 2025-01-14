@@ -24,7 +24,7 @@ Cypress.Commands.add('createAccount', ({ demoUser }: AuthActionProps) => {
 });
 
 Cypress.Commands.add('verifyAccount', ({ email }: { email: string }) => {
-  cy.getVerificationToken({ email }).should('exist', { timeout: 10000 }).then(token => {
+  cy.getVerificationToken({ email }).should('exist').then(token => {
     cy.visit(`/verify-account?token=${token}`);
     cy.contains('Verifying...').should('be.visible');
     cy.url().should('include', '/home');
@@ -33,7 +33,6 @@ Cypress.Commands.add('verifyAccount', ({ email }: { email: string }) => {
 
 Cypress.Commands.add('signUpAndVerify', ({ demoUser }: AuthActionProps) => {
   cy.createAccount({ demoUser });
-  cy.wait(1000);
   cy.verifyAccount({ email: demoUser.email });
 });
 
