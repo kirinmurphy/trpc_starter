@@ -3,6 +3,7 @@ x-test-app-defaults: &test-app-defaults
   CLIENT_DOMAIN: 'localhost'
   VITE_API_URL: "http://nginx:80"
   NODE_ENV: test
+  TEST_DB_NAME: ${TEST_DB_NAME}  
 
 services: 
   app:
@@ -30,7 +31,6 @@ services:
       DB_HOST: db
       DB_PASSWORD: ${DB_PASSWORD}
       DB_PORT: 5432
-      TEST_DB_NAME: ${TEST_DB_NAME}
       # OUTPUT
       # CYPRESS_QUIET: 1
       FORCE_COLOR: 1

@@ -6,6 +6,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs: 
   cypress-tests:
     runs-on: ubuntu-latest
@@ -13,8 +17,8 @@ jobs:
     env: 
       API_PORT: ${API_PORT}
       VITE_PORT: 4173
-      DB_NAME: testdb
-      TEST_DB_NAME: testdbname
+      DB_NAME: nottestdb
+      TEST_DB_NAME: testdb
       DB_USER: postgres
       DB_PASSWORD: password1
       AUTH_TOKEN_SECRET: test-secret
