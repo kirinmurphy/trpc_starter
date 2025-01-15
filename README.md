@@ -56,7 +56,6 @@ VITE_PORT=5173
 
 # DB
 DB_NAME=db_for_your_app
-TEST_DB_NAME=db_for_cypress_tests
 DB_USER=your_username
 DB_PASSWORD=your_password
 # DB_HOST=localhost 
