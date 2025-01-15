@@ -17,8 +17,8 @@ jobs:
     env: 
       API_PORT: ${API_PORT}
       VITE_PORT: 4173
-      DB_NAME: nottestdb
-      TEST_DB_NAME: testdb
+      DB_NAME: ci_db
+      TEST_DB_NAME: ci_db_cypress
       DB_USER: postgres
       DB_PASSWORD: password1
       AUTH_TOKEN_SECRET: test-secret

@@ -22,7 +22,7 @@ async function verifyTestEnvironment () {
   try {
     const { rows } = await client.query('SELECT current_database()');
     const dbName = rows[0].current_database; 
-    if (!dbName.includes('test')) {
+    if (!dbName.includes('_cypress')) {
       throw new Error('Tests must run against a test database. Current database: ' + dbName);      
     }
   } finally {

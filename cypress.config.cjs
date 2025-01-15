@@ -9,7 +9,6 @@ const pool = createTestPool();
 module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
-
       config.env = {
         ...config.env,
         DB_USER: process.env.DB_USER,
