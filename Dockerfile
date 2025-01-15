@@ -41,6 +41,6 @@ RUN NODE_ENV=production bun run vite build --minify
 
 # PRODUCTION 
 FROM builder AS production
-RUN chmod +x init-prod.sh
+RUN chmod +x ./docker/init-prod.sh
 
 CMD ["./docker/init-prod.sh"]

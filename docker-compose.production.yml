@@ -8,6 +8,8 @@ services:
       target: production
       args: 
         DOCKER_BUILDKIT: 1
+    env_file:
+      - .env.production
     deploy:
       resources:
         limits:
@@ -18,10 +20,9 @@ services:
       - "${VITE_PORT}"
     environment:
       NODE_ENV: production
-      # TODO: move to env variable 
-      CLIENT_DOMAIN: "localhost"
-      INTERNAL_CLIENT_URL: "${API_PROTOCOL:-https}://localhost:4173"
-      VITE_API_URL: "${API_PROTOCOL:-https}://localhost:${API_PORT}"
+      CLIENT_DOMAIN: ${CLIENT_DOMAIN}
+      INTERNAL_CLIENT_URL: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN}"
+      VITE_API_URL: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN}"
       PORT: ${API_PORT}
 
       # DB
@@ -33,10 +34,16 @@ services:
       # AUTH
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+
+      # EMAIL SERVICE 
+      EMAIL_SERVICE_API_KEY: ${EMAIL_SERVICE_API_KEY}
+      EMAIL_SERVICE_DOMAIN: ${EMAIL_SERVICE_DOMAIN}
+      EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS}
+
     healthcheck:
       test: [
         "CMD-SHELL", 
-        "curl -f ${API_PROTOCOL:-https}://localhost:${VITE_PORT} && curl -f '${API_PROTOCOL:-https}://localhost:${API_PORT}/ping?batch=1&input=%7B%7D'"
+        "curl -f http://localhost:${API_PORT}/ping?batch=1&input=%7B%7D && curl -f http://localhost:${VITE_PORT}"
       ]
       interval: 30s
       timeout: 10s
@@ -45,6 +52,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks: 
+      - app_network
 
   db:
     image: postgres:latest
@@ -59,16 +68,28 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes: 
       - postgres_data:/var/lib/postgresql/postgres_data
+    ulimits: 
+      nproc: 65535
+      nofile: 
+        soft: 20000
+        hard: 40000
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 5
+    networks: 
+      - app_network
 
   nginx:
     environment: 
-      ALLOWED_ORIGINS: "https://some-website.com,https://api.some-website.com"
-      
+      # Do we want to move this to env file? 
+      ALLOWED_ORIGINS: "https://${CLIENT_DOMAIN},https://api.${CLIENT_DOMAIN}"
+
+networks: 
+  app_network:
+    driver: bridge
+
 volumes: 
   postgres_data:
   
