@@ -50,7 +50,7 @@ App starter built in Typescript, tRPC, Node and React
 # commented variables available for overrides
 
 API_PORT=3000
-VITE_PORT=5173
+# VITE_PORT=5173
 # API_HOST=0.0.0.0
 # VITE_HOST=0.0.0.0
 

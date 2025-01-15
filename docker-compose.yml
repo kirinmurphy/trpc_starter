@@ -76,5 +76,11 @@ services:
       - "1025:1025"
       - "8025:8025"
 
+  nginx:
+    environment: 
+      VITE_PORT: ${VITE_PORT}
+
+
+
 volumes: 
   postgres_data: 

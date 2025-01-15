@@ -1,6 +1,8 @@
 services: 
   nginx: 
     image: nginx:alpine
+    networks: 
+      - app_network
     deploy:
       resources:
         limits:
@@ -28,4 +30,7 @@ services:
       interval: 10s
       timeout: 5s 
       retries: 3
-      
+
+networks:
+  app_network:
+    driver: bridge      
