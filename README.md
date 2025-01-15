@@ -75,6 +75,7 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 - **make build-app-no-cache**     - Clear cache, clean and build app container
 - **make logs-app**               - View application logs
 - **make app-all**                - Run build, start, and logs in sequence
+- **make clean-app**              - Clean dev containers and volumes
 - **make reload-nginx**           - Update nginx config (no restart needed)
 
 #### Dev URLs
@@ -88,6 +89,7 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 - **make build tests-no-cache** - Clear cache, clean and build cypress container
 - **make logs-tests**           - View cypress logs
 - **make tests-all**            - Clean, build, test, and logs in sequence
+- **make clean-tests**          - Clean tests containers and volumes
 
 ### Production commands:
 - **make prod**                   - Start the application in production
@@ -95,11 +97,10 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 - **make build-prod-no-cache**    - Clear cache and build production container
 - **make logs-prod**              - View production logs
 - **make prod-all**               - Run prod build, start, and logs in sequence
+- **make clean-prod**             - Clean prod containers and volumes
 
 ### General 
 - **make help**                   - Show all commands 
-- **make reload-nginx**           - Restart nginx container
-- **make clean**                  - compose down containers and prune volumes/system
 
 Notes: 
 - DB Migration is run on every app/production  start

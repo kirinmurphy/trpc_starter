@@ -16,7 +16,6 @@ jobs:
 
     env: 
       API_PORT: ${API_PORT}
-      VITE_PORT: 4173
       DB_NAME: ci_db
       TEST_DB_NAME: ci_db_cypress
       DB_USER: postgres
@@ -29,9 +28,6 @@ jobs:
 
       - name: Install make
         run: sudo apt-get install -y make
-
-      - name: Clean environment
-        run: make clean
 
       - name: Build test containers
         run: make build-tests
@@ -50,4 +46,4 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: make clean
+        run: make clean-tests

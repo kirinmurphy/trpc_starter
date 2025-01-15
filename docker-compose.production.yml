@@ -8,8 +8,6 @@ services:
       target: production
       args: 
         DOCKER_BUILDKIT: 1
-    env_file:
-      - .env.production
     deploy:
       resources:
         limits:
@@ -17,13 +15,15 @@ services:
           cpus: '0.5'
     expose:
       - "${API_PORT}"
-      - "${VITE_PORT}"
+      - "4173"
     environment:
       NODE_ENV: production
       CLIENT_DOMAIN: ${CLIENT_DOMAIN}
-      INTERNAL_CLIENT_URL: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN}"
-      VITE_API_URL: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN}"
+      # TODO: API_PROTOCOL not loading, not sure how to pass in env.production
+      INTERNAL_CLIENT_URL: "${API_PROTOCOL:-http}://${CLIENT_DOMAIN}"
+      VITE_API_URL: "${API_PROTOCOL:-http}://${CLIENT_DOMAIN}"
       PORT: ${API_PORT}
+      VITE_PORT: "4173"
 
       # DB
       DB_NAME: ${DB_NAME}
@@ -45,15 +45,12 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL", 
-        "echo 'Testing API...' && curl -v http://localhost:${API_PORT}/ping?batch=1&input=%7B%7D && echo 'Testing Vite...' && curl -v http://localhost:4173"
- 
-
-        # "curl -f http://localhost:${API_PORT}/ping?batch=1&input=%7B%7D && curl -f http://localhost:${VITE_PORT}"
+        "curl -v http://localhost:${API_PORT}/ping?batch=1&input=%7B%7D && curl -v http://localhost:4173",
       ]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 120s
+      start_period: 60s
     depends_on:
       db:
         condition: service_healthy
@@ -87,12 +84,10 @@ services:
       - app_network
 
   nginx:
-    env_file:
-      - .env.production
     environment: 
-      # Do we want to move this to env file? 
-      ALLOWED_ORIGINS: "https://${CLIENT_DOMAIN},https://api.${CLIENT_DOMAIN}"
-      # VITE_PORT: "4173"
+      # TODO: move this to env file
+      ALLOWED_ORIGINS: "http://${CLIENT_DOMAIN},http://${CLIENT_DOMAIN}:80"
+      VITE_PORT: "4173"
 
 networks: 
   app_network:

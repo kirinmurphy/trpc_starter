@@ -37,7 +37,6 @@ services:
     depends_on: 
       db:
         condition: service_healthy    
-
     healthcheck:
       test: [
         "CMD-SHELL",
@@ -47,11 +46,14 @@ services:
       timeout: 5s
       retries: 5
       start_period: 60s
-
     command: ./docker/init-app.sh
+    networks: 
+      - app_network    
 
   db: 
     image: postgres:latest
+    networks: 
+      - app_network    
     ports: 
       - "5433:5432"
     environment: 
@@ -72,6 +74,8 @@ services:
   mailhog: 
     image: mailhog/mailhog:latest
     container_name: mailhog
+    networks: 
+      - app_network    
     ports:
       - "1025:1025"
       - "8025:8025"
@@ -80,6 +84,10 @@ services:
     environment: 
       VITE_PORT: ${VITE_PORT}
 
+
+networks: 
+  app_network:
+    driver: bridge
 
 
 volumes: 
