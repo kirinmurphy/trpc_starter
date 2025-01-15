@@ -1,6 +1,7 @@
-DC=docker compose -f docker-compose.nginx.yml -f docker-compose.yml 
+DC_BASE=docker compose -f docker-compose.base.yml 
+DC=${DC_BASE} -f docker-compose.yml 
 DCT=${DC} -f docker-compose.cypress.yml
-DCP=docker compose -f docker-compose.nginx.yml -f docker-compose.production.yml
+DCP=${DC_BASE} -f docker-compose.production.yml
 PRUNE=docker system prune -f && docker volume prune -f
 
 ## -- DEV ------- ## 

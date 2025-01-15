@@ -54,11 +54,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    networks: 
-      - app_network
 
   db:
-    image: postgres:latest
     deploy:
       resources:
         limits:
@@ -68,31 +65,14 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
-    volumes: 
-      - postgres_data:/var/lib/postgresql/postgres_data
     ulimits: 
       nproc: 65535
       nofile: 
         soft: 20000
         hard: 40000
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks: 
-      - app_network
 
   nginx:
     environment: 
       # TODO: move this to env file
       ALLOWED_ORIGINS: "http://${CLIENT_DOMAIN},http://${CLIENT_DOMAIN}:80"
       VITE_PORT: "4173"
-
-networks: 
-  app_network:
-    driver: bridge
-
-volumes: 
-  postgres_data:
-  

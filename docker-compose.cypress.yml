@@ -62,11 +62,3 @@ services:
     environment: 
       AUTH_RATE: "1000r/m"
       VERIFY_RATE: "500r/m"
-
-networks: 
-  app_network:
-    driver: bridge
-
-
-volumes:  
-  postgres_data: 
