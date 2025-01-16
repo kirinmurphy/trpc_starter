@@ -13,12 +13,12 @@ interface EmailConfigProps {
 // TODO: turn these all into env vars
 const emailConfig: Record<string, EmailConfigProps> = {
   production: {
-    host: 'smtp.postmarkapp.com',
+    host: 'smtp.sendgrid.net',
     port: 587,
     secure: false,
     auth: {
-      user: process.env.POSTMARK_API_TOKEN!,
-      pass: process.env.POSTMARK_API_TOKEN!
+      user: 'apikey',
+      pass: process.env.SENDGRID_API_KEY!
     }
   },
   development: {
