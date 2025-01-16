@@ -11,17 +11,16 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
-          cpus: '0.5'
+          memory: ${DOCKER_MEMORY_LIMIT:-1G}
+          cpus: ${DOCKER_CPU_LIMIT:-0.5}
     expose:
       - "3000"
       - "4173"
     environment:
       NODE_ENV: production
       CLIENT_DOMAIN: ${CLIENT_DOMAIN}
-      # TODO: API_PROTOCOL not loading, not sure how to pass in env.production
-      INTERNAL_CLIENT_URL: "${API_PROTOCOL:-http}://${CLIENT_DOMAIN}"
-      VITE_API_URL: "${API_PROTOCOL:-http}://${CLIENT_DOMAIN}"
+      INTERNAL_CLIENT_URL: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN}"
+      VITE_API_URL: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN}"
       PORT: "3000"
       VITE_PORT: "4173"
 
@@ -59,8 +58,8 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
-          cpus: '0.5'
+          memory: ${DOCKER_MEMORY_LIMIT:-1G}
+          cpus: ${DOCKER_CPU_LIMIT:-0.5}
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -74,5 +73,5 @@ services:
   nginx:
     environment: 
       # TODO: move this to env file
-      ALLOWED_ORIGINS: "http://${CLIENT_DOMAIN},http://${CLIENT_DOMAIN}:80"
+      ALLOWED_ORIGINS: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN},${API_PROTOCOL:-https}://${CLIENT_DOMAIN}:80"
       VITE_PORT: "4173"
