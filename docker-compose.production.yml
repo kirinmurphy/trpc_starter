@@ -11,18 +11,18 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
-          cpus: '0.5'
+          memory: ${DOCKER_MEMORY_LIMIT:-1G}
+          cpus: ${DOCKER_CPU_LIMIT:-0.5}
     expose:
-      - "${API_PORT}"
-      - "${VITE_PORT}"
+      - "3000"
+      - "4173"
     environment:
       NODE_ENV: production
-      # TODO: move to env variable 
-      CLIENT_DOMAIN: "localhost"
-      INTERNAL_CLIENT_URL: "${API_PROTOCOL:-https}://localhost:4173"
-      VITE_API_URL: "${API_PROTOCOL:-https}://localhost:${API_PORT}"
-      PORT: ${API_PORT}
+      CLIENT_DOMAIN: ${CLIENT_DOMAIN}
+      INTERNAL_CLIENT_URL: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN}"
+      VITE_API_URL: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN}"
+      PORT: "3000"
+      VITE_PORT: "4173"
 
       # DB
       DB_NAME: ${DB_NAME}
@@ -33,42 +33,45 @@ services:
       # AUTH
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+
+      # EMAIL SERVICE 
+      EMAIL_SERVICE_API_KEY: ${EMAIL_SERVICE_API_KEY}
+      EMAIL_SERVICE_DOMAIN: ${EMAIL_SERVICE_DOMAIN}
+      EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS}
+
+
+
     healthcheck:
       test: [
         "CMD-SHELL", 
-        "curl -f ${API_PROTOCOL:-https}://localhost:${VITE_PORT} && curl -f '${API_PROTOCOL:-https}://localhost:${API_PORT}/ping?batch=1&input=%7B%7D'"
+        "curl -v http://localhost:3000/ping?batch=1&input=%7B%7D && curl -v http://localhost:4173",
       ]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s      
+      start_period: 60s
     depends_on:
       db:
         condition: service_healthy
 
   db:
-    image: postgres:latest
     deploy:
       resources:
         limits:
-          memory: 1G
-          cpus: '0.5'
+          memory: ${DOCKER_MEMORY_LIMIT:-1G}
+          cpus: ${DOCKER_CPU_LIMIT:-0.5}
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
-    volumes: 
-      - postgres_data:/var/lib/postgresql/postgres_data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    ulimits: 
+      nproc: 65535
+      nofile: 
+        soft: 20000
+        hard: 40000
 
   nginx:
     environment: 
-      ALLOWED_ORIGINS: "https://some-website.com,https://api.some-website.com"
-      
-volumes: 
-  postgres_data:
-  
+      # TODO: move this to env file
+      ALLOWED_ORIGINS: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN},${API_PROTOCOL:-https}://${CLIENT_DOMAIN}:80"
+      VITE_PORT: "4173"

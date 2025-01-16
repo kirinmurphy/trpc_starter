@@ -49,8 +49,6 @@ App starter built in Typescript, tRPC, Node and React
 ```env 
 # commented variables available for overrides
 
-API_PORT=3000
-VITE_PORT=5173
 # API_HOST=0.0.0.0
 # VITE_HOST=0.0.0.0
 
@@ -58,7 +56,6 @@ VITE_PORT=5173
 DB_NAME=db_for_your_app
 DB_USER=your_username
 DB_PASSWORD=your_password
-# DB_HOST=localhost 
 # DB_PORT=5432
 
 # AUTH
@@ -75,6 +72,7 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 - **make build-app-no-cache**     - Clear cache, clean and build app container
 - **make logs-app**               - View application logs
 - **make app-all**                - Run build, start, and logs in sequence
+- **make clean-app**              - Clean dev containers and volumes
 - **make reload-nginx**           - Update nginx config (no restart needed)
 
 #### Dev URLs
@@ -88,6 +86,7 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 - **make build tests-no-cache** - Clear cache, clean and build cypress container
 - **make logs-tests**           - View cypress logs
 - **make tests-all**            - Clean, build, test, and logs in sequence
+- **make clean-tests**          - Clean tests containers and volumes
 
 ### Production commands:
 - **make prod**                   - Start the application in production
@@ -95,11 +94,10 @@ REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 - **make build-prod-no-cache**    - Clear cache and build production container
 - **make logs-prod**              - View production logs
 - **make prod-all**               - Run prod build, start, and logs in sequence
+- **make clean-prod**             - Clean prod containers and volumes
 
 ### General 
 - **make help**                   - Show all commands 
-- **make reload-nginx**           - Restart nginx container
-- **make clean**                  - compose down containers and prune volumes/system
 
 Notes: 
 - DB Migration is run on every app/production  start

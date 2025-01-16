@@ -14,7 +14,7 @@ services:
         max-size: "10m"
         max-file: '3'
     expose:
-      - "${API_PORT}"
+      - "3000"
       - "${VITE_PORT}"
     environment:
       CLIENT_DOMAIN: "localhost"
@@ -23,7 +23,7 @@ services:
       VITE_HOST: ${VITE_HOST:-0.0.0.0}
       API_HOST: ${API_HOST:-0.0.0.0}
       NODE_ENV: development
-      PORT: ${API_PORT}
+      PORT: "3000"
       # DB
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
@@ -37,21 +37,18 @@ services:
     depends_on: 
       db:
         condition: service_healthy    
-
     healthcheck:
       test: [
         "CMD-SHELL",
-        "curl -v -f http://0.0.0.0:${API_PORT}/ping && curl -v -f http://0.0.0.0:${VITE_PORT} || echo 'Health check failed with status $?'"
+        "curl -v -f http://0.0.0.0:3000/ping && curl -v -f http://0.0.0.0:${VITE_PORT} || echo 'Health check failed with status $?'"
       ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 60s
-
     command: ./docker/init-app.sh
 
   db: 
-    image: postgres:latest
     ports: 
       - "5433:5432"
     environment: 
@@ -60,21 +57,17 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - TEST_DB_NAME=${DB_NAME}_cypress
     volumes:
-      - postgres_data:/var/lib/postgresql/data
       - ./docker/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
-    healthcheck: 
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
 
   mailhog: 
     image: mailhog/mailhog:latest
     container_name: mailhog
+    networks: 
+      - app_network    
     ports:
       - "1025:1025"
       - "8025:8025"
 
-volumes: 
-  postgres_data: 
+  nginx:
+    environment: 
+      VITE_PORT: ${VITE_PORT}
