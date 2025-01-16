@@ -61,6 +61,13 @@ DB_PASSWORD=your_password
 # AUTH
 AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
 REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
+
+# EMAIL
+EMAIL_SERVICE_HOST=smtp.some-provider.com # ex: smtp.sendgrid.net
+EMAIL_SERVICE_API_KEY=email_service_api_key
+EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS=noreply@yourdomain.com
+EMAIL_SERVICE_SYSTEM_EMAIL_NAME=yourdomain.com
+
 ``` 
 
 

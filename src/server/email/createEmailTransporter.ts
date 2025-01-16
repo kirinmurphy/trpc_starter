@@ -13,12 +13,12 @@ interface EmailConfigProps {
 // TODO: turn these all into env vars
 const emailConfig: Record<string, EmailConfigProps> = {
   production: {
-    host: 'smtp.sendgrid.net',
+    host: process.env.EMAIL_SERVICE_HOST!,
     port: 587,
     secure: false,
     auth: {
       user: 'apikey',
-      pass: process.env.SENDGRID_API_KEY!
+      pass: process.env.EMAIL_SERVICE_API_KEY!
     }
   },
   development: {
