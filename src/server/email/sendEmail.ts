@@ -1,7 +1,11 @@
 import { createEmailTransporter } from "./createEmailTransporter";
 
 const fromEmail = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS;
+<<<<<<< HEAD
 const fromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER;
+=======
+const fromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_NAME;
+>>>>>>> 3e7cbb5 (added email integration)
 const defaultFrom = `"${fromName}" <${fromEmail}>`;
 
 interface NodemailerError extends Error {
