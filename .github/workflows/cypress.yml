@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env: 
-      API_PORT: ${API_PORT}
       DB_NAME: ci_db
       TEST_DB_NAME: ci_db_cypress
       DB_USER: postgres

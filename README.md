@@ -49,7 +49,6 @@ App starter built in Typescript, tRPC, Node and React
 ```env 
 # commented variables available for overrides
 
-API_PORT=3000
 # API_HOST=0.0.0.0
 # VITE_HOST=0.0.0.0
 

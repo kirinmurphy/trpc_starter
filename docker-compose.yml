@@ -14,7 +14,7 @@ services:
         max-size: "10m"
         max-file: '3'
     expose:
-      - "${API_PORT}"
+      - "3000"
       - "${VITE_PORT}"
     environment:
       CLIENT_DOMAIN: "localhost"
@@ -23,7 +23,7 @@ services:
       VITE_HOST: ${VITE_HOST:-0.0.0.0}
       API_HOST: ${API_HOST:-0.0.0.0}
       NODE_ENV: development
-      PORT: ${API_PORT}
+      PORT: "3000"
       # DB
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
@@ -40,7 +40,7 @@ services:
     healthcheck:
       test: [
         "CMD-SHELL",
-        "curl -v -f http://0.0.0.0:${API_PORT}/ping && curl -v -f http://0.0.0.0:${VITE_PORT} || echo 'Health check failed with status $?'"
+        "curl -v -f http://0.0.0.0:3000/ping && curl -v -f http://0.0.0.0:${VITE_PORT} || echo 'Health check failed with status $?'"
       ]
       interval: 10s
       timeout: 5s
