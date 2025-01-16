@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 DC_BASE=docker compose -f docker-compose.base.yml 
 DC=${DC_BASE} -f docker-compose.yml 
 DCT=${DC} -f docker-compose.cypress.yml
@@ -39,7 +41,7 @@ reload-nginx:
 tests:
 	# $(DCT) up --exit-code-from cypress --abort-on-container-exit
 	# Toggle to hide nginx logs in terminal
-	$(DCT) up --exit-code-from cypress --abort-on-container-exit | grep -v "nginx.*\|.*nginx"
+	set -o pipefail; $(DCT) up --exit-code-from cypress --abort-on-container-exit | grep -v "nginx.*\|.*nginx"
 
 .PHONY: build-tests
 build-tests: clean-tests

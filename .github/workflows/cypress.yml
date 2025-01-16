@@ -21,6 +21,7 @@ jobs:
       DB_PASSWORD: password1
       AUTH_TOKEN_SECRET: test-secret
       REFRESH_TOKEN_SECRET: test-refresh-secret
+      VITE_PORT: 5173
 
     steps: 
       - uses: actions/checkout@v4
@@ -33,9 +34,11 @@ jobs:
 
       - name: Run tests
         run: make tests
+        id: run_tests
+        continue-on-error: false
 
       - name: Upload test artifacts 
-        if: always()
+        if: always() && steps.run_tests.outcome != 'skipped'
         uses: actions/upload-artifact@v3
         with: 
           name: cypress-results
