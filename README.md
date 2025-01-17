@@ -32,7 +32,7 @@ App starter built in Typescript, tRPC, Node and React
     <td style="vertical-align: top;">Client</td>
     <td>
       • Simple form library w/ tRPC integration<br>
-      • Markdown file import
+      • Markdown file import<br>
       • Icon library
     </td>
   </tr>
@@ -62,7 +62,6 @@ DB_PASSWORD=your_password
 AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
 REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
-<<<<<<< HEAD
 # -- EMAIL
 EMAIL_SERVICE_HOST=smtp.some-provider.com
 EMAIL_SERVICE_USER=email_service_user
@@ -71,14 +70,6 @@ EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS=support@yourdomain.com
 EMAIL_SERVICE_SYSTEM_EMAIL_SENDER=yourdomain.com
 # EMAIL_SERViCE_PORT=not_587
 # EMAIL_SERVICE_SECURE=not_false
-=======
-# EMAIL
-EMAIL_SERVICE_HOST=smtp.some-provider.com # ex: smtp.sendgrid.net
-EMAIL_SERVICE_API_KEY=email_service_api_key
-EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS=noreply@yourdomain.com
-EMAIL_SERVICE_SYSTEM_EMAIL_NAME=yourdomain.com
-
->>>>>>> 3e7cbb5 (added email integration)
 ``` 
 
 
