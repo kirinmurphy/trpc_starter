@@ -1,7 +1,6 @@
 # tRPC web app starter
 App starter built in Typescript, tRPC, Node and React 
 
-
 <table>
   <tr>
     <td style="vertical-align: top;">Authentication</td>
@@ -22,17 +21,17 @@ App starter built in Typescript, tRPC, Node and React
   <tr>
     <td style="vertical-align: top;">Infra / Devops</td>
     <td>
-      • e2e test framework with Github Actions integration<br>
+      • e2e test framework with CI integration (Github Actions)<br>
       • Docker containers for dev, testing, and production environments<br>
-      • Email integration for dev, test and production environments<br>
-      • CI integrated postgres migration action
+      • Email integration for dev and production environments<br>
+      • CI integrated postgres migration flow
     </td>
   </tr>
   <tr>
     <td style="vertical-align: top;">Client</td>
     <td>
       • Simple form library w/ tRPC integration<br>
-      • Markdown file import
+      • Markdown file import<br>
       • Icon library
     </td>
   </tr>
@@ -48,15 +47,13 @@ App starter built in Typescript, tRPC, Node and React
 # Setup
 ## ENV Variables
 ```env 
-# commented variables available for overrides
-
 # -- PRODUCTION
-CLIENT_DOMAIN=your-webdomain.com
+CLIENT_DOMAIN=your-website-domain.com
 
 # -- DB
-DB_NAME=db_for_your_app
-DB_USER=your_username
-DB_PASSWORD=your_password
+DB_NAME=app_db_name
+DB_USER=app_db_username
+DB_PASSWORD=app_db_password
 
 # -- AUTH
 AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
@@ -68,9 +65,8 @@ EMAIL_SERVICE_USER=email_service_user
 EMAIL_SERVICE_PASS=email_service_password_or_api_key
 EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS=support@yourdomain.com
 EMAIL_SERVICE_SYSTEM_EMAIL_SENDER=yourdomain.com
-# EMAIL_SERViCE_PORT=not_587
-# EMAIL_SERVICE_SECURE=not_false
 ``` 
+additional optional override variables available [here](./.env.example)
 
 
 ## Running App With Docker

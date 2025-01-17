@@ -1,19 +1,49 @@
 x-network-config: &network-config
   networks: 
     - app_network  
-    
+
+
 services: 
   app: 
-    <<: *network-config  
+    <<: *network-config
+    build: 
+      context: .
+      args: 
+        DOCKER_BUILDKIT: 1
+    expose:
+      - "3000"
+    depends_on: 
+      db:
+        condition: service_healthy    
+    environment: 
+      PORT: "3000"
+
+      # DB    
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # AUTH
+      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+    healthcheck:
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
 
   db: 
     image: postgres:latest
     <<: *network-config   
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data    
     healthcheck: 
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
@@ -32,7 +62,7 @@ services:
       ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-http://localhost,http://localhost:3000}"
     command: sh -c "cp /init-nginx.sh /tmp/init-nginx.sh && chmod +x /tmp/init-nginx.sh && /tmp/init-nginx.sh"
     ports: 
-      - "${NGINX_PORT:-443}:443"
+      - "${NGINX_HTTPS_PORT:-443}:443"
       - "${NGINX_HTTP_PORT:-80}:80"    
     volumes: 
       - ./nginx/includes:/etc/nginx/includes
@@ -47,7 +77,7 @@ services:
       test: ["CMD-SHELL", "curl -k -f http://localhost:80/ping"]
       interval: 10s
       timeout: 5s 
-      retries: 3
+      retries: 5
 
 networks:
   app_network:

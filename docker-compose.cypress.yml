@@ -1,8 +1,8 @@
 x-test-app-defaults: &test-app-defaults 
-  INTERNAL_CLIENT_URL: "http://nginx:80"
-  CLIENT_DOMAIN: 'localhost'
-  VITE_API_URL: "http://nginx:80"
   NODE_ENV: test
+  CLIENT_DOMAIN: 'localhost'
+  INTERNAL_CLIENT_URL: "http://nginx:80"
+  VITE_API_URL: "http://nginx:80"
   DB_NAME: ${DB_NAME}
   TEST_DB_NAME: ${DB_NAME}_cypress
 
@@ -10,7 +10,7 @@ services:
   app:
     environment:
       <<: *test-app-defaults
-
+      
   cypress: 
     build:
       context: .

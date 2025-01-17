@@ -1,24 +1,12 @@
 import { createEmailTransporter } from "./createEmailTransporter";
+import { getMailerError } from "./getMailerError";
+import { EmailOptions, EmailResult } from "./types";
 
 const fromEmail = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS;
 const fromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER;
 const defaultFrom = `"${fromName}" <${fromEmail}>`;
 
-interface NodemailerError extends Error {
-  code?: string;
-  command?: string;
-  response?: string;
-  responseCode?: number;
-}
-
-interface EmailOptions {
-  to: string;
-  subject: string;
-  html: string; 
-  from?: string;
-}
-
-export async function sendEmail (options: EmailOptions) {
+export async function sendEmail (options: EmailOptions): Promise<EmailResult>{
   const { from = defaultFrom, subject } = options;
   const transporter = createEmailTransporter();
 
@@ -31,21 +19,14 @@ export async function sendEmail (options: EmailOptions) {
       console.log('Email sent: ', info.messageId);
     }
 
-    return info;
+    return {
+      success: true, 
+      messageId: info.messageId
+    };
   } catch (error: unknown) {
-    const mailerError = error as NodemailerError;
-
-    console.error('Failed to send email: ', {
-      error: mailerError.message,
-      code: mailerError.code,
-      response: mailerError.response,
-      to: options.to,
-      subject: options.subject
-    });
-
     return {
       success: false,
-      error: mailerError.message,
+      error: getMailerError({ error, options }), 
       messageId: null
     };
   } finally {
