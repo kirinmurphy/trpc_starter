@@ -1,33 +1,33 @@
 SHELL := /bin/bash
 
 DC_BASE=docker compose -f docker-compose.base.yml 
-DC=${DC_BASE} -f docker-compose.yml 
+DC=${DC_BASE} -f docker-compose.dev.yml 
 DCT=${DC} -f docker-compose.cypress.yml
 DCP=${DC_BASE} -f docker-compose.production.yml
 PRUNE=docker system prune -f && docker volume prune -f
 
 ## -- DEV ------- ## 
-.PHONY: app
-app:
+.PHONY: run-dev
+run-dev:
 	$(DC) up
 
-.PHONY: build-app
-build-app: clean-app
+.PHONY: build-dev
+build-dev: clean-dev
 	$(DC) build app
 
-.PHONY: build-app-no-cache
-build-app-no-cache: clean-app
+.PHONY: build-dev-no-cache
+build-dev-no-cache: clean-dev
 	$(DC) build app --no-cache
 
-.PHONY: logs-app
-logs-app:
-	$(DC) logs app
+.PHONY: logs-dev
+logs-dev:
+	$(DC) logs dev
 
-.PHONY: app-all
-app-all: build-app app logs-app
+.PHONY: dev-all
+dev-all: build-dev run-dev logs-dev
 
-.PHONY: clean-app
-clean-app: 
+.PHONY: clean-dev
+clean-dev: 
 	$(DC) down -v
 	${PRUNE}
 
@@ -37,8 +37,8 @@ reload-nginx:
 
 
 ## -- TESTING ------- ## 
-.PHONY: tests
-tests:
+.PHONY: run-tests
+run-tests:
 	# $(DCT) up --exit-code-from cypress --abort-on-container-exit
 	# Toggle to hide nginx logs in terminal
 	set -o pipefail; $(DCT) up --exit-code-from cypress --abort-on-container-exit | grep -v "nginx.*\|.*nginx"
@@ -56,7 +56,7 @@ logs-tests:
 	$(DCT) logs cypress
 
 .PHONY: tests-all
-tests-all: build-tests tests logs-tests
+tests-all: build-tests run-tests logs-tests
 
 .PHONY: clean-tests
 clean-tests: 
@@ -65,8 +65,8 @@ clean-tests:
 
 
 ## -- PRODUCTION ------- ##
-.PHONY: prod
-prod:
+.PHONY: run-prod
+run-prod:
 	$(DCP) up
 
 .PHONY: build-prod
@@ -82,7 +82,7 @@ logs-prod:
 	$(DCP) logs app
 
 .PHONY: prod-all
-prod-all: build-prod prod logs-prod
+prod-all: build-prod run-prod logs-prod
 
 .PHONY: clean-prod
 clean-prod: 
@@ -102,17 +102,17 @@ clean-all:
 .PHONY: help
 help:
 	@echo "Application commands:"
-	@echo "  make app                    - Start the application"
-	@echo "  make build-app              - Clean and build application container"
-	@echo "  make build-app-no-cache     - Clear cache and build app container"
-	@echo "  make logs-app               - View application logs"
-	@echo "  make app-all                - Run app build, start, and logs in sequence"
-	@echo "  make clean-app              - Clean dev containers and volumes"
+	@echo "  make run-dev                - Start the application"
+	@echo "  make build-dev              - Clean and build application container"
+	@echo "  make build-dev-no-cache     - Clear cache and build dev container"
+	@echo "  make logs-dev               - View dev application logs"
+	@echo "  make dev-all                - Run app build, start, and logs in sequence"
+	@echo "  make clean-dev              - Clean dev containers and volumes"
 	@echo "  make reload-nginx           - Update nginx config (w/o restarting)"
 
 	@echo ""
 	@echo "CI / Testing commands:"
-	@echo "  make tests                  - Run cypress tests"
+	@echo "  make run-tests              - Run cypress tests"
 	@echo "  make build-tests            - Clean and build cypress container"
 	@echo "  make build-tests-no-cache   - Clear cache and build cypress container"
 	@echo "  make logs-tests             - View cypress logs"
@@ -121,7 +121,7 @@ help:
 
 	@echo ""
 	@echo "Production commands:"
-	@echo "  make prod                   - Start the application in production"
+	@echo "  make run-prod               - Start the application in production"
 	@echo "  make build-prod             - Clean and build production container"
 	@echo "  make build-prod-no-cache    - Clear cache and build production container"
 	@echo "  make logs-prod              - View production logs"

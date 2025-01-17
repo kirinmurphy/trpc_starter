@@ -33,7 +33,7 @@ jobs:
         run: make build-tests
 
       - name: Run tests
-        run: make tests
+        run: make run-tests
         id: run_tests
         continue-on-error: false
 

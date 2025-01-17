@@ -2,22 +2,21 @@
 set -e
 
 echo "Starting production server..."
+echo "Waiting for database..."
 
-if [[ -n "$DB_HOST" ]]; then
-  echo "Waiting for database..."
-  timeout=30
-  elapsed=0
-  until nc -z $DB_HOST 5432 || [ $elapsed -gt $timeout ]; do
-    sleep 1
-    elapsed=$((elapsed+1))
-  done
+timeout=30
+elapsed=0
+until nc -z db 5432 || [ $elapsed -gt $timeout ]; do
+  sleep 1
+  elapsed=$((elapsed+1))
+done
 
-  if [ $elapsed -gt $timeout ]; then
-    echo "Database connection timeout"
-    exit 1
-  fi
-  echo "Database is ready!"
+if [ $elapsed -gt $timeout ]; then
+  echo "Database connection timeout"
+  exit 1
 fi
+
+echo "Database is ready!"
 
 echo "Building application..."
 bun run build

@@ -1,7 +1,15 @@
 import { createEmailTransporter } from "./createEmailTransporter";
 
-// TODO: move to config 
-const defaultFrom = '"codethings.net" <noreply@codethings.net>';
+const fromEmail = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS;
+const fromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER;
+const defaultFrom = `"${fromName}" <${fromEmail}>`;
+
+interface NodemailerError extends Error {
+  code?: string;
+  command?: string;
+  response?: string;
+  responseCode?: number;
+}
 
 interface EmailOptions {
   to: string;
@@ -24,9 +32,22 @@ export async function sendEmail (options: EmailOptions) {
     }
 
     return info;
-  } catch (error) {
-    console.error("Error sending email: ", error);
-    throw error;
+  } catch (error: unknown) {
+    const mailerError = error as NodemailerError;
+
+    console.error('Failed to send email: ', {
+      error: mailerError.message,
+      code: mailerError.code,
+      response: mailerError.response,
+      to: options.to,
+      subject: options.subject
+    });
+
+    return {
+      success: false,
+      error: mailerError.message,
+      messageId: null
+    };
   } finally {
     transporter.close();
   }
