@@ -9,7 +9,7 @@ README.md
 .dockerignore
 Dockerfile
 Dockerfile.cypress
-docker-compose.yml
+docker-compose.dev.yml
 docker-compose.cypress.yml
 docker-compose.production.yml
 docker/*

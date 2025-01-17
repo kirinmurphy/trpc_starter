@@ -14,11 +14,11 @@ interface EmailConfigProps {
 const emailConfig: Record<string, EmailConfigProps> = {
   production: {
     host: process.env.EMAIL_SERVICE_HOST!,
-    port: 587,
-    secure: false,
+    port: parseInt(process.env.EMAIL_SERVICE_PORT || '587'),
+    secure: process.env.EMAIL_SERVICE_SECURE === 'true',
     auth: {
-      user: 'apikey',
-      pass: process.env.EMAIL_SERVICE_API_KEY!
+      user: process.env.EMAIL_SERVICE_USER!,
+      pass: process.env.EMAIL_SERVICE_PASS!
     }
   },
   development: {

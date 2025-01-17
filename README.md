@@ -25,13 +25,14 @@ App starter built in Typescript, tRPC, Node and React
       • e2e test framework with Github Actions integration<br>
       • Docker containers for dev, testing, and production environments<br>
       • Email integration for dev, test and production environments<br>
-      • Postgres migration task
+      • CI integrated postgres migration action
     </td>
   </tr>
   <tr>
     <td style="vertical-align: top;">Client</td>
     <td>
       • Simple form library w/ tRPC integration<br>
+      • Markdown file import
       • Icon library
     </td>
   </tr>
@@ -49,37 +50,38 @@ App starter built in Typescript, tRPC, Node and React
 ```env 
 # commented variables available for overrides
 
-# API_HOST=0.0.0.0
-# VITE_HOST=0.0.0.0
+# -- PRODUCTION
+CLIENT_DOMAIN=your-webdomain.com
 
-# DB
+# -- DB
 DB_NAME=db_for_your_app
 DB_USER=your_username
 DB_PASSWORD=your_password
-# DB_PORT=5432
 
-# AUTH
+# -- AUTH
 AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
 REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
-# EMAIL
-EMAIL_SERVICE_HOST=smtp.some-provider.com # ex: smtp.sendgrid.net
-EMAIL_SERVICE_API_KEY=email_service_api_key
-EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS=noreply@yourdomain.com
-EMAIL_SERVICE_SYSTEM_EMAIL_NAME=yourdomain.com
-
+# -- EMAIL
+EMAIL_SERVICE_HOST=smtp.some-provider.com
+EMAIL_SERVICE_USER=email_service_user
+EMAIL_SERVICE_PASS=email_service_password_or_api_key
+EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS=support@yourdomain.com
+EMAIL_SERVICE_SYSTEM_EMAIL_SENDER=yourdomain.com
+# EMAIL_SERViCE_PORT=not_587
+# EMAIL_SERVICE_SECURE=not_false
 ``` 
 
 
 ## Running App With Docker
 
 ### Development commands:
-- **make app**                    - Run the application 
-- **make build-app**              - Clean and build application container
-- **make build-app-no-cache**     - Clear cache, clean and build app container
-- **make logs-app**               - View application logs
-- **make app-all**                - Run build, start, and logs in sequence
-- **make clean-app**              - Clean dev containers and volumes
+- **make run-dev**                    - Run the application 
+- **make build-dev**              - Clean and build application container
+- **make build-dev-no-cache**     - Clear cache, clean and build dev container
+- **make logs-dev**               - View application logs
+- **make dev-all**                - Run build, start, and logs in sequence
+- **make clean-dev**              - Clean dev containers and volumes
 - **make reload-nginx**           - Update nginx config (no restart needed)
 
 #### Dev URLs
@@ -88,7 +90,7 @@ EMAIL_SERVICE_SYSTEM_EMAIL_NAME=yourdomain.com
 
 
 ### CI / Testing commands:
-- **make test**                   - Run cypress tests
+- **make run-test**                   - Run cypress tests
 - **make build tests**          - Clean and build cypress container
 - **make build tests-no-cache** - Clear cache, clean and build cypress container
 - **make logs-tests**           - View cypress logs
@@ -96,7 +98,7 @@ EMAIL_SERVICE_SYSTEM_EMAIL_NAME=yourdomain.com
 - **make clean-tests**          - Clean tests containers and volumes
 
 ### Production commands:
-- **make prod**                   - Start the application in production
+- **make run-prod**                   - Start the application in production
 - **make build-prod**             - Clean and build production container
 - **make build-prod-no-cache**    - Clear cache and build production container
 - **make logs-prod**              - View production logs
@@ -107,4 +109,4 @@ EMAIL_SERVICE_SYSTEM_EMAIL_NAME=yourdomain.com
 - **make help**                   - Show all commands 
 
 Notes: 
-- DB Migration is run on every app/production  start
+- DB Migration is run on every app/production start

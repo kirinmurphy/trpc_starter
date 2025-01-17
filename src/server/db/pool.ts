@@ -20,7 +20,7 @@ export const getPool = (function () {
 export function createPool ({ dbName }: { dbName: string }) {
   return new Pool({
     user: process.env.DB_USER,
-    host: process.env.DB_HOST || 'localhost',
+    host: 'db',
     database: dbName,
     password: process.env.DB_PASSWORD,
     port: 5432

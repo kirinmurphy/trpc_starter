@@ -34,9 +34,9 @@ async function verifyTestEnvironment () {
 function createTestPool () {
   return new Pool({
     user: process.env.DB_USER,
-    host: process.env.DB_HOST || 'localhost',
+    host: 'db',
     password: process.env.DB_PASSWORD,
-    port: parseInt(process.env.DB_PORT || '5432'),
+    port: 5432,
     database: process.env.TEST_DB_NAME
   });
 }

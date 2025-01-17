@@ -20,15 +20,12 @@ services:
       CLIENT_DOMAIN: "localhost"
       INTERNAL_CLIENT_URL: "http://app:${VITE_PORT}"  
       VITE_API_URL: "http://localhost"
-      VITE_HOST: ${VITE_HOST:-0.0.0.0}
-      API_HOST: ${API_HOST:-0.0.0.0}
       NODE_ENV: development
       PORT: "3000"
       # DB
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: db 
       # AUTH
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}

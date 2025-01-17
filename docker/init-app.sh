@@ -15,7 +15,7 @@ fi
 echo "Database is ready"
 
 echo "Running migrations..."
-bun run migrate:docker 
+bun run migrate 
 if [ $? -ne 0 ]; then
   echo "Migration failed" 
   exit 1
