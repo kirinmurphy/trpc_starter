@@ -1,57 +1,36 @@
+
+
 services: 
   app:
     build: 
-      context: .
       target: development
-      args:
-        DOCKER_BUILDKIT: 1
+    expose:
+      - "5173"
+    command: ./docker/init-app.sh
     volumes: 
       - .:/app
       - /app/node_modules
+    environment:
+      NODE_ENV: development
+      CLIENT_DOMAIN: "localhost"
+      INTERNAL_CLIENT_URL: "http://app:5173"  
+      VITE_API_URL: "http://localhost"
+      DEBUG: "app:*"
+    healthcheck:
+      test: [
+        "CMD-SHELL",
+        "curl -v -f http://0.0.0.0:3000/ping && curl -v -f http://0.0.0.0:5173 || echo 'Health check failed with status $?'"
+      ]
     logging: 
       driver: "json-file"
       options:
         max-size: "10m"
         max-file: '3'
-    expose:
-      - "3000"
-      - "${VITE_PORT}"
-    environment:
-      CLIENT_DOMAIN: "localhost"
-      INTERNAL_CLIENT_URL: "http://app:${VITE_PORT}"  
-      VITE_API_URL: "http://localhost"
-      NODE_ENV: development
-      PORT: "3000"
-      # DB
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      # AUTH
-      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
-      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
-      # OUTPUT
-      DEBUG: "app:*"
-    depends_on: 
-      db:
-        condition: service_healthy    
-    healthcheck:
-      test: [
-        "CMD-SHELL",
-        "curl -v -f http://0.0.0.0:3000/ping && curl -v -f http://0.0.0.0:${VITE_PORT} || echo 'Health check failed with status $?'"
-      ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 60s
-    command: ./docker/init-app.sh
 
   db: 
     ports: 
       - "5433:5432"
     environment: 
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
       - TEST_DB_NAME=${DB_NAME}_cypress
     volumes:
       - ./docker/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
@@ -67,4 +46,4 @@ services:
 
   nginx:
     environment: 
-      VITE_PORT: ${VITE_PORT}
+      VITE_PORT: 5173

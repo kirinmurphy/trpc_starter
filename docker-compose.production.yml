@@ -1,37 +1,15 @@
-# NOTES: 
-# API_PROTOCOL deafults to https but can be overriden in .env to test locally 
-
 services:
   app: 
     build: 
-      context: .
       target: production
-      args: 
-        DOCKER_BUILDKIT: 1
-    deploy:
-      resources:
-        limits:
-          memory: ${DOCKER_MEMORY_LIMIT:-1G}
-          cpus: ${DOCKER_CPU_LIMIT:-0.5}
     expose:
-      - "3000"
       - "4173"
     environment:
       NODE_ENV: production
       CLIENT_DOMAIN: ${CLIENT_DOMAIN}
       INTERNAL_CLIENT_URL: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN}"
       VITE_API_URL: "${API_PROTOCOL:-https}://${CLIENT_DOMAIN}"
-      PORT: "3000"
       VITE_PORT: "4173"
-
-      # DB
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-
-      # AUTH
-      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
-      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
 
       # EMAIL SERVICE 
       EMAIL_SERVICE_HOST: ${EMAIL_SERVICE_HOST}
@@ -39,32 +17,25 @@ services:
       EMAIL_SERVICE_PASS: ${EMAIL_SERVICE_PASS}
       EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS: ${EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS}
       EMAIL_SERVICE_SYSTEM_EMAIL_SENDER: ${EMAIL_SERVICE_SYSTEM_EMAIL_SENDER}
-      EMAIL_SERViCE_PORT: ${EMAIL_SERViCE_PORT}
+      EMAIL_SERVICE_PORT: ${EMAIL_SERViCE_PORT}
       EMAIL_SERVICE_SECURE: ${EMAIL_SERVICE_SECURE}
-
     healthcheck:
       test: [
         "CMD-SHELL", 
         "curl -v http://localhost:3000/ping?batch=1&input=%7B%7D && curl -v http://localhost:4173",
       ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-    depends_on:
-      db:
-        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: ${DOCKER_APP_MEMORY_LIMIT:-1G}
+          cpus: ${DOCKER_APP_CPU_LIMIT:-0.5}
 
   db:
     deploy:
       resources:
         limits:
-          memory: ${DOCKER_MEMORY_LIMIT:-1G}
-          cpus: ${DOCKER_CPU_LIMIT:-0.5}
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+          memory: ${DOCKER_DB_MEMORY_LIMIT:-1G}
+          cpus: ${DOCKER_DB_CPU_LIMIT:-0.5}
     ulimits: 
       nproc: 65535
       nofile: 

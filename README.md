@@ -24,7 +24,7 @@ App starter built in Typescript, tRPC, Node and React
       • e2e test framework with CI integration (Github Actions)<br>
       • Docker containers for dev, testing, and production environments<br>
       • Email integration for dev and production environments<br>
-      • CI integrated postgres migration action
+      • CI integrated postgres migration flow
     </td>
   </tr>
   <tr>
