@@ -7,8 +7,15 @@ const fromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER;
 const defaultFrom = `"${fromName}" <${fromEmail}>`;
 
 export async function sendEmail (options: EmailOptions): Promise<EmailResult>{
+  // TODO: split function arg for from to fromEmail and fromName (fromSender),
+  //  so we can have more precision in checking the address
   const { from = defaultFrom, subject } = options;
-  const transporter = createEmailTransporter();
+
+  console.log('========= From', from);
+  if ( !from ) {
+    throw new Error('from address not defined');
+  }
+  const transporter = await createEmailTransporter();
 
   try {
     const info = await transporter.sendMail({

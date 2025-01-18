@@ -5,6 +5,7 @@ const DEMO_USER = {
 } as const; 
 
 const publicHomepageIntroText = 'tRPC web app starter';
+
 describe('User Authentication', () => {
   describe('Public Pages', () => {
     it('loads the public homepage', () => {
@@ -29,7 +30,7 @@ describe('User Authentication', () => {
       cy.cleanupTestUsers();
     });
   
-    describe('successful sign up', () => {
+    describe.only('successful sign up', () => {
       it('renders the authenticated homepage and then successfully logs out ', () => {
         cy.contains(DEMO_USER.name).should('be.visible');
         cy.contains(DEMO_USER.email).should('be.visible');

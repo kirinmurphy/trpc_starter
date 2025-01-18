@@ -5,6 +5,9 @@ x-test-app-defaults: &test-app-defaults
   VITE_API_URL: "http://nginx:80"
   DB_NAME: ${DB_NAME}
   TEST_DB_NAME: ${DB_NAME}_cypress
+  EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS: ${EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS}
+  EMAIL_SERVICE_SYSTEM_EMAIL_SENDER: ${EMAIL_SERVICE_SYSTEM_EMAIL_SENDER}
+
 
 services: 
   app:

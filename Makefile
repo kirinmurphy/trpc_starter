@@ -45,11 +45,11 @@ run-tests:
 
 .PHONY: build-tests
 build-tests: clean-tests
-	$(DCT) build cypress
+	$(DCT) build cypress mailhog
 
 .PHONY: build-tests-no-cache
 build-tests-no-cache: clean-tests
-	$(DCT) build cypress --no-cache
+	$(DCT) build cypress mailhog --no-cache
 
 .PHONY: logs-tests
 logs-tests:
@@ -62,6 +62,10 @@ tests-all: build-tests run-tests logs-tests
 clean-tests: 
 	$(DCT) down -v
 	${PRUNE}
+
+.PHONY: check-mailhog
+check-mailhog:
+	$(DCT) exec cypress curl -v mailhog:8025/api/v2/messages || true
 
 
 ## -- PRODUCTION ------- ##

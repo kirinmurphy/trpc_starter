@@ -22,6 +22,9 @@ jobs:
       AUTH_TOKEN_SECRET: test-secret
       REFRESH_TOKEN_SECRET: test-refresh-secret
       VITE_PORT: 5173
+      DOCKER_COMPOSE_CMD: "docker compose -f docker-compose.base.yml -f docker-compose.dev.yml -f docker-compose.cypress.yml"
+      EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS: noreply@codethings.net
+      EMAIL_SERVICE_SYSTEM_EMAIL_SENDER: codethings.net
 
     steps: 
       - uses: actions/checkout@v4
@@ -32,13 +35,41 @@ jobs:
       - name: Build test containers
         run: make build-tests
 
-      - name: Run tests
-        run: make run-tests
-        id: run_tests
-        continue-on-error: false
+      # Start containers in detached mode
+      - name: Start test environment
+        run: |
+          $DOCKER_COMPOSE_CMD up -d
+          sleep 10  # Give containers time to be fully ready
+
+      # Debug setup before tests
+      - name: Initial container state
+        run: |
+          echo "Container Status:"
+          $DOCKER_COMPOSE_CMD ps
+          echo "\nMailhog Logs:"
+          $DOCKER_COMPOSE_CMD logs mailhog
+          echo "\nApp Logs:"
+          $DOCKER_COMPOSE_CMD logs app
+          echo "\nNetwork Test:"
+          $DOCKER_COMPOSE_CMD exec app curl -v mailhog:8025/api/v2/messages
+
+      # Run tests
+      - name: Run Cypress tests
+        run: $DOCKER_COMPOSE_CMD up --exit-code-from cypress --abort-on-container-exit
+
+      # Debug state after tests
+      - name: Final state
+        if: always()
+        run: |
+          echo "Final Container Status:"
+          $DOCKER_COMPOSE_CMD ps
+          echo "\nFinal Mailhog Logs:"
+          $DOCKER_COMPOSE_CMD logs mailhog
+          echo "\nFinal App Logs:"
+          $DOCKER_COMPOSE_CMD logs app
 
       - name: Upload test artifacts 
-        if: always() && steps.run_tests.outcome != 'skipped'
+        if: always()
         uses: actions/upload-artifact@v3
         with: 
           name: cypress-results
@@ -48,4 +79,5 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: make clean-tests
+        run: |
+          $DOCKER_COMPOSE_CMD down -v

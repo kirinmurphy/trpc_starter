@@ -1,4 +1,4 @@
-import { AuthActionProps } from "./types";
+import { AuthActionProps, MailhogEmailProps } from "./types";
 
 Cypress.Commands.add('cleanupTestUsers', () => {
   cy.task('cleanupTestUsers');
@@ -19,6 +19,15 @@ Cypress.Commands.add('createAccountAttempt', ({ demoUser }: AuthActionProps) => 
 
 Cypress.Commands.add('createAccount', ({ demoUser }: AuthActionProps) => {
   cy.createAccountAttempt({ demoUser });
+
+  cy.wait(1000);
+
+  // cy.getLastEmail({ email: demoUser.email }).then(emailAttempt => {
+  //   expect(emailAttempt.Raw.To.includes(demoUser.email)).to.equal(true);
+  //   expect(emailAttempt.Content.Headers.Subject).to.include("Verify your email address");
+  //   expect(emailAttempt.Content.Body).to.include('Welcome');
+  // });
+
   const msg = "We have sent a verification link to the email you provided.";
   cy.contains(msg).should('be.visible');
 });
@@ -46,4 +55,18 @@ Cypress.Commands.add('login', ({ demoUser }: AuthActionProps) => {
 
 Cypress.Commands.add('getVerificationToken', ({ email }: { email: string; }) => {
   return cy.task('getVerificationToken', { email });
+});
+
+// -- EMAIL 
+Cypress.Commands.add('clearEmails', () => {
+  cy.task('clearAllEmails');
+  cy.wait(1000);
+});
+
+Cypress.Commands.add('getLastEmail', ({ email }) => {
+  cy.wait(5000);
+  return cy.task('getLastEmailByRecipient', { email }).then(emailResponse => {
+    cy.wrap(emailResponse).should('not.be.null');
+    return cy.wrap(emailResponse as MailhogEmailProps);
+  });
 });
