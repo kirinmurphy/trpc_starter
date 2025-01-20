@@ -2,19 +2,18 @@ import { createEmailTransporter } from "./createEmailTransporter";
 import { getMailerError } from "./getMailerError";
 import { EmailOptions, EmailResult } from "./types";
 
-const fromEmail = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS;
-const fromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER;
-const defaultFrom = `"${fromName}" <${fromEmail}>`;
+const defaultFromEmail = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS || 'test@email.com';
+const defaultFromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER || 'Test Sender';
 
 export async function sendEmail (options: EmailOptions): Promise<EmailResult>{
-  // TODO: split function arg for from to fromEmail and fromName (fromSender),
-  //  so we can have more precision in checking the address
-  const { from = defaultFrom, subject } = options;
+  const { 
+    fromEmail = defaultFromEmail,
+    fromSender = defaultFromName, 
+    subject 
+  } = options;
 
-  console.log('========= From', from);
-  if ( !from ) {
-    throw new Error('from address not defined');
-  }
+  const from = `"${fromSender}" <${fromEmail}>`;
+
   const transporter = await createEmailTransporter();
 
   try {

@@ -13,6 +13,7 @@ module.exports = {
     await fetch(`${MAILHOG_API}/v1/messages`, { method: 'DELETE' }); 
     return null;
   },
+  // TODO: format the email item to be a little more consumable for task users
   getLastEmailByRecipient: async ({ email }) => {
     const { items } = await getAllEmails();
     
@@ -23,7 +24,6 @@ module.exports = {
       });
     });
 
-    console.log('message', message);
     return message || null;
   }
 }

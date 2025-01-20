@@ -30,10 +30,17 @@ describe('User Authentication', () => {
       cy.cleanupTestUsers();
     });
   
-    describe.only('successful sign up', () => {
+    describe('successful sign up', () => {
       it('renders the authenticated homepage and then successfully logs out ', () => {
         cy.contains(DEMO_USER.name).should('be.visible');
         cy.contains(DEMO_USER.email).should('be.visible');
+
+        cy.getLastEmail({ email: DEMO_USER.email }).then(emailAttempt => {
+          expect(emailAttempt.Raw.To.includes(DEMO_USER.email)).to.equal(true);
+          expect(emailAttempt.Content.Headers.Subject).to.include("Verify your email address");
+          expect(emailAttempt.Content.Body).to.include('Welcome');
+        });
+      
         cy.contains('button', 'Logout').click();
         cy.location('pathname').should('eq', '/');
       });

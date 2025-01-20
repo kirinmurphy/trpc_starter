@@ -32,14 +32,5 @@ const emailConfig: EmailConfigProps = isProd ? productionConfig : mailhogConfig;
 
 export async function createEmailTransporter () {
   console.log('Creating email transporter for env', process.env.NODE_ENV);
-  const transporter = nodemailer.createTransport(emailConfig);
-
-  try {
-    await transporter.verify();
-    console.log('SMTP connection verified successfully');
-  } catch (error) {
-    console.error('SMTP connection failed:', error);
-  }
-
-  return transporter;
+  return nodemailer.createTransport(emailConfig);
 }
