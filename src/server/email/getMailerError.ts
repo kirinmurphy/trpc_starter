@@ -7,7 +7,12 @@ interface NodemailerError extends Error {
   responseCode?: number;
 }
 
-export function getMailerError ({ error, options }: { error: unknown; options: EmailOptions }) {
+interface Props {
+  error: unknown; 
+  options: EmailOptions;
+}
+
+export function getMailerError ({ error, options }: Props) {
   const mailerError = error as NodemailerError;
 
   console.error('Failed to send email: ', {

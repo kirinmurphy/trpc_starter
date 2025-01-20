@@ -1,10 +1,10 @@
 const { defineConfig } = require('cypress');
-const { verifyTestEnvironment, cleanupTestUsers } = require('./cypress/support/db.cjs');
-const { createTestPool } = require('./cypress/support/db.cjs');
+const { verifyTestEnvironment, cleanupTestUsers } = require('./cypress/support/tasks/db.cjs');
+const { getVerificationToken } = require('./cypress/support/tasks/auth.cjs'); 
+const mailhogApi = require('./cypress/plugins/mailhog.cjs');
 
 require('dotenv').config();
 
-const pool = createTestPool();
 
 module.exports = defineConfig({
   e2e: {
@@ -42,12 +42,9 @@ module.exports = defineConfig({
           return null;
         },
         async getVerificationToken({ email }) {
-          const result = await pool.query(
-            'SELECT token FROM verification_tokens WHERE email = $1 ORDER BY expires_at DESC LIMIT 1',
-            [email]
-          );
-          return result.rows[0]?.token || null;
-        }
+          return await getVerificationToken({ email });
+        },
+        ...mailhogApi
       });
 
       return config;

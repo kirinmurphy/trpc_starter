@@ -1,4 +1,4 @@
-import { AuthActionProps } from "./types";
+import { AuthActionProps, MailhogEmailProps } from "./types";
 
 Cypress.Commands.add('cleanupTestUsers', () => {
   cy.task('cleanupTestUsers');
@@ -46,4 +46,18 @@ Cypress.Commands.add('login', ({ demoUser }: AuthActionProps) => {
 
 Cypress.Commands.add('getVerificationToken', ({ email }: { email: string; }) => {
   return cy.task('getVerificationToken', { email });
+});
+
+// -- EMAIL 
+Cypress.Commands.add('clearEmails', () => {
+  cy.task('clearAllEmails');
+  cy.wait(1000);
+});
+
+Cypress.Commands.add('getLastEmail', ({ email }) => {
+  cy.wait(2000);
+  return cy.task('getLastEmailByRecipient', { email }).then(emailResponse => {
+    cy.wrap(emailResponse).should('not.be.null');
+    return cy.wrap(emailResponse as MailhogEmailProps);
+  });
 });

@@ -2,13 +2,19 @@ import { createEmailTransporter } from "./createEmailTransporter";
 import { getMailerError } from "./getMailerError";
 import { EmailOptions, EmailResult } from "./types";
 
-const fromEmail = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS;
-const fromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER;
-const defaultFrom = `"${fromName}" <${fromEmail}>`;
+const defaultFromEmail = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS || 'test@email.com';
+const defaultFromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER || 'Test Sender';
 
 export async function sendEmail (options: EmailOptions): Promise<EmailResult>{
-  const { from = defaultFrom, subject } = options;
-  const transporter = createEmailTransporter();
+  const { 
+    fromEmail = defaultFromEmail,
+    fromSender = defaultFromName, 
+    subject 
+  } = options;
+
+  const from = `"${fromSender}" <${fromEmail}>`;
+
+  const transporter = await createEmailTransporter();
 
   try {
     const info = await transporter.sendMail({

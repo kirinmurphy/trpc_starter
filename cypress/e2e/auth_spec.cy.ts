@@ -5,6 +5,7 @@ const DEMO_USER = {
 } as const; 
 
 const publicHomepageIntroText = 'tRPC web app starter';
+
 describe('User Authentication', () => {
   describe('Public Pages', () => {
     it('loads the public homepage', () => {
@@ -33,6 +34,13 @@ describe('User Authentication', () => {
       it('renders the authenticated homepage and then successfully logs out ', () => {
         cy.contains(DEMO_USER.name).should('be.visible');
         cy.contains(DEMO_USER.email).should('be.visible');
+
+        cy.getLastEmail({ email: DEMO_USER.email }).then(emailAttempt => {
+          expect(emailAttempt.Raw.To.includes(DEMO_USER.email)).to.equal(true);
+          expect(emailAttempt.Content.Headers.Subject).to.include("Verify your email address");
+          expect(emailAttempt.Content.Body).to.include('Welcome');
+        });
+      
         cy.contains('button', 'Logout').click();
         cy.location('pathname').should('eq', '/');
       });

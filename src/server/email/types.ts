@@ -2,7 +2,8 @@ export interface EmailOptions {
   to: string;
   subject: string;
   html: string; 
-  from?: string;
+  fromEmail?: string;
+  fromSender?: string;
 }
 
 export interface EmailSuccess {

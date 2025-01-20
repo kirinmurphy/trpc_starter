@@ -23,7 +23,7 @@ App starter built in Typescript, tRPC, Node and React
     <td>
       • e2e test framework with CI integration (Github Actions)<br>
       • Docker containers for dev, testing, and production environments<br>
-      • Email integration for dev and production environments<br>
+      • Email integration for dev, testing and production environments<br>
       • CI integrated postgres migration flow
     </td>
   </tr>
@@ -47,9 +47,6 @@ App starter built in Typescript, tRPC, Node and React
 # Setup
 ## ENV Variables
 ```env 
-# -- PRODUCTION
-CLIENT_DOMAIN=your-website-domain.com
-
 # -- DB
 DB_NAME=app_db_name
 DB_USER=app_db_username
@@ -59,7 +56,9 @@ DB_PASSWORD=app_db_password
 AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
 REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
-# -- EMAIL
+# -- PRODUCTION
+CLIENT_DOMAIN=your-website-domain.com
+
 EMAIL_SERVICE_HOST=smtp.some-provider.com
 EMAIL_SERVICE_USER=email_service_user
 EMAIL_SERVICE_PASS=email_service_password_or_api_key
@@ -72,7 +71,7 @@ additional optional override variables available [here](./.env.example)
 ## Running App With Docker
 
 ### Development commands:
-- **make run-dev**                    - Run the application 
+- **make run-dev**                - Run the application 
 - **make build-dev**              - Clean and build application container
 - **make build-dev-no-cache**     - Clear cache, clean and build dev container
 - **make logs-dev**               - View application logs
@@ -82,11 +81,11 @@ additional optional override variables available [here](./.env.example)
 
 #### Dev URLs
 - website: `http://localhost`     
-- email server: `http://localhost:8025`    
+- mock email server: `http://localhost:8025`
 
 
 ### CI / Testing commands:
-- **make run-test**                   - Run cypress tests
+- **make run-test**             - Run cypress tests
 - **make build tests**          - Clean and build cypress container
 - **make build tests-no-cache** - Clear cache, clean and build cypress container
 - **make logs-tests**           - View cypress logs
@@ -94,7 +93,7 @@ additional optional override variables available [here](./.env.example)
 - **make clean-tests**          - Clean tests containers and volumes
 
 ### Production commands:
-- **make run-prod**                   - Start the application in production
+- **make run-prod**               - Start the application in production
 - **make build-prod**             - Clean and build production container
 - **make build-prod-no-cache**    - Clear cache and build production container
 - **make logs-prod**              - View production logs
