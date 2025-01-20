@@ -28,6 +28,7 @@ describe('User Authentication', () => {
   
     after(() => {
       cy.cleanupTestUsers();
+      cy.clearEmails();
     });
   
     describe('successful sign up', () => {
