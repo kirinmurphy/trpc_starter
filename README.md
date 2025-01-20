@@ -57,7 +57,7 @@ AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
 REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
 # -- PRODUCTION
-CLIENT_DOMAIN=your-website-domain.com
+CLIENT_DOMAIN=yourdomain.com
 
 EMAIL_SERVICE_HOST=smtp.some-provider.com
 EMAIL_SERVICE_USER=email_service_user
