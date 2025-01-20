@@ -1,12 +1,4 @@
-import { AuthActionProps, MailhogEmailProps } from "./types";
-
-Cypress.Commands.add('cleanupTestUsers', () => {
-  cy.task('cleanupTestUsers');
-});
-
-Cypress.Commands.add('verifyTestEnvironment', () => {
-  cy.task('verifyTestEnvironment');
-});
+import { AuthActionProps } from "./types";
 
 Cypress.Commands.add('createAccountAttempt', ({ demoUser }: AuthActionProps) => {
   cy.visit('/');
@@ -31,7 +23,7 @@ Cypress.Commands.add('verifyAccount', ({ email }: { email: string }) => {
   });
 });
 
-Cypress.Commands.add('signUpAndVerify', ({ demoUser }: AuthActionProps) => {
+Cypress.Commands.add('createAccountAndVerify', ({ demoUser }: AuthActionProps) => {
   cy.createAccount({ demoUser });
   cy.verifyAccount({ email: demoUser.email });
 });
@@ -44,20 +36,15 @@ Cypress.Commands.add('login', ({ demoUser }: AuthActionProps) => {
   cy.get('button[type="submit"]').click();
 });
 
+let storedVerificationToken: string | null = null;
+
 Cypress.Commands.add('getVerificationToken', ({ email }: { email: string; }) => {
-  return cy.task('getVerificationToken', { email });
-});
-
-// -- EMAIL 
-Cypress.Commands.add('clearEmails', () => {
-  cy.task('clearAllEmails');
-  cy.wait(1000);
-});
-
-Cypress.Commands.add('getLastEmail', ({ email }) => {
-  cy.wait(2000);
-  return cy.task('getLastEmailByRecipient', { email }).then(emailResponse => {
-    cy.wrap(emailResponse).should('not.be.null');
-    return cy.wrap(emailResponse as MailhogEmailProps);
+  return cy.task('getVerificationToken', { email }).then((token: string) => {
+    storedVerificationToken = token;
+    return token;
   });
+});
+
+Cypress.Commands.add('getStoredVerificationToken', () => {
+  cy.wrap(storedVerificationToken);
 });

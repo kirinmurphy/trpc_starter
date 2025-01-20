@@ -23,11 +23,12 @@ describe('User Authentication', () => {
     before(() => {
       cy.verifyTestEnvironment();
       cy.cleanupTestUsers();  // in case prior tests don't complete
-      cy.signUpAndVerify({ demoUser: DEMO_USER });
+      cy.createAccountAndVerify({ demoUser: DEMO_USER });
     });
   
     after(() => {
       cy.cleanupTestUsers();
+      cy.clearEmails();
     });
   
     describe('successful sign up', () => {
@@ -35,12 +36,17 @@ describe('User Authentication', () => {
         cy.contains(DEMO_USER.name).should('be.visible');
         cy.contains(DEMO_USER.email).should('be.visible');
 
-        cy.getLastEmail({ email: DEMO_USER.email }).then(emailAttempt => {
-          expect(emailAttempt.Raw.To.includes(DEMO_USER.email)).to.equal(true);
-          expect(emailAttempt.Content.Headers.Subject).to.include("Verify your email address");
-          expect(emailAttempt.Content.Body).to.include('Welcome');
+        cy.getStoredVerificationToken({ email: DEMO_USER.email }).should('exist').then(token => {
+          cy.getLastEmail({ email: DEMO_USER.email }).then(emailAttempt => {
+            expect(emailAttempt.Raw.To.includes(DEMO_USER.email)).to.equal(true);
+            expect(emailAttempt.Content.Headers.Subject).to.include("Verify your email address");
+            const emailBody =  emailAttempt.Content.Body;
+            expect(emailBody).to.include(token);
+            // TODO: Implement html parser to query more specific page elements 
+            // const tokenUrl = `http://localhost/verify-account?token=${token}`;
+          });  
         });
-      
+
         cy.contains('button', 'Logout').click();
         cy.location('pathname').should('eq', '/');
       });
@@ -56,7 +62,7 @@ describe('User Authentication', () => {
   
   describe('Login', () => {
     before(() => {
-      cy.signUpAndVerify({ demoUser: DEMO_USER });    
+      cy.createAccountAndVerify({ demoUser: DEMO_USER });    
       cy.contains('button', 'Logout').click();
     });
   
@@ -150,3 +156,4 @@ describe('User Authentication', () => {
     });
   });
 });
+

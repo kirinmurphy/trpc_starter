@@ -61,9 +61,10 @@ declare global {
       createAccountAttempt: (props: AuthActionProps) => Chainable<void>;
       createAccount: (props: AuthActionProps) => Chainable<void>;
       verifyAccount: (props: { email: string }) => Chainable<void>;
-      signUpAndVerify: (props: AuthActionProps) => Chainable<void>;
-      getVerificationToken: (options: { email: string }) => Chainable<string | null>;
+      createAccountAndVerify: (props: AuthActionProps) => Chainable<void>;
       login: (props: AuthActionProps) => Chainable<void>;
+      getVerificationToken: (options: { email: string }) => Chainable<string>;
+      getStoredVerificationToken: (options: { email: string }) => Chainable<string>;
 
       clearEmails: () => Chainable<void>;
       getLastEmail: (props: { email: string }) => Chainable<MailhogEmailProps>;

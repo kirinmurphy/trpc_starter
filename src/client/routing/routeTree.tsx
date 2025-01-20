@@ -23,7 +23,7 @@ const publicHomepageRoute = createRoute({
   component: () => <PublicApp><PublicHomepage/></PublicApp>,
 });
 
-const signUpPageRoute = createRoute({
+const createAccountPageRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.createAccount,
   beforeLoad: redirectIfAuthenticated,
@@ -57,7 +57,7 @@ const verifyAccountRoute = createRoute({
 export const routeTree = rootRoute.addChildren([
   publicHomepageRoute,
   loginPageRoute,
-  signUpPageRoute,
+  createAccountPageRoute,
   authenticatedHomepageRoute,
   verifyAccountRoute
 ]);  
