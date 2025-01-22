@@ -62,3 +62,6 @@ services:
     environment: 
       AUTH_RATE: "1000r/m"
       VERIFY_RATE: "500r/m"
+
+  mailhog: 
+    command: ["-invite-jim"]

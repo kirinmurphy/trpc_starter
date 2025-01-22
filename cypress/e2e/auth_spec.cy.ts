@@ -154,6 +154,32 @@ describe('User Authentication', () => {
       cy.url().should('include', '/login');
       cy.contains('There was a problem verifying your account. Login to request another verification email.');
     });
+
+    describe.only('email send failures', () => {
+      beforeEach(() => {
+        cy.resetMockEmailServer();
+      });
+
+      const emailSendFailureMessage = `We were unable to send your verification email to ${DEMO_USER.email}`;
+
+      it('fails to send email due to a connection error', () => {
+        cy.simulateEmailErrors("connectionError");
+        cy.createAccountAttempt({ demoUser: DEMO_USER });
+        cy.contains(emailSendFailureMessage).should('be.visible');       
+      });
+
+      it('fails to send email due to an invalid email address', () => {
+        cy.simulateEmailErrors("recipientError");
+        cy.createAccountAttempt({ demoUser: DEMO_USER });
+        cy.contains(emailSendFailureMessage).should('be.visible');
+      });
+
+      it('fails to send email due to a delivery timeout', () => {
+        cy.simulateEmailErrors("deliveryError");
+        cy.createAccountAttempt({ demoUser: DEMO_USER });
+        cy.contains(emailSendFailureMessage).should('be.visible');       
+      });
+    });
   });
 });
 

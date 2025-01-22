@@ -12,3 +12,17 @@ Cypress.Commands.add('getLastEmail', ({ email }) => {
     return cy.wrap(emailResponse as MailhogEmailProps);
   });
 });
+
+Cypress.Commands.add('resetMockEmailServer', () => {
+  cy.task('configureMailhogMockResponse');
+});
+
+Cypress.Commands.add('simulateEmailErrors', (type: string) => {
+  const configs = {
+    connectionError: { DisconnectChance: 1.0, AcceptChance: 0  },
+    recipientError: { RejectRecipientChance: 1.0, AcceptChance: 0  },
+    deliveryError: { RejectSenderChance: 1.0 }
+  };
+
+  cy.task('configureMailhogMockResponse', configs[type]);
+});

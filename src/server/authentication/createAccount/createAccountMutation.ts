@@ -7,6 +7,7 @@ import { SQL_CREATE_MEMBER } from "../../db/sql";
 import { ContextType } from "../types";
 import { createEmailSchema, createPasswordSchema, inputIsUnsafe } from "../sharedSchema";
 import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
+import { EmailResult } from "../../email/types";
 
 const copy = {
   duplicateEmail: 'An account with this email already exists.',
@@ -31,10 +32,17 @@ interface CreateAccountMutationProps {
   ctx: ContextType
 }
 
-export async function createAccountMutation (props: CreateAccountMutationProps) {
-  const { 
-    input: { name, email, password }
-  } = props;
+interface CreateAccountResponseProps {
+  success: boolean;
+  userId: string;
+  verificationEmailSendStatus: EmailResult;
+}
+
+export async function createAccountMutation (
+  { input }: CreateAccountMutationProps
+): Promise<CreateAccountResponseProps> {
+
+  const { name, email, password } = input; 
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -43,11 +51,12 @@ export async function createAccountMutation (props: CreateAccountMutationProps) 
       SQL_CREATE_MEMBER,
       [name, email, hashedPassword]
     );
+    
     const userId = result.rows[0].id;
 
-    await initVerifyAccountFlow({ userId, email });
+    const verificationEmailSendStatus = await initVerifyAccountFlow({ userId, email });
+    return { success: true, userId, verificationEmailSendStatus };
 
-    return { success: true, userId };
   } catch (err: unknown) {
     const isDupeError = isDuplicateDBValue({ err, property: 'users_email_key' });
     const errMessage = isDupeError ? copy.duplicateEmail : copy.registrationFailed;

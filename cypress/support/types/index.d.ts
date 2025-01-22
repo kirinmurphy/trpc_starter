@@ -52,6 +52,7 @@ export interface MailhogEmailProps {
   };
 }
 
+type EmailErrorType = 'connectionError' | 'recipientError' | 'deliveryError';
 
 declare global {
   namespace Cypress {
@@ -68,6 +69,8 @@ declare global {
 
       clearEmails: () => Chainable<void>;
       getLastEmail: (props: { email: string }) => Chainable<MailhogEmailProps>;
+      resetMockEmailServer: () => Chainable<void>;
+      simulateEmailErrors: (type: EmailErrorType) => Chainable<void>;
     }
   }  
 }

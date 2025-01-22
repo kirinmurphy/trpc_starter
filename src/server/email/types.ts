@@ -13,15 +13,6 @@ export interface EmailSuccess {
 
 export interface EmailFailure {
   success: false;
-  error: {
-    type: 
-      | 'DELIVERY_FAILED' 
-      | 'CONNECTION_ERROR' 
-      | 'AUTHENTICATION_ERROR' 
-      | 'RECIPIENT_ERROR' 
-      | 'UNKNOWN';
-    message: string;
-  };
   messageId: null;
 }
 

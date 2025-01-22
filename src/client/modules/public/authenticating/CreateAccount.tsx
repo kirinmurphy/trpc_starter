@@ -3,8 +3,8 @@ import { trpcService } from '../../../trpcService/trpcClientService';
 import { SimpleForm } from '../../../widgets/forms/SimpleForm';
 import { InputField } from '../../../widgets/forms/InputField';
 import { useFormState } from '../../../widgets/forms/utils/useFormState';
-import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries';
 import { VerifyAccountInstructions } from './VerifyAccountInstructions';
+import { VerificationEmailNotSent } from './VerificationEmailNotSent';
 
 interface SubmitFormDataProps {
   email: string;
@@ -12,8 +12,10 @@ interface SubmitFormDataProps {
   password: string;
 }
 
+type AccountCreationStateType = 'default' | 'emailNotSent' | 'emailSent';
+
 export function CreateAccount () {
-  const [accountCreated, setAccountCreated] = useState<boolean>(false);
+  const [accountCreationState, setAccountCreationState] = useState<AccountCreationStateType>('default');
   
   const { 
     formData: { email, name, password }, 
@@ -23,9 +25,10 @@ export function CreateAccount () {
   const { mutate, error, isLoading } = trpcService.auth.createAccount.useMutation({
     onSuccess: async (data) => {
       if ( data?.success ) {
-        await invalidateAuthCheckQuery();
-        setAccountCreated(true);
-      } 
+        const emailSent = data?.verificationEmailSendStatus.success;
+        const newState = emailSent ? 'emailSent' : 'emailNotSent';
+        setAccountCreationState(newState);
+      }
     },
   });
 
@@ -45,7 +48,7 @@ export function CreateAccount () {
 
   return (
     <>
-      {!accountCreated && (
+      {accountCreationState === 'default' && (
         <SimpleForm 
           onSubmit={onSubmit}
           isLoading={isLoading}
@@ -79,7 +82,13 @@ export function CreateAccount () {
         </SimpleForm>     
       )}
 
-      {accountCreated && <VerifyAccountInstructions />}
+      {accountCreationState === 'emailSent' && <VerifyAccountInstructions />}
+
+      {accountCreationState === 'emailNotSent' &&  (
+        <VerificationEmailNotSent 
+          email={email}
+        />
+      )} 
     </>
   );
 };
