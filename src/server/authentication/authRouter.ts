@@ -9,6 +9,7 @@ import { createAccountMutation, createAccountSchema } from "./createAccount/crea
 import { verifyAccountMutation } from "./createAccount/verifyAccountMutation";
 import { getNewVerificationEmailMutation, GetNewVerificationEmailSchema } from "./createAccount/getNewVerificationEmailMutation";
 import { resendFailedVerificationEmailMutation, ResendFailedVerificationEmailSchema } from "./createAccount/resendFailedVerificationEmailMutation";
+import { getVerificationEmailSentStatusQuery, GetVerificationEmailSentStatusSchema } from "./createAccount/getVerificationEmailSentStatusQuery";
 
 const { publicQuery, protectedQuery, publicMutation } = procedures;
 
@@ -29,7 +30,11 @@ export const authRouter = router({
     .input(GetNewVerificationEmailSchema)
     .mutation(getNewVerificationEmailMutation),
 
-  resendFailedVerificationEmail: publicMutation
+  getEmailSentStatus: publicQuery
+    .input(GetVerificationEmailSentStatusSchema)
+    .query(getVerificationEmailSentStatusQuery),  
+
+    resendFailedVerificationEmail: publicMutation
     .input(ResendFailedVerificationEmailSchema)
     .mutation(resendFailedVerificationEmailMutation),
 

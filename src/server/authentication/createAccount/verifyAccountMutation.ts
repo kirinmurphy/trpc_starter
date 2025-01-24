@@ -48,7 +48,6 @@ export async function verifyAccountMutation (
 
     const { user_id: userId, expires_at: expiresAt } = tokenDetails;
 
-    // if (  expiresAt !== undefined ) {
     if ( new Date(expiresAt) < new Date() ) {
       return { success: false, userId, error: ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED };
     }

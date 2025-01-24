@@ -7,7 +7,6 @@ import { SQL_CREATE_MEMBER } from "../../db/sql";
 import { ContextType } from "../types";
 import { createEmailSchema, createPasswordSchema, inputIsUnsafe } from "../sharedSchema";
 import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
-import { EmailResult } from "../../email/types";
 
 const copy = {
   duplicateEmail: 'An account with this email already exists.',
@@ -35,7 +34,6 @@ interface CreateAccountMutationProps {
 interface CreateAccountResponseProps {
   success: boolean;
   userId: string;
-  verificationEmailSendStatus: EmailResult;
 }
 
 export async function createAccountMutation (
@@ -54,8 +52,9 @@ export async function createAccountMutation (
     
     const userId = result.rows[0].id;
 
-    const verificationEmailSendStatus = await initVerifyAccountFlow({ userId, email });
-    return { success: true, userId, verificationEmailSendStatus };
+    await initVerifyAccountFlow({ userId, email });
+
+    return { success: true, userId };
 
   } catch (err: unknown) {
     const isDupeError = isDuplicateDBValue({ err, property: 'users_email_key' });

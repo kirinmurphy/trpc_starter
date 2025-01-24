@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { EmailSentStatus } from '../../../../utils/types';
 import { trpcService } from '../../../trpcService/trpcClientService';
 import { SimpleForm } from '../../../widgets/forms/SimpleForm';
 import { InputField } from '../../../widgets/forms/InputField';
 import { useFormState } from '../../../widgets/forms/utils/useFormState';
 import { VerifyAccountInstructions } from './VerifyAccountInstructions';
 import { UnsentVerificationEmailInstructions } from './UnsentVerificationEmailInstructions';
+import { CheckingEmailSent } from './CheckingIfEmailSent';
 
 interface SubmitFormDataProps {
   email: string;
@@ -12,7 +14,7 @@ interface SubmitFormDataProps {
   password: string;
 }
 
-type AccountCreationStateType = 'default' | 'emailNotSent' | 'emailSent';
+type AccountCreationStateType = 'default' | EmailSentStatus[keyof EmailSentStatus];
 
 export function CreateAccount () {
   const [accountCreationState, setAccountCreationState] = useState<AccountCreationStateType>('default');
@@ -24,10 +26,8 @@ export function CreateAccount () {
 
   const { data, mutate, error, isLoading } = trpcService.auth.createAccount.useMutation({
     onSuccess: async (data) => {
-      if ( data?.success ) {
-        const emailSent = data?.verificationEmailSendStatus.success;
-        const newState = emailSent ? 'emailSent' : 'emailNotSent';
-        setAccountCreationState(newState);
+      if ( data?.success ) { 
+        setAccountCreationState(EmailSentStatus.emailQueued); 
       }
     },
   });
@@ -81,15 +81,26 @@ export function CreateAccount () {
         </SimpleForm>     
       )}
 
-      {accountCreationState === 'emailSent' && (
+      {accountCreationState === EmailSentStatus.emailQueued && data && (
+        <CheckingEmailSent 
+          userId={data.userId} 
+          onEmailChecked={state => {
+            setAccountCreationState(state);
+          }} 
+        />
+      )}
+
+      {accountCreationState === EmailSentStatus.emailSent && (
         <VerifyAccountInstructions />
       )}
 
-      {accountCreationState === 'emailNotSent' && data && (
+      {accountCreationState === EmailSentStatus.emailFailed && data && (
         <UnsentVerificationEmailInstructions 
           email={email} 
           userId={data.userId}
-          onResendSuccess={() => { setAccountCreationState('emailSent'); }}
+          onResendSuccess={() => { 
+            setAccountCreationState(EmailSentStatus.emailSent); 
+          }}
         />
       )} 
     </>

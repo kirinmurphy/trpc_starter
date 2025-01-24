@@ -1,7 +1,7 @@
 import { ROUTE_URLS } from "../../../client/routing/routeUrls";
 import { sendEmail } from "../../email/sendEmail";
 
-interface SendVerificationEmailProps {                                                                                                                            
+export interface SendVerificationEmailProps {                                                                                                                            
   to: string; 
   verificationToken: string; 
 }
@@ -10,8 +10,8 @@ export async function sendVerificationEmail (props: SendVerificationEmailProps) 
   const { to, verificationToken } = props;
 
   const verificationUrl = getVerificationUrl({ verificationToken });
-  
-  return sendEmail({
+   
+  const response = sendEmail({
     to,
     subject: 'Verify your email address',
     html: `
@@ -28,6 +28,12 @@ export async function sendVerificationEmail (props: SendVerificationEmailProps) 
       </html>
     `
   });
+
+  response.then((result) => {
+    console.log('resullllllt', result);
+  });
+
+  return response;
 }
 
 function getVerificationUrl ({ verificationToken }: { verificationToken: string }): string {

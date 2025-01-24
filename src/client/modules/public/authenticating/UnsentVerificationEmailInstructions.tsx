@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { trpcService } from "../../../trpcService/trpcClientService";
 import { Button } from "../../../widgets/Button";
 import { LoginRedirectLink } from "./LoginRedirectLink";
@@ -9,22 +10,33 @@ interface Props {
   loginRedirectOverride?: () => void;
 }
 
+const MAX_REQUESTS = 2;
+
 const supportEmail = import.meta.env.VITE_EMAIL_ADDRESS_SUPPORT || 'support@test.com';
 
 export function UnsentVerificationEmailInstructions (props: Props) {
 
   const { email, userId, onResendSuccess, loginRedirectOverride } = props;
 
-  const { data, mutate, isLoading } = trpcService.auth.resendFailedVerificationEmail.useMutation({
-    onSuccess: async () => {
-      console.log('success');
-      onResendSuccess();
+  const [resendRequestCount, setResendRequestCount] = useState<number>(0);
+
+  const { mutate, isLoading } = trpcService.auth.resendFailedVerificationEmail.useMutation({
+    onSuccess: (data) => {
+      if ( data?.success ) {
+        console.log('fhooopp', data);
+        onResendSuccess();
+      } else {
+        setResendRequestCount(prev => prev+1);
+      }
+    },
+    onError: () => {
+      setResendRequestCount(prev => prev+1);     
     }
   });
 
-  const handleResendEmail = () => {
-    if ( isLoading ) { return; }
+  console.log('resendRequestCount', resendRequestCount);
 
+  const handleResendEmail = () => {
     try {
       mutate({ userId });
     } catch (err) {
@@ -32,20 +44,34 @@ export function UnsentVerificationEmailInstructions (props: Props) {
     }
   };
 
-  console.log('data', data);
+  // TODO: should be able to handle with rate limiting 
+  const atResendLimit = resendRequestCount === MAX_REQUESTS;
+
+  console.log('atResendLimit', atResendLimit);
 
   return (
     <div className="text-center">
       <p className="text-xl">We were unable to send your verification link to {email}.</p>
-      
-      <p>This may be a problem with the connection or with the address provided.</p>
-      <p>Try resending the email or <LoginRedirectLink loginRedirectOverride={loginRedirectOverride} /> later to request a new verification link.</p>
 
-      <div className="pt-4 flex justify-center">
-        <Button disabled={isLoading} onClick={handleResendEmail}>
-          {isLoading ? 'Sending...' : 'Resend verification email' }
-        </Button>
-      </div>
+      {!atResendLimit && (
+        <>
+          <p>This may be a problem with the connection or with the address provided.</p>
+  
+          <p>Try resending the email or <LoginRedirectLink loginRedirectOverride={loginRedirectOverride} /> later to request a new verification link.</p>
+    
+          <div className="pt-4 flex justify-center">
+            <Button disabled={isLoading} onClick={handleResendEmail}>
+              {isLoading ? 'Sending...' : 'Resend verification email' }
+            </Button>
+          </div>
+        </>
+      )}
+
+      {atResendLimit && (
+        <p className="max-w-[480px] mx-auto">
+          It seems there is a continued connection problem, please <LoginRedirectLink loginRedirectOverride={loginRedirectOverride} /> later to request a new verification link.
+        </p>
+      )}
 
       <div className="max-w-[350px] mx-auto pt-10 pb-6">
         <hr></hr>

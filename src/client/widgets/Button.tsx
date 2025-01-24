@@ -16,10 +16,15 @@ export function StyledButton (props: StyledButtonProps) {
     disabled 
   } = props;
 
+  const handleClick = (e: MouseEvent) => {
+    if ( disabled || !onClick ) { return; }
+    onClick(e);
+  };
+
   return (
     <button 
     type="button" 
-      {...(onClick && { onClick })}
+      {...(onClick && { onClick: handleClick })}
       className={clsx('', {
         'px-4 py-1 bg-gray-600 font-bold text-white ': type === 'default',
         'hover:bg-gray-200 hover:text-black': type === 'default' && !disabled,

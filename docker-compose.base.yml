@@ -61,7 +61,7 @@ services:
           cpus: ${NGINX_CPU_LIMIT:-0.25}
     environment: 
       AUTH_RATE: "${AUTH_RATE:-10r/m}"
-      VERIFY_RATE: "${VERIFY_RATE:-3r/m}"
+      VERIFY_RATE: "${VERIFY_RATE:-10r/m}"
       ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-http://localhost,http://localhost:3000}"
     command: sh -c "cp /init-nginx.sh /tmp/init-nginx.sh && chmod +x /tmp/init-nginx.sh && /tmp/init-nginx.sh"
     ports: 
