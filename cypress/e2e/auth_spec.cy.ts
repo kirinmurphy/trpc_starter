@@ -160,7 +160,7 @@ describe('User Authentication', () => {
         cy.resetMockEmailServer();
       });
 
-      const emailSendFailureMessage = `We were unable to send your verification email to ${DEMO_USER.email}`;
+      const emailSendFailureMessage = `We were unable to send your verification link to ${DEMO_USER.email}.`;
 
       it('fails to send email due to a connection error', () => {
         cy.simulateEmailErrors("connectionError");

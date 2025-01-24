@@ -6,18 +6,18 @@ import { ContextType } from "../types";
 import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
 import { MemberEmailSchema, VerificationTokenMinimalSchema } from "../schemas";
 
-export const ResendVerificationEmailSchema = z.object({
+export const GetNewVerificationEmailSchema = z.object({
   userId: z.string().uuid()
 });
 
-type ResendVerificationEmailInput = z.infer<typeof ResendVerificationEmailSchema>;
+type GetNewVerificationEmailInput = z.infer<typeof GetNewVerificationEmailSchema>;
 
-interface ResendVerificationEmailMutationProps {
-  input: ResendVerificationEmailInput;
+interface GetNewVerificationEmailMutationProps {
+  input: GetNewVerificationEmailInput;
   ctx: ContextType;
 }
 
-export async function resendVerificationEmailMutation (props: ResendVerificationEmailMutationProps) {
+export async function getNewVerificationEmailMutation (props: GetNewVerificationEmailMutationProps) {
   const { input: { userId }} = props;
   const client = await getPool().connect();
 

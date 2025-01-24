@@ -22,7 +22,7 @@ export function CreateAccount () {
     handleFieldChange 
   } = useFormState<SubmitFormDataProps>({ email: '', name: '', password: '' });
 
-  const { mutate, error, isLoading } = trpcService.auth.createAccount.useMutation({
+  const { data, mutate, error, isLoading } = trpcService.auth.createAccount.useMutation({
     onSuccess: async (data) => {
       if ( data?.success ) {
         const emailSent = data?.verificationEmailSendStatus.success;
@@ -34,7 +34,6 @@ export function CreateAccount () {
 
   const onSubmit = () => {
     if ( !email || !password || !name ) { return; }
-
     try {
       mutate({ 
         email: email.trim(), 
@@ -82,11 +81,14 @@ export function CreateAccount () {
         </SimpleForm>     
       )}
 
-      {accountCreationState === 'emailSent' && <VerifyAccountInstructions />}
+      {accountCreationState === 'emailSent' && (
+        <VerifyAccountInstructions />
+      )}
 
-      {accountCreationState === 'emailNotSent' &&  (
+      {accountCreationState === 'emailNotSent' && data && (
         <VerificationEmailNotSent 
-          email={email}
+          email={email} 
+          userId={data.userId}
         />
       )} 
     </>

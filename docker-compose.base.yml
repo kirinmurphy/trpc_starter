@@ -26,6 +26,9 @@ services:
       # AUTH
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+
+      # EMAIL
+      VITE_EMAIL_ADDRESS_SUPPORT: ${VITE_EMAIL_ADDRESS_SUPPORT}
     healthcheck:
       interval: 10s
       timeout: 5s

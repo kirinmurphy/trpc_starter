@@ -7,7 +7,7 @@ import { SimpleForm } from '../../../widgets/forms/SimpleForm';
 import { InputField } from '../../../widgets/forms/InputField';
 import { useFormState } from '../../../widgets/forms/utils/useFormState';
 import { InlineNotification } from '../../../widgets/InlineNotification';
-import { ResendVerificationEmail } from './ResendVerificationEmail';
+import { GetNewVerificationEmail } from './GetNewVerificationEmail';
 
 const loginNotifications = {
   [ERR_VERIFICATION_FAILED]: 'There was a problem verifying your account.  Login to request another verification email.'
@@ -88,7 +88,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
 
       {data && isUnverified && (
         <>
-          <ResendVerificationEmail 
+          <GetNewVerificationEmail 
             userId={data.userId} 
             loginRedirectOverride={() => { setIsUnverified(false); }} 
           />

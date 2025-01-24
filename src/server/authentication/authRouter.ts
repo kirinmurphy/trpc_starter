@@ -7,7 +7,8 @@ import { getUserQuery } from "./getUserQuery";
 import { refreshTokenMutation } from "./refreshTokenMutation";
 import { createAccountMutation, createAccountSchema } from "./createAccount/createAccountMutation";
 import { verifyAccountMutation } from "./createAccount/verifyAccountMutation";
-import { resendVerificationEmailMutation, ResendVerificationEmailSchema } from "./createAccount/resendVerificationEmailMutation";
+import { getNewVerificationEmailMutation, GetNewVerificationEmailSchema } from "./createAccount/getNewVerificationEmailMutation";
+import { resendFailedVerificationEmailMutation, ResendFailedVerificationEmailSchema } from "./createAccount/resendFailedVerificationEmailMutation";
 
 const { publicQuery, protectedQuery, publicMutation } = procedures;
 
@@ -24,9 +25,13 @@ export const authRouter = router({
     .input(z.object({ token: z.string() }))
     .mutation(verifyAccountMutation),
 
-  resendVerificationEmail: publicMutation
-    .input(ResendVerificationEmailSchema)
-    .mutation(resendVerificationEmailMutation),
+  getNewVerificationEmail: publicMutation
+    .input(GetNewVerificationEmailSchema)
+    .mutation(getNewVerificationEmailMutation),
+
+  resendFailedVerificationEmail: publicMutation
+    .input(ResendFailedVerificationEmailSchema)
+    .mutation(resendFailedVerificationEmailMutation),
 
   logout: publicMutation  
     .mutation(logoutUserMutation),
