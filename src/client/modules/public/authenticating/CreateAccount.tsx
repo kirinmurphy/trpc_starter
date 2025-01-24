@@ -4,7 +4,7 @@ import { SimpleForm } from '../../../widgets/forms/SimpleForm';
 import { InputField } from '../../../widgets/forms/InputField';
 import { useFormState } from '../../../widgets/forms/utils/useFormState';
 import { VerifyAccountInstructions } from './VerifyAccountInstructions';
-import { VerificationEmailNotSent } from './VerificationEmailNotSent';
+import { UnsentVerificationEmailInstructions } from './UnsentVerificationEmailInstructions';
 
 interface SubmitFormDataProps {
   email: string;
@@ -86,9 +86,10 @@ export function CreateAccount () {
       )}
 
       {accountCreationState === 'emailNotSent' && data && (
-        <VerificationEmailNotSent 
+        <UnsentVerificationEmailInstructions 
           email={email} 
           userId={data.userId}
+          onResendSuccess={() => { setAccountCreationState('emailSent'); }}
         />
       )} 
     </>
