@@ -11,7 +11,7 @@ export async function sendVerificationEmail (props: SendVerificationEmailProps) 
 
   const verificationUrl = getVerificationUrl({ verificationToken });
    
-  const response = sendEmail({
+  return sendEmail({
     to,
     subject: 'Verify your email address',
     html: `
@@ -28,12 +28,6 @@ export async function sendVerificationEmail (props: SendVerificationEmailProps) 
       </html>
     `
   });
-
-  response.then((result) => {
-    console.log('resullllllt', result);
-  });
-
-  return response;
 }
 
 function getVerificationUrl ({ verificationToken }: { verificationToken: string }): string {

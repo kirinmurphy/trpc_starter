@@ -165,18 +165,21 @@ describe('User Authentication', () => {
       it('fails to send email due to a connection error', () => {
         cy.simulateEmailErrors("connectionError");
         cy.createAccountAttempt({ demoUser: DEMO_USER });
+        cy.wait(4000);
         cy.contains(emailSendFailureMessage).should('be.visible');       
       });
 
       it('fails to send email due to an invalid email address', () => {
         cy.simulateEmailErrors("recipientError");
         cy.createAccountAttempt({ demoUser: DEMO_USER });
+        cy.wait(4000);
         cy.contains(emailSendFailureMessage).should('be.visible');
       });
 
       it('fails to send email due to a delivery timeout', () => {
         cy.simulateEmailErrors("deliveryError");
         cy.createAccountAttempt({ demoUser: DEMO_USER });
+        cy.wait(4000);
         cy.contains(emailSendFailureMessage).should('be.visible');       
       });
     });

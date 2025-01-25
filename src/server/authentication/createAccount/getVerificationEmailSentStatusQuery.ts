@@ -24,10 +24,10 @@ export async function getVerificationEmailSentStatusQuery (
 
   for ( let attempts = 0; attempts < 4; attempts++ ) {
     await new Promise(resolve => setTimeout(resolve, ( attempts*1500 + 1000 )));  
+
     const result = await getPool().query(SQL_GET_VERIFICATION_EMAIL_SEND_STATE, [userId]);
     
     const { email_sent_status } = parseDBQueryResult(result, EmailSentStatusSchema) || {};
-    console.log('resulllllllltttttt', email_sent_status);
 
     if ( !email_sent_status || email_sent_status !== EmailSentStatus.emailQueued ) {
       return email_sent_status || EmailSentStatus.emailFailed;
@@ -36,5 +36,4 @@ export async function getVerificationEmailSentStatusQuery (
 
   // TODO: better error handling here 
   return EmailSentStatus.emailFailed;
-
 }
