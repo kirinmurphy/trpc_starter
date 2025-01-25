@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { EmailSentStatus } from '../../../utils/types';
 import { getPool } from '../../db/pool';
-import { SQL_CREATE_VERIFICATION_TOKEN, SQL_UPDATE_VERIFICIATION_EMAIL_SEND_STATE } from "../../db/sql";
+import { SQL_CREATE_VERIFICATION_RECORD, SQL_SET_VERIFICIATION_EMAIL_SEND_STATE } from "../../db/sql";
 import { VERIFICATION_TOKEN_EXPIRY } from '../expiryConstants';
 import { sendVerificationEmail, SendVerificationEmailProps } from "./sendVerificationEmail";
 
@@ -17,7 +17,7 @@ export async function initVerifyAccountFlow (props: Props): Promise<void> {
 
   try {
     await getPool().query(
-      SQL_CREATE_VERIFICATION_TOKEN,
+      SQL_CREATE_VERIFICATION_RECORD,
       [verificationToken, userId, email, VERIFICATION_TOKEN_EXPIRY]
     );
   
@@ -50,7 +50,7 @@ async function sendVerificationEmailAsync (props: SendVerificationEmailAsyncProp
 async function updateEmailStatus ({ userId, emailStatus }: { userId: string; emailStatus: EmailSentStatus }) {
   try {
     await getPool().query(
-      SQL_UPDATE_VERIFICIATION_EMAIL_SEND_STATE,
+      SQL_SET_VERIFICIATION_EMAIL_SEND_STATE,
       [emailStatus, userId]
     );
   } catch (err) {

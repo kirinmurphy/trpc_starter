@@ -5,9 +5,9 @@ import {
 } from "../../../utils/messageCodes";
 import { getPool } from "../../db/pool";
 import { 
-  SQL_DELETE_VERIFICATION_TOKEN, 
+  SQL_DELETE_VERIFICATION_RECORD, 
   SQL_SET_MEMBER_AS_VERIFIED, 
-  SQL_VERIFY_ACCOUNT 
+  SQL_GET_VERIFICATION_RECORD_BY_TOKEN 
 } from "../../db/sql";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { setAccessTokenCookie, setRefreshTokenCookie } from "../jwtActions";
@@ -39,7 +39,7 @@ export async function verifyAccountMutation (
   const client = await getPool().connect();
 
   try {
-    const tokenResult = await client.query(SQL_VERIFY_ACCOUNT, [token]);
+    const tokenResult = await client.query(SQL_GET_VERIFICATION_RECORD_BY_TOKEN, [token]);
     const tokenDetails = parseDBQueryResult(tokenResult, VerificationTokenSchema);
 
     if ( !tokenDetails ) {
@@ -55,7 +55,7 @@ export async function verifyAccountMutation (
     await client.query('BEGIN');
     try {
       await client.query(SQL_SET_MEMBER_AS_VERIFIED, [userId]);
-      await client.query(SQL_DELETE_VERIFICATION_TOKEN, [token]);
+      await client.query(SQL_DELETE_VERIFICATION_RECORD, [token]);
       await client.query('COMMIT');
     } catch (err) {
       await client.query('ROLLBACK');

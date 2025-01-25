@@ -22,7 +22,7 @@ export async function getVerificationEmailSentStatusQuery (
 ): Promise<EmailSentStatus>  {
   const { input: { userId } } = props;
 
-  for ( let attempts = 0; attempts < 5; attempts++ ) {
+  for ( let attempts = 0; attempts < 4; attempts++ ) {
     await new Promise(resolve => setTimeout(resolve, ( attempts*1500 + 1000 )));  
     const result = await getPool().query(SQL_GET_VERIFICATION_EMAIL_SEND_STATE, [userId]);
     

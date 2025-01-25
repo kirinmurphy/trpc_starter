@@ -9,11 +9,11 @@ interface Props {
 export function CheckingEmailSent (props: Props) {
   const { userId, onEmailChecked } = props;
 
-  trpcService.auth.getEmailSentStatus.useQuery({ userId }, { 
+  trpcService.auth.getVerificationEmailSentStatus.useQuery({ userId }, { 
     cacheTime: 0, 
     staleTime: 0,
     onSuccess: data => {
-      console.log('SuCEESSS, data:', data);
+      console.log('SUCCESS, data:', data);
       onEmailChecked(data);
     },
     onError: err => {
@@ -24,7 +24,7 @@ export function CheckingEmailSent (props: Props) {
 
   return (
     <div className="text-center">
-      Loading...
+      Creating Your Account...
     </div>
   )
 }

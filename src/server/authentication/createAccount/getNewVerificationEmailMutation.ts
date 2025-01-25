@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { getPool } from "../../db/pool";
-import { SQL_DELETE_VERIFICATION_TOKEN, SQL_GET_MEMBER_EMAIL, SQL_GET_VERIFICATION_TOKEN_BY_USERID } from "../../db/sql";
+import { SQL_DELETE_VERIFICATION_RECORD, SQL_GET_MEMBER_EMAIL, SQL_GET_VERIFICATION_RECORD_BY_USERID } from "../../db/sql";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { ContextType } from "../types";
 import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
@@ -21,7 +21,7 @@ export async function getNewVerificationEmailMutation (props: GetNewVerification
   const { input: { userId }} = props;
   const client = await getPool().connect();
 
-  const result = await client.query(SQL_GET_VERIFICATION_TOKEN_BY_USERID, [userId])
+  const result = await client.query(SQL_GET_VERIFICATION_RECORD_BY_USERID, [userId])
   const tokenDetails = parseDBQueryResult(result, VerificationTokenMinimalSchema);
 
   let email;
@@ -31,7 +31,7 @@ export async function getNewVerificationEmailMutation (props: GetNewVerification
   try {
     if ( tokenDetails ) {
       email = tokenDetails.email;
-      await client.query(SQL_DELETE_VERIFICATION_TOKEN, [tokenDetails.token]);
+      await client.query(SQL_DELETE_VERIFICATION_RECORD, [tokenDetails.token]);
     } else {
       const result = await client.query(SQL_GET_MEMBER_EMAIL, [userId]);
       const parsedResult = parseDBQueryResult(result, MemberEmailSchema);

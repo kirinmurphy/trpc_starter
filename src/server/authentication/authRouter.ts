@@ -30,11 +30,11 @@ export const authRouter = router({
     .input(GetNewVerificationEmailSchema)
     .mutation(getNewVerificationEmailMutation),
 
-  getEmailSentStatus: publicQuery
+  getVerificationEmailSentStatus: publicQuery
     .input(GetVerificationEmailSentStatusSchema)
     .query(getVerificationEmailSentStatusQuery),  
 
-    resendFailedVerificationEmail: publicMutation
+  resendFailedVerificationEmail: publicMutation
     .input(ResendFailedVerificationEmailSchema)
     .mutation(resendFailedVerificationEmailMutation),
 
