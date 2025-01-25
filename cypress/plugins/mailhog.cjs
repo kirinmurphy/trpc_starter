@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 
 const MAILHOG_API = 'http://mailhog:8025/api';
+const MOCK_CONFIG_ENDPOINT = `${MAILHOG_API}/v2/jim`;
 
 async function getAllEmails () {
   const response = await fetch(`${MAILHOG_API}/v2/messages`);
@@ -26,10 +27,10 @@ module.exports = {
     return message || null;
   },
   configureMailhogMockResponse: async (config) => {    
-    await fetch(`${MAILHOG_API}/v2/jim`, { method: 'DELETE' });
+    await fetch(MOCK_CONFIG_ENDPOINT, { method: 'DELETE' });
 
     if ( config ) {
-      await fetch(`${MAILHOG_API}/v2/jim`, {
+      await fetch(MOCK_CONFIG_ENDPOINT, {
         method: 'POST',      
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

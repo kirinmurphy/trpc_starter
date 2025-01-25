@@ -49,10 +49,7 @@ async function sendVerificationEmailAsync (props: SendVerificationEmailAsyncProp
 
 async function updateEmailStatus ({ userId, emailStatus }: { userId: string; emailStatus: EmailSentStatus }) {
   try {
-    await getPool().query(
-      SQL_SET_VERIFICIATION_EMAIL_SEND_STATE,
-      [emailStatus, userId]
-    );
+    await getPool().query(SQL_SET_VERIFICIATION_EMAIL_SEND_STATE, [emailStatus, userId]);
   } catch (err) {
     console.error('updateEmailStatus error', err);
     throw err;

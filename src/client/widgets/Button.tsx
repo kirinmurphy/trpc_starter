@@ -6,6 +6,7 @@ interface StyledButtonProps {
   disabled?: boolean;
   type?: 'inline';
   onClick?: (e: MouseEvent) => void;
+  testId?: string;
 }
 
 export function StyledButton (props: StyledButtonProps) {
@@ -13,6 +14,7 @@ export function StyledButton (props: StyledButtonProps) {
     children, 
     onClick, 
     type = 'default',
+    testId,
     disabled 
   } = props;
 
@@ -25,6 +27,7 @@ export function StyledButton (props: StyledButtonProps) {
     <button 
     type="button" 
       {...(onClick && { onClick: handleClick })}
+      {...(testId && { "data-testid": testId })}
       className={clsx('', {
         'px-4 py-1 bg-gray-600 font-bold text-white ': type === 'default',
         'hover:bg-gray-200 hover:text-black': type === 'default' && !disabled,

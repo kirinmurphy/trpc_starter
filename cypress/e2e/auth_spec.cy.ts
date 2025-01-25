@@ -155,8 +155,9 @@ describe('User Authentication', () => {
       cy.contains('There was a problem verifying your account. Login to request another verification email.');
     });
 
-    describe.only('email send failures', () => {
+    describe('verification email send failures', () => {
       beforeEach(() => {
+        cy.cleanupTestUsers();
         cy.resetMockEmailServer();
       });
 
@@ -165,22 +166,35 @@ describe('User Authentication', () => {
       it('fails to send email due to a connection error', () => {
         cy.simulateEmailErrors("connectionError");
         cy.createAccountAttempt({ demoUser: DEMO_USER });
-        cy.wait(4000);
+        cy.wait(5000);
         cy.contains(emailSendFailureMessage).should('be.visible');       
       });
 
       it('fails to send email due to an invalid email address', () => {
         cy.simulateEmailErrors("recipientError");
         cy.createAccountAttempt({ demoUser: DEMO_USER });
-        cy.wait(4000);
+        cy.wait(5000);
         cy.contains(emailSendFailureMessage).should('be.visible');
       });
 
-      it('fails to send email due to a delivery timeout', () => {
+      it('fails to send email due to an delivery error address and re-attempt sending email workflow', () => {
         cy.simulateEmailErrors("deliveryError");
         cy.createAccountAttempt({ demoUser: DEMO_USER });
-        cy.wait(4000);
+        cy.contains('Creating account...');
+        cy.wait(5000);
         cy.contains(emailSendFailureMessage).should('be.visible');       
+
+        const resendButtonSelector = 'button[data-testid="resend-failed-verification-email-button"]';
+        const getResendButton = () => cy.get(resendButtonSelector);
+        
+        getResendButton().contains('Resend verification email').click();
+        getResendButton().contains('Sending...')
+        cy.wait(1000);
+        getResendButton().contains('Resend verification email').should('be.visible');
+        cy.resetMockEmailServer();
+        getResendButton().contains('Resend verification email').click();
+        const msg = "We have sent a verification link to the email you provided.";
+        cy.contains(msg).should('be.visible');
       });
     });
   });

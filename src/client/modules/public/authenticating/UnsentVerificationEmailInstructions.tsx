@@ -12,7 +12,7 @@ interface Props {
 
 const MAX_REQUESTS = 4;
 
-const supportEmail = import.meta.env.VITE_EMAIL_ADDRESS_SUPPORT || 'support@test.com';
+const supportEmail = import.meta.env.VITE_EMAIL_ADDRESS_SUPPORT!;
 
 export function UnsentVerificationEmailInstructions (props: Props) {
 
@@ -23,7 +23,6 @@ export function UnsentVerificationEmailInstructions (props: Props) {
   const { mutate, isLoading } = trpcService.auth.resendFailedVerificationEmail.useMutation({
     onSuccess: (data) => {
       if ( data?.success ) {
-        console.log('fhooopp', data);
         onResendSuccess();
       } else {
         setResendRequestCount(prev => prev+1);
@@ -33,8 +32,6 @@ export function UnsentVerificationEmailInstructions (props: Props) {
       setResendRequestCount(prev => prev+1);     
     }
   });
-
-  console.log('resendRequestCount', resendRequestCount);
 
   const handleResendEmail = () => {
     try {
@@ -47,8 +44,6 @@ export function UnsentVerificationEmailInstructions (props: Props) {
   // TODO: should be able to handle with rate limiting 
   const atResendLimit = resendRequestCount === MAX_REQUESTS;
 
-  console.log('atResendLimit', atResendLimit);
-
   return (
     <div className="text-center">
       <p className="text-xl">We were unable to send your verification link to {email}.</p>
@@ -60,7 +55,11 @@ export function UnsentVerificationEmailInstructions (props: Props) {
           <p>Try resending the email or <LoginRedirectLink loginRedirectOverride={loginRedirectOverride} /> later to request a new verification link.</p>
     
           <div className="pt-4 flex justify-center">
-            <Button disabled={isLoading} onClick={handleResendEmail}>
+            <Button 
+              testId="resend-failed-verification-email-button" 
+              disabled={isLoading} 
+              onClick={handleResendEmail}
+            >
               {isLoading ? 'Sending...' : 'Resend verification email' }
             </Button>
           </div>

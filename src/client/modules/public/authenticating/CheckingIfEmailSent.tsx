@@ -13,18 +13,16 @@ export function CheckingEmailSent (props: Props) {
     cacheTime: 0, 
     staleTime: 0,
     onSuccess: data => {
-      console.log('SUCCESS, data:', data);
       onEmailChecked(data);
     },
-    onError: err => {
-      console.log('Faaaillll, err:', err);
+    onError: () => {
       onEmailChecked(EmailSentStatus.emailFailed)
     } 
   });
 
   return (
     <div className="text-center">
-      Creating Your Account...
+      Creating account...
     </div>
   )
 }
