@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+source ./docker/check-env.sh
+
 echo "Starting production server..."
 echo "Waiting for database..."
 

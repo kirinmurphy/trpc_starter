@@ -23,7 +23,8 @@ COPY . .
 CMD ["bun", "run", "dev"]
 
 
-FROM base as builder 
+# PRODUCTION 
+FROM base as production 
 ENV NODE_OPTIONS="--max-old-space-size=384"
 ENV BUN_JS_HEAP_SIZE_MB=384
 
@@ -33,14 +34,11 @@ RUN --mount=type=cache,target=/root/.bun \
     bun add mock-aws-s3 aws-sdk nock && \
     rm -rf ~/.bun/install/cache
 
+
 COPY . .
+RUN chmod +x /app/docker/*.sh
+
 RUN rm -rf node_modules/.cache
 RUN NODE_ENV=production bun build src/server/server.ts --outdir=dist/server --target=node --minify
 RUN NODE_ENV=production bun run vite build --minify
-
-
-# PRODUCTION 
-FROM builder AS production
-RUN chmod +x ./docker/init-prod.sh
-
-CMD ["./docker/init-prod.sh"]
+CMD ["/app/docker/init-prod.sh"]

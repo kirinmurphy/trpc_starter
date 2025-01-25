@@ -56,6 +56,9 @@ DB_PASSWORD=app_db_password
 AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
 REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
+# -- MISC
+VITE_EMAIL_ADDRESS_SUPPORT=support@yourdomain.com
+
 # -- PRODUCTION
 CLIENT_DOMAIN=yourdomain.com
 

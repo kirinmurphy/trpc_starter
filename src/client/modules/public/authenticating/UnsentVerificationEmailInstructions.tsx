@@ -10,7 +10,7 @@ interface Props {
   loginRedirectOverride?: () => void;
 }
 
-const MAX_REQUESTS = 2;
+const MAX_REQUESTS = 4;
 
 const supportEmail = import.meta.env.VITE_EMAIL_ADDRESS_SUPPORT || 'support@test.com';
 

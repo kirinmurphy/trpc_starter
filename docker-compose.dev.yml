@@ -30,8 +30,8 @@ services:
       - "5433:5432"
     environment: 
       - TEST_DB_NAME=${DB_NAME}_cypress
-    volumes:
-      - ./docker/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    # volumes:
+    #   - ./docker/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
 
   mailhog: 
     image: mailhog/mailhog:latest
