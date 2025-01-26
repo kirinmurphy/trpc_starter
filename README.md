@@ -65,7 +65,7 @@ CLIENT_DOMAIN=yourdomain.com
 EMAIL_SERVICE_HOST=smtp.some-provider.com
 EMAIL_SERVICE_USER=email_service_user
 EMAIL_SERVICE_PASS=email_service_password_or_api_key
-EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS=support@yourdomain.com
+EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS=noreply@yourdomain.com
 EMAIL_SERVICE_SYSTEM_EMAIL_SENDER=yourdomain.com
 ``` 
 additional optional override variables available [here](./.env.example)
