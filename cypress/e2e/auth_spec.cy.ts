@@ -23,11 +23,12 @@ describe('User Authentication', () => {
     before(() => {
       cy.verifyTestEnvironment();
       cy.cleanupTestUsers();  // in case prior tests don't complete
-      cy.signUpAndVerify({ demoUser: DEMO_USER });
+      cy.createAccountAndVerify({ demoUser: DEMO_USER });
     });
   
     after(() => {
       cy.cleanupTestUsers();
+      cy.clearEmails();
     });
   
     describe('successful sign up', () => {
@@ -35,12 +36,17 @@ describe('User Authentication', () => {
         cy.contains(DEMO_USER.name).should('be.visible');
         cy.contains(DEMO_USER.email).should('be.visible');
 
-        cy.getLastEmail({ email: DEMO_USER.email }).then(emailAttempt => {
-          expect(emailAttempt.Raw.To.includes(DEMO_USER.email)).to.equal(true);
-          expect(emailAttempt.Content.Headers.Subject).to.include("Verify your email address");
-          expect(emailAttempt.Content.Body).to.include('Welcome');
+        cy.getStoredVerificationToken({ email: DEMO_USER.email }).should('exist').then(token => {
+          cy.getLastEmail({ email: DEMO_USER.email }).then(emailAttempt => {
+            expect(emailAttempt.Raw.To.includes(DEMO_USER.email)).to.equal(true);
+            expect(emailAttempt.Content.Headers.Subject).to.include("Verify your email address");
+            const emailBody =  emailAttempt.Content.Body;
+            expect(emailBody).to.include(token);
+            // TODO: Implement html parser to query more specific page elements 
+            // const tokenUrl = `http://localhost/verify-account?token=${token}`;
+          });  
         });
-      
+
         cy.contains('button', 'Logout').click();
         cy.location('pathname').should('eq', '/');
       });
@@ -56,7 +62,7 @@ describe('User Authentication', () => {
   
   describe('Login', () => {
     before(() => {
-      cy.signUpAndVerify({ demoUser: DEMO_USER });    
+      cy.createAccountAndVerify({ demoUser: DEMO_USER });    
       cy.contains('button', 'Logout').click();
     });
   
@@ -148,5 +154,66 @@ describe('User Authentication', () => {
       cy.url().should('include', '/login');
       cy.contains('There was a problem verifying your account. Login to request another verification email.');
     });
+
+    describe('verification email send failures', () => {
+      const emailSendFailureMessage = `We were unable to send your verification link to ${DEMO_USER.email}.`;
+      const CREATE_ACCOUNT_SUCCESS_HEADER = "We have sent a verification link to the email you provided.";
+
+      beforeEach(() => {
+        cy.cleanupTestUsers();
+        cy.resetMockEmailServer();
+      });
+
+      it('fails to send email due to a connection error', () => {
+        cy.simulateEmailSendFailure("connectionError");
+        cy.createAccountAttempt({ demoUser: DEMO_USER });
+        cy.wait(5000);
+        cy.contains(emailSendFailureMessage).should('be.visible');       
+      });
+
+      it('fails to send email due to an invalid email address', () => {
+        cy.simulateEmailSendFailure("recipientError");
+        cy.createAccountAttempt({ demoUser: DEMO_USER });
+        cy.wait(5000);
+        cy.contains(emailSendFailureMessage).should('be.visible');
+      });
+
+      it('fails to send email due to an delivery error address and re-attempt sending email workflow', () => {
+        cy.simulateEmailSendFailure("deliveryError");
+        cy.createAccountAttempt({ demoUser: DEMO_USER });
+        cy.contains('Creating account...');
+        cy.wait(5000);
+        cy.contains(emailSendFailureMessage).should('be.visible');       
+
+        getUnsentEmailResendButton().contains('Resend verification email').click();
+        // happens too fast to capture?  
+        // getEmailResendButton().contains('Sending...')
+        cy.wait(1000);
+        getUnsentEmailResendButton().contains('Resend verification email').should('be.visible');
+        cy.resetMockEmailServer();
+        getUnsentEmailResendButton().contains('Resend verification email').click();
+        cy.contains(CREATE_ACCOUNT_SUCCESS_HEADER).should('be.visible');
+      });
+
+      it('fails to RE-send the re-requested verifical email (then re-re-sends it)', () => {
+        cy.createAccount({ demoUser: DEMO_USER });
+        cy.login({ demoUser: DEMO_USER });
+        cy.simulateEmailSendFailure('deliveryError');
+        cy.contains('Resend verification email').click();
+        cy.contains(emailSendFailureMessage).should('be.visible');       
+        getUnsentEmailResendButton().click();
+        cy.contains(emailSendFailureMessage).should('be.visible');       
+        cy.resetMockEmailServer();
+        cy.wait(4000);
+        getUnsentEmailResendButton().click();
+        cy.contains(CREATE_ACCOUNT_SUCCESS_HEADER).should('be.visible');
+      });
+    });
   });
 });
+
+function getUnsentEmailResendButton () {
+  const resendButtonSelector = 'button[data-testid="resend-failed-verification-email-button"]';
+  return cy.get(resendButtonSelector);
+} 
+

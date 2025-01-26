@@ -52,6 +52,7 @@ export interface MailhogEmailProps {
   };
 }
 
+type EmailErrorType = 'connectionError' | 'recipientError' | 'deliveryError';
 
 declare global {
   namespace Cypress {
@@ -61,12 +62,15 @@ declare global {
       createAccountAttempt: (props: AuthActionProps) => Chainable<void>;
       createAccount: (props: AuthActionProps) => Chainable<void>;
       verifyAccount: (props: { email: string }) => Chainable<void>;
-      signUpAndVerify: (props: AuthActionProps) => Chainable<void>;
-      getVerificationToken: (options: { email: string }) => Chainable<string | null>;
+      createAccountAndVerify: (props: AuthActionProps) => Chainable<void>;
       login: (props: AuthActionProps) => Chainable<void>;
+      getVerificationToken: (options: { email: string }) => Chainable<string>;
+      getStoredVerificationToken: (options: { email: string }) => Chainable<string>;
 
       clearEmails: () => Chainable<void>;
       getLastEmail: (props: { email: string }) => Chainable<MailhogEmailProps>;
+      resetMockEmailServer: () => Chainable<void>;
+      simulateEmailSendFailure: (type: EmailErrorType) => Chainable<void>;
     }
   }  
 }

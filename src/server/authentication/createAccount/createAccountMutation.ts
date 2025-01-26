@@ -31,10 +31,16 @@ interface CreateAccountMutationProps {
   ctx: ContextType
 }
 
-export async function createAccountMutation (props: CreateAccountMutationProps) {
-  const { 
-    input: { name, email, password }
-  } = props;
+interface CreateAccountResponseProps {
+  success: boolean;
+  userId: string;
+}
+
+export async function createAccountMutation (
+  { input }: CreateAccountMutationProps
+): Promise<CreateAccountResponseProps> {
+
+  const { name, email, password } = input; 
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -43,11 +49,13 @@ export async function createAccountMutation (props: CreateAccountMutationProps) 
       SQL_CREATE_MEMBER,
       [name, email, hashedPassword]
     );
+    
     const userId = result.rows[0].id;
 
     await initVerifyAccountFlow({ userId, email });
 
     return { success: true, userId };
+
   } catch (err: unknown) {
     const isDupeError = isDuplicateDBValue({ err, property: 'users_email_key' });
     const errMessage = isDupeError ? copy.duplicateEmail : copy.registrationFailed;

@@ -17,9 +17,9 @@ export interface EmailFailure {
     type: 
       | 'DELIVERY_FAILED' 
       | 'CONNECTION_ERROR' 
-      | 'AUTHENTICATION_ERROR' 
+      | 'AUTHENTICATION_ERROR'
       | 'RECIPIENT_ERROR' 
-      | 'UNKNOWN';
+      | 'UNKNOWN'
     message: string;
   };
   messageId: null;

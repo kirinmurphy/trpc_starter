@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1.4
 FROM oven/bun:latest as base 
+
 WORKDIR /app
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -23,24 +24,21 @@ COPY . .
 CMD ["bun", "run", "dev"]
 
 
-FROM base as builder 
-ENV NODE_OPTIONS="--max-old-space-size=384"
-ENV BUN_JS_HEAP_SIZE_MB=384
-
+# PRODUCTION 
+FROM base as production 
 COPY package.json bun.lockb ./
+
 RUN --mount=type=cache,target=/root/.bun \
     bun install --production --frozen-lockfile && \
     bun add mock-aws-s3 aws-sdk nock && \
     rm -rf ~/.bun/install/cache
 
+
 COPY . .
+RUN chmod +x /app/docker/*.sh
+
 RUN rm -rf node_modules/.cache
+# TODO: consolidate with package.json scripts 
 RUN NODE_ENV=production bun build src/server/server.ts --outdir=dist/server --target=node --minify
 RUN NODE_ENV=production bun run vite build --minify
-
-
-# PRODUCTION 
-FROM builder AS production
-RUN chmod +x ./docker/init-prod.sh
-
-CMD ["./docker/init-prod.sh"]
+CMD ["/app/docker/init-prod.sh"]

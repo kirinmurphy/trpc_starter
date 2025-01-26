@@ -3,7 +3,8 @@ import { useNavigate, useRouter } from "@tanstack/react-router";
 import { ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED, ERR_VERIFICATION_FAILED } from "../../../../utils/messageCodes";
 import { trpcService } from "../../../trpcService/trpcClientService";
 import { ROUTE_URLS } from "../../../routing/routeUrls";
-import { ResendVerificationEmail } from "./ResendVerificationEmail";
+import { GetNewVerificationEmail } from "./GetNewVerificationEmail";
+import { invalidateAuthCheckQuery } from "../../../trpcService/invalidateQueries";
 
 const loginRedirectConfig = {
   to: ROUTE_URLS.login,   
@@ -17,8 +18,9 @@ export function VerifyAccount () {
   const [tokenExpired, setTokenExpired] = useState<boolean>(false);
 
   const { mutate, data, isLoading } = trpcService.auth.verifyAccount.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if ( data?.success ) {
+        await invalidateAuthCheckQuery();
         navigate({ to: ROUTE_URLS.authenticatedHomepage });
         return;
       }
@@ -50,7 +52,7 @@ export function VerifyAccount () {
   }
 
   if ( userId && tokenExpired ) {
-    return <ResendVerificationEmail 
+    return <GetNewVerificationEmail 
       userId={userId} 
       viewType="confirmedExpired" 
     />;

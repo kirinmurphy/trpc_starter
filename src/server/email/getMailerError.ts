@@ -21,15 +21,19 @@ export function getMailerError ({ error, options }: Props) {
   });
 
   let errorType: EmailFailure['error']['type'] = 'UNKNOWN';
-
-  if ( mailerError.code === '' || mailerError.code === 'ETIMEDOUT' ) {
+  
+  if ( mailerError.code === '' || mailerError.code === 'ETIMEDOUT' || mailerError.message?.includes('socket close') ) {
     errorType = 'CONNECTION_ERROR';
-  } else if ( mailerError.code === 'EAUTH' ) {
-    errorType = 'AUTHENTICATION_ERROR';
+
   } else if ( mailerError.responseCode === 500 ) {
     errorType = 'RECIPIENT_ERROR';
+
   } else if ( mailerError.response?.includes('delivery failed') ) {
     errorType = 'DELIVERY_FAILED';
+
+  // smtp auth wiring not set up, optimized for auth with 3rd party api (like sendgrid)
+  } else if ( mailerError.code === 'EAUTH' ) {
+    errorType = 'AUTHENTICATION_ERROR';
   } 
 
   return { 

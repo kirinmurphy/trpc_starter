@@ -4,7 +4,7 @@ services:
       target: development
     expose:
       - "5173"
-    command: ./docker/init-app.sh
+    command: ./docker/init-dev.sh
     volumes: 
       - .:/app
       - /app/node_modules

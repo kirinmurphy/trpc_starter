@@ -1,7 +1,10 @@
-#!/bin/sh
+#!/bin/bash
+
+source ./docker/check-env.sh
 
 timeout=30
 elapsed=0
+
 echo "Waiting for the database"
 until nc -z db 5432 || [ $elapsed -gt $timeout ]; do
   sleep 1

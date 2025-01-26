@@ -26,6 +26,9 @@ services:
       # AUTH
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+
+      # EMAIL
+      VITE_EMAIL_ADDRESS_SUPPORT: ${VITE_EMAIL_ADDRESS_SUPPORT}
     healthcheck:
       interval: 10s
       timeout: 5s
@@ -58,18 +61,18 @@ services:
           cpus: ${NGINX_CPU_LIMIT:-0.25}
     environment: 
       AUTH_RATE: "${AUTH_RATE:-10r/m}"
-      VERIFY_RATE: "${VERIFY_RATE:-3r/m}"
+      VERIFY_RATE: "${VERIFY_RATE:-5r/m}"
       ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-http://localhost,http://localhost:3000}"
-    command: sh -c "cp /init-nginx.sh /tmp/init-nginx.sh && chmod +x /tmp/init-nginx.sh && /tmp/init-nginx.sh"
+    command: sh -c "cp ./docker/init-nginx.sh /tmp/init-nginx.sh && chmod +x /tmp/init-nginx.sh && /tmp/init-nginx.sh"
     ports: 
       - "${NGINX_HTTPS_PORT:-443}:443"
       - "${NGINX_HTTP_PORT:-80}:80"    
     volumes: 
+      - ./docker:/docker
       - ./nginx/includes:/etc/nginx/includes
       - ./nginx/templates:/etc/nginx/templates:ro
       - ./nginx/nginx.conf:/etc/nginx/conf:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./docker/init-nginx.sh:/init-nginx.sh:ro
     depends_on:
       app:
         condition: service_healthy

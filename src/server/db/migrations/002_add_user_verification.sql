@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS verification_tokens (
   token VARCHAR(255) PRIMARY KEY,
   user_id UUID NOT NULL,
   email VARCHAR(255) NOT NULL,
+  email_sent_status VARCHAR(20) DEFAULT 'emailQueued' CHECK (email_sent_status IN ('emailQueued', 'emailSent', 'emailFailed')),
   expires_at TIMESTAMP WITH TIME ZONE DEFAULT (CURRENT_TIMESTAMP + INTERVAL '20 minutes'),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
