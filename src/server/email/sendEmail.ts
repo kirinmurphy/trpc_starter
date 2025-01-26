@@ -30,14 +30,8 @@ export async function sendEmail (options: EmailOptions): Promise<EmailResult>{
       messageId: info.messageId
     };
   } catch (error: unknown) {
-    // TODO: add logging to the error, don't need to send back specific error to UI 
     const mailerError = getMailerError({ error, options });
-    console.log('mailerError', mailerError);
-
-    return {
-      success: false,
-      messageId: null
-    };
+    throw mailerError;
   } finally {
     transporter.close();
   }

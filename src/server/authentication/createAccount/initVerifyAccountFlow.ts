@@ -8,10 +8,11 @@ import { sendVerificationEmail, SendVerificationEmailProps } from "./sendVerific
 interface Props { 
   email: string;
   userId: string; 
+  waitForEmailConfirmation?: boolean;
 }
 
 export async function initVerifyAccountFlow (props: Props): Promise<void> {
-  const{ email, userId } = props;
+  const{ email, userId, waitForEmailConfirmation = false } = props;
 
   const verificationToken = crypto.randomBytes(32).toString('base64url');
 
@@ -21,7 +22,16 @@ export async function initVerifyAccountFlow (props: Props): Promise<void> {
       [verificationToken, userId, email, VERIFICATION_TOKEN_EXPIRY]
     );
   
-    void sendVerificationEmailAsync({ to: email, verificationToken, userId });
+    const emailPromise = sendVerificationEmailAsync({ to: email, verificationToken, userId });
+
+    if ( waitForEmailConfirmation ) {
+      await emailPromise;
+      console.log('VERIFICATION SENT!');
+    } else {
+      void emailPromise.catch(err => {
+        console.error("Async email sending failed: ", err);
+      });
+    }
   } catch (err) {
     console.error('error in initVerifyAccountFlow', err);
     throw err;
@@ -32,7 +42,7 @@ interface SendVerificationEmailAsyncProps extends SendVerificationEmailProps {
   userId: string;
 }
 
-async function sendVerificationEmailAsync (props: SendVerificationEmailAsyncProps) {
+async function sendVerificationEmailAsync (props: SendVerificationEmailAsyncProps): Promise<void> {
   const { userId } = props;
 
   try {
@@ -43,7 +53,8 @@ async function sendVerificationEmailAsync (props: SendVerificationEmailAsyncProp
     }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    await updateEmailStatus({ userId, emailStatus: EmailSentStatus.emailFailed })
+    await updateEmailStatus({ userId, emailStatus: EmailSentStatus.emailFailed });
+    throw error;
   }
 }
 

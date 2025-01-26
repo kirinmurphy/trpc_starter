@@ -14,7 +14,7 @@ interface SubmitFormDataProps {
   password: string;
 }
 
-type AccountCreationStateType = 'default' | EmailSentStatus[keyof EmailSentStatus];
+type AccountCreationStateType = 'default' | EmailSentStatus;
 
 export function CreateAccount () {
   const [accountCreationState, setAccountCreationState] = useState<AccountCreationStateType>('default');
@@ -98,9 +98,7 @@ export function CreateAccount () {
         <UnsentVerificationEmailInstructions 
           email={email} 
           userId={data.userId}
-          onResendSuccess={() => { 
-            setAccountCreationState(EmailSentStatus.emailSent); 
-          }}
+          onResendSuccess={() => { setAccountCreationState(EmailSentStatus.emailSent); }}
         />
       )} 
     </>

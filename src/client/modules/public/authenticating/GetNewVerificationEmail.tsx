@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { EmailSentStatus } from "../../../../utils/types";
 import { trpcService } from "../../../trpcService/trpcClientService";
 import { Button } from "../../../widgets/Button";
 import { VerifyAccountInstructions } from "./VerifyAccountInstructions";
 import { LoginRedirectLink } from "./LoginRedirectLink";
+import { UnsentVerificationEmailInstructions } from "./UnsentVerificationEmailInstructions";
 
 const userPromptCopy = {
   confirmedExpired: ["Your verification code has expired.",  "Click here to request another verification link."],
@@ -17,15 +19,20 @@ interface GetNewVerificationEmailProps {
 
 export function GetNewVerificationEmail (props: GetNewVerificationEmailProps) {
   const { userId, viewType, loginRedirectOverride } = props;
-  const [requestSubmitted, setRequestSubmitted] = useState<boolean>(false);
+  const [reRequestState, setReRequestState] = useState<EmailSentStatus | null>(null);
   
-  const getNewEmailMutation = trpcService.auth.getNewVerificationEmail.useMutation({
-    onSuccess: async () => { setRequestSubmitted(true); }
+  const { data, mutate } = trpcService.auth.getNewVerificationEmail.useMutation({
+    onSuccess: async ({ emailSentStatus }) => {
+      setReRequestState(emailSentStatus);
+    },
+    onError: () => {
+      setReRequestState(EmailSentStatus.emailFailed);
+    }
   });
 
   const handleGetNewEmail = async () => {
     try {
-      await getNewEmailMutation.mutate({ userId });
+      await mutate({ userId });
     } catch (err) {
       console.error('Error during resend email prompt: ', err);
     }
@@ -35,7 +42,7 @@ export function GetNewVerificationEmail (props: GetNewVerificationEmailProps) {
 
   return (
     <div className="text-center">
-      {!requestSubmitted && (
+      {!reRequestState && (
         <div className="max-w-[600px] mx-auto py-[4vw]">
           <p className="text-xl">{messages[0]}</p>
           <p>{messages[1]}</p>
@@ -51,9 +58,18 @@ export function GetNewVerificationEmail (props: GetNewVerificationEmailProps) {
         </div>
       )}
 
-      {requestSubmitted && (
+      {reRequestState === EmailSentStatus.emailSent && (
         <VerifyAccountInstructions 
           loginRedirectOverride={loginRedirectOverride}  
+        />
+      )}
+
+      {reRequestState === EmailSentStatus.emailFailed && data && (
+        <UnsentVerificationEmailInstructions 
+          userId={userId}
+          email={data.email}
+          onResendSuccess={() => { setReRequestState(EmailSentStatus.emailSent); }}
+          loginRedirectOverride={loginRedirectOverride}
         />
       )}
     </div>

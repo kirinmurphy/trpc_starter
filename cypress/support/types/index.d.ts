@@ -70,7 +70,7 @@ declare global {
       clearEmails: () => Chainable<void>;
       getLastEmail: (props: { email: string }) => Chainable<MailhogEmailProps>;
       resetMockEmailServer: () => Chainable<void>;
-      simulateEmailErrors: (type: EmailErrorType) => Chainable<void>;
+      simulateEmailSendFailure: (type: EmailErrorType) => Chainable<void>;
     }
   }  
 }

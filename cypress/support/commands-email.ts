@@ -17,7 +17,7 @@ Cypress.Commands.add('resetMockEmailServer', () => {
   cy.task('configureMailhogMockResponse');
 });
 
-Cypress.Commands.add('simulateEmailErrors', (type: string) => {
+Cypress.Commands.add('simulateEmailSendFailure', (type: string) => {
   const configs = {
     connectionError: { DisconnectChance: 1.0, AcceptChance: 0  },
     recipientError: { RejectRecipientChance: 1.0, AcceptChance: 0  },

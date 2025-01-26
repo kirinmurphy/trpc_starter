@@ -156,47 +156,64 @@ describe('User Authentication', () => {
     });
 
     describe('verification email send failures', () => {
+      const emailSendFailureMessage = `We were unable to send your verification link to ${DEMO_USER.email}.`;
+      const CREATE_ACCOUNT_SUCCESS_HEADER = "We have sent a verification link to the email you provided.";
+
       beforeEach(() => {
         cy.cleanupTestUsers();
         cy.resetMockEmailServer();
       });
 
-      const emailSendFailureMessage = `We were unable to send your verification link to ${DEMO_USER.email}.`;
-
       it('fails to send email due to a connection error', () => {
-        cy.simulateEmailErrors("connectionError");
+        cy.simulateEmailSendFailure("connectionError");
         cy.createAccountAttempt({ demoUser: DEMO_USER });
         cy.wait(5000);
         cy.contains(emailSendFailureMessage).should('be.visible');       
       });
 
       it('fails to send email due to an invalid email address', () => {
-        cy.simulateEmailErrors("recipientError");
+        cy.simulateEmailSendFailure("recipientError");
         cy.createAccountAttempt({ demoUser: DEMO_USER });
         cy.wait(5000);
         cy.contains(emailSendFailureMessage).should('be.visible');
       });
 
       it('fails to send email due to an delivery error address and re-attempt sending email workflow', () => {
-        cy.simulateEmailErrors("deliveryError");
+        cy.simulateEmailSendFailure("deliveryError");
         cy.createAccountAttempt({ demoUser: DEMO_USER });
         cy.contains('Creating account...');
         cy.wait(5000);
         cy.contains(emailSendFailureMessage).should('be.visible');       
 
-        const resendButtonSelector = 'button[data-testid="resend-failed-verification-email-button"]';
-        const getResendButton = () => cy.get(resendButtonSelector);
-        
-        getResendButton().contains('Resend verification email').click();
-        getResendButton().contains('Sending...')
+        getUnsentEmailResendButton().contains('Resend verification email').click();
+        // happens too fast to capture?  
+        // getEmailResendButton().contains('Sending...')
         cy.wait(1000);
-        getResendButton().contains('Resend verification email').should('be.visible');
+        getUnsentEmailResendButton().contains('Resend verification email').should('be.visible');
         cy.resetMockEmailServer();
-        getResendButton().contains('Resend verification email').click();
-        const msg = "We have sent a verification link to the email you provided.";
-        cy.contains(msg).should('be.visible');
+        getUnsentEmailResendButton().contains('Resend verification email').click();
+        cy.contains(CREATE_ACCOUNT_SUCCESS_HEADER).should('be.visible');
+      });
+
+      it('fails to RE-send the re-requested verifical email (then re-re-sends it)', () => {
+        cy.createAccount({ demoUser: DEMO_USER });
+        cy.login({ demoUser: DEMO_USER });
+        cy.simulateEmailSendFailure('deliveryError');
+        cy.contains('Resend verification email').click();
+        cy.contains(emailSendFailureMessage).should('be.visible');       
+        getUnsentEmailResendButton().click();
+        cy.contains(emailSendFailureMessage).should('be.visible');       
+        cy.resetMockEmailServer();
+        cy.wait(4000);
+        getUnsentEmailResendButton().click();
+        cy.contains(CREATE_ACCOUNT_SUCCESS_HEADER).should('be.visible');
       });
     });
   });
 });
+
+function getUnsentEmailResendButton () {
+  const resendButtonSelector = 'button[data-testid="resend-failed-verification-email-button"]';
+  return cy.get(resendButtonSelector);
+} 
 

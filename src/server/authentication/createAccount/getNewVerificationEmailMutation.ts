@@ -5,6 +5,7 @@ import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { ContextType } from "../types";
 import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
 import { MemberEmailSchema, VerificationTokenMinimalSchema } from "../schemas";
+import { EmailSentStatus } from "../../../utils/types";
 
 export const GetNewVerificationEmailSchema = z.object({
   userId: z.string().uuid()
@@ -17,7 +18,15 @@ interface GetNewVerificationEmailMutationProps {
   ctx: ContextType;
 }
 
-export async function getNewVerificationEmailMutation (props: GetNewVerificationEmailMutationProps) {
+interface GetNewVerificationEmailResponse {
+  userId: string;
+  email: string;
+  emailSentStatus: EmailSentStatus;
+}
+
+export async function getNewVerificationEmailMutation (
+  props: GetNewVerificationEmailMutationProps
+): Promise<GetNewVerificationEmailResponse> {
   const { input: { userId }} = props;
   const client = await getPool().connect();
 
@@ -49,7 +58,18 @@ export async function getNewVerificationEmailMutation (props: GetNewVerification
   }
 
   if ( email ) {
-    await initVerifyAccountFlow({ userId, email });
+    try {
+      await initVerifyAccountFlow({ 
+        userId, 
+        email, 
+        waitForEmailConfirmation: true 
+      });
+      return { emailSentStatus: EmailSentStatus.emailSent, userId, email };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch ( err ) {
+      return { emailSentStatus: EmailSentStatus.emailFailed, userId, email };
+    }
+    
   } else {
     throw new Error('Missing email');
   }
