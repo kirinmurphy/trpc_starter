@@ -30,8 +30,7 @@ export async function sendEmail (options: EmailOptions): Promise<EmailResult>{
       messageId: info.messageId
     };
   } catch (error: unknown) {
-    const mailerError = getMailerError({ error, options });
-    throw mailerError;
+    throw getMailerError({ error, options });
   } finally {
     transporter.close();
   }

@@ -26,7 +26,6 @@ export async function initVerifyAccountFlow (props: Props): Promise<void> {
 
     if ( waitForEmailConfirmation ) {
       await emailPromise;
-      console.log('VERIFICATION SENT!');
     } else {
       void emailPromise.catch(err => {
         console.error("Async email sending failed: ", err);
