@@ -12,6 +12,7 @@ Cypress.Commands.add('createAccountAttempt', ({ demoUser }: AuthActionProps) => 
 Cypress.Commands.add('createAccount', ({ demoUser }: AuthActionProps) => {
   cy.createAccountAttempt({ demoUser });
   const msg = "We have sent a verification link to the email you provided.";
+  // cy.wait(4200);
   cy.contains(msg).should('be.visible');
 });
 

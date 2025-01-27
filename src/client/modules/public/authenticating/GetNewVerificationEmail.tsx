@@ -38,14 +38,14 @@ export function GetNewVerificationEmail (props: GetNewVerificationEmailProps) {
     }
   }
 
-  const messages = userPromptCopy[viewType || 'default'];
+  const [headlineText, instructionText] = userPromptCopy[viewType || 'default'];
 
   return (
     <div className="text-center">
       {!reRequestState && (
         <div className="max-w-[600px] mx-auto py-[4vw]">
-          <p className="text-xl">{messages[0]}</p>
-          <p>{messages[1]}</p>
+          <p className="text-xl">{headlineText}</p>
+          <p>{instructionText}</p>
           <div className="pt-4 flex justify-center">
             <Button onClick={handleGetNewEmail}>Resend verification email</Button>
           </div>

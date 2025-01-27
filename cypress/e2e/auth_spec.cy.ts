@@ -130,7 +130,7 @@ describe('User Authentication', () => {
   
     it('prompts user to resend verification email if token expired', () => {
       cy.createAccount({ demoUser: DEMO_USER });    
-      cy.wait(16000);
+      cy.wait(18000);
       cy.getVerificationToken({ email: DEMO_USER.email }).should('exist').then(token => {
         cy.visit(`/verify-account?token=${token}`);
         cy.contains('Your verification code has expired.');

@@ -5,7 +5,7 @@ App starter built in Typescript, tRPC, Node and React
   <tr>
     <td style="vertical-align: top;">Authentication</td>
     <td>
-      • Account creation with email verification<br>
+      • <a href="./docs/verification.md">Account creation with email verification</a><br>
       • Authentication (& refresh) session management
     </td>
   </tr>
@@ -21,9 +21,9 @@ App starter built in Typescript, tRPC, Node and React
   <tr>
     <td style="vertical-align: top;">Infra / Devops</td>
     <td>
-      • e2e test framework with CI integration (Github Actions)<br>
-      • Docker containers for dev, testing, and production environments<br>
-      • Email integration for dev, testing and production environments<br>
+      • <a href="./cypress/e2e/auth_spec.cy.ts">e2e testing</a> with CI integration (Github Actions)<br>
+      • <a href="#running-app-with-docker">Docker containers</a> for dev, testing, and production environments<br>
+      • <a href="./docs/email.md">Email integration</a> for dev, testing and production environments<br>
       • CI integrated postgres migration flow
     </td>
   </tr>
