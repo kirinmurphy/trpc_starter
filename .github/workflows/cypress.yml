@@ -30,22 +30,43 @@ jobs:
       - name: Install make
         run: sudo apt-get install -y make
 
+      - name: Prepare artifact directories
+        run: |
+          mkdir -p cypress/screenshots cypress/videos cypress/downloads
+          chmod -R 777 cypress/screenshots cypress/videos cypress/downloads
+
+      - name: Check for artifacts BEFORRRRRR
+        if: failure()
+        run: |
+          echo "Checking for artifacts..."
+          ls -la cypress/screenshots || true
+          ls -la cypress/videos || true
+  
+
       - name: Build test containers
         run: make build-tests
-
+  
       - name: Run tests
         run: make run-tests
         id: run_tests
         continue-on-error: false
 
+      - name: Check for artifacts
+        if: failure()
+        run: |
+          echo "Checking for artifacts..."
+          ls -la cypress/screenshots || true
+          ls -la cypress/videos || true
+
       - name: Upload test artifacts 
-        if: always() && steps.run_tests.outcome != 'skipped'
+        if: failure()
         uses: actions/upload-artifact@v3
         with: 
           name: cypress-results
           path: |
             cypress/videos
             cypress/screenshots
+          if-no-files-found: warn
 
       - name: Cleanup
         if: always()

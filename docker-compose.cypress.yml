@@ -51,9 +51,20 @@ services:
       - ./cypress.config.cjs:/e2e/cypress.config.cjs:ro
       
       # Writable output directories
-      - ./cypress/videos:/e2e/cypress/videos
-      - ./cypress/screenshots:/e2e/cypress/screenshots
-      - ./cypress/downloads:/e2e/cypress/downloads  
+      - type: bind
+        source: ./cypress/videos
+        target: /e2e/cypress/videos
+        consistency: delegated
+      - type: bind
+        source: ./cypress/screenshots
+        target: /e2e/cypress/screenshots
+        consistency: delegated
+      - type: bind
+        source: ./cypress/downloads
+        target: /e2e/cypress/downloads
+        consistency: delegated
+      # - ./cypress/screenshots:/e2e/cypress/screenshots
+      # - ./cypress/downloads:/e2e/cypress/downloads  
       
     working_dir: /e2e
     
@@ -65,4 +76,5 @@ services:
       VERIFY_RATE: "500r/m"
 
   mailhog: 
-    command: ["-invite-jim"]
+    # command: ["-invite-jim"]
+    command: ["-invite-jim", "-jim-linkspeed-min=100", "-jim-linkspeed-max=1000"]
