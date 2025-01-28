@@ -20,6 +20,7 @@ export function AuthenticatedApp ({ children }: AuthenticatedAppProps) {
     }
   });  
   
+  // TODO: Add system error handling
   if ( !user ) { return <></>; }  
 
   return (

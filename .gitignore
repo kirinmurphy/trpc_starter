@@ -30,7 +30,7 @@ cypress/screenshots
 cypress/videos
 cypress/downloads
 
-docs/
+docs/local
 
 
 nginx/includes/cors_map.conf

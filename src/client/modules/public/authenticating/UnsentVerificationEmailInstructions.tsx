@@ -44,6 +44,8 @@ export function UnsentVerificationEmailInstructions (props: Props) {
   // TODO: should be able to handle with rate limiting 
   const atResendLimit = resendRequestCount === MAX_REQUESTS;
 
+  const loginLink = <LoginRedirectLink loginRedirectOverride={loginRedirectOverride} /> ;
+
   return (
     <div className="text-center">
       <p className="text-xl">We were unable to send your verification link to {email}.</p>
@@ -52,7 +54,7 @@ export function UnsentVerificationEmailInstructions (props: Props) {
         <>
           <p>This may be a problem with the connection or with the address provided.</p>
   
-          <p>Try resending the email or <LoginRedirectLink loginRedirectOverride={loginRedirectOverride} /> later to request a new verification link.</p>
+          <p>Try resending the email or {loginLink} later to request a new verification link.</p>
     
           <div className="pt-4 flex justify-center">
             <Button 
@@ -68,7 +70,7 @@ export function UnsentVerificationEmailInstructions (props: Props) {
 
       {atResendLimit && (
         <p className="max-w-[480px] mx-auto">
-          It seems there is a continued connection problem, please <LoginRedirectLink loginRedirectOverride={loginRedirectOverride} /> later to request a new verification link.
+          It seems there is a continued connection problem, please {loginLink} later to request a new verification link.
         </p>
       )}
 
