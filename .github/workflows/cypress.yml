@@ -35,7 +35,7 @@ jobs:
           mkdir -p cypress/screenshots cypress/videos cypress/downloads
           chmod -R 777 cypress/screenshots cypress/videos cypress/downloads
 
-      - name: Check for artifacts BEFORRRRRR
+      - name: Check for artifacts Before Tests
         if: failure()
         run: |
           echo "Checking for artifacts..."

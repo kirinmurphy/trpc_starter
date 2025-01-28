@@ -10,21 +10,7 @@ Cypress.Commands.add('createAccountAttempt', ({ demoUser }: AuthActionProps) => 
 });
 
 Cypress.Commands.add('createAccount', ({ demoUser }: AuthActionProps) => {
-  // cy.intercept('POST', '**', (req) => {
-  //   console.log(' EEEEEEEEEE tRPC Request:', {
-  //     url: req.url,
-  //     body: req.body,
-  //     method: req.method
-  //   });
-  //   req.continue(); // Very important - lets the request continue
-  // }).as('trpcRequest');
-  
   cy.createAccountAttempt({ demoUser });
-  // cy.wait('@trpcRequest').then(interception => {
-  //   console.log('Full interception:', interception);
-  // });
-  
-  // cy.createAccountAttempt({ demoUser });
   const msg = "We have sent a verification link to the email you provided.";
   // cy.wait(4200);
   cy.contains(msg).should('be.visible');

@@ -19,41 +19,19 @@
   "securityLevel": "loose" }}%%
 
 flowchart LR
-  CreateAccount([Create Account]) --> IsValidCredentials{Valid<br>Credentials?}
-  IsValidCredentials --> |No - Email In Use| ReturnError[Form Error] --> CreateAccount
-  IsValidCredentials --> |No - Invalid Fields| ReturnError    
-  IsValidCredentials --> |Yes| SendEmail[Send Verification Email] --> Continue([Continue Below])
+    CreateAccount([Create Account]) --> IsValidCredentials{Valid<br>Credentials?}
+    IsValidCredentials --> |No - Email In Use| ReturnError[Form Error] --> CreateAccount
+    IsValidCredentials --> |No - Invalid Fields| ReturnError    
+    IsValidCredentials --> |Yes| SendEmail[Send Verification Email] --> Continue([Continue Below])
 
+    Login([Login]) --> IsValidLoginCredentials{Valid<br>Credentials?}
+    IsValidLoginCredentials{Valid<br>Credentials?} --> |Yes| IsVerified{Is Verified?}
+    IsValidLoginCredentials{Valid<br>Credentials?} --> |No| LoginError[Form Error]
+    LoginError --> Login
+    IsVerified --> |Yes| AuthPage([Redirected to auth page])
+    IsVerified --> |No| RequestToken[Request New Token] --> SendEmail
 
-  Login([Login]) --> IsValidLoginCredentials{Valid<br>Credentials?}
-  IsValidLoginCredentials{Valid<br>Credentials?} --> |Yes| IsVerified{Is Verified?}
-  IsValidLoginCredentials{Valid<br>Credentials?} --> |No| LoginError[Form Error]
-  LoginError --> Login
-  IsVerified --> |Yes| AuthPage([Redirected to auth page])
-  IsVerified --> |No| RequestToken[Request New Token] --> SendEmail
-
-```
-
-
-
-```mermaid
-%%{init: {
-  "theme": "dark", 
-  "themeVariables": { 
-    "primaryColor": "#ff6e6e", 
-    "secondaryColor": "#feb236", 
-    "tertiaryColor": "#6cb1ff" 
-  },
-  "flowchart": {
-    "htmlLabels": true,
-    "curve": "basis"
-  },
-  "height": "100%",
-  "width": "100%",
-  "startOnLoad": true,
-  "securityLevel": "loose" }}%%
-
-  flowchart LR
+    
     SendEmail2([Send Verification Email]) --> WasEmailSent{Email Sent?}
     WasEmailSent --> |Yes| UserVerifies[User Verifies] --> TokenValid{Token Valid?} --> |Yes| Verified([Redirected to auth page])
     TokenValid{Token Valid?} --> |No - Not Found| Login2([Redirected to Login])
