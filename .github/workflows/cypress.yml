@@ -36,12 +36,10 @@ jobs:
           chmod -R 777 cypress/screenshots cypress/videos cypress/downloads
 
       - name: Check for artifacts Before Tests
-        if: failure()
         run: |
           echo "Checking for artifacts..."
-          ls -la cypress/screenshots || true
-          ls -la cypress/videos || true
-  
+          ls -la cypress || true
+
 
       - name: Build test containers
         run: make build-tests
@@ -60,7 +58,7 @@ jobs:
 
       - name: Upload test artifacts 
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with: 
           name: cypress-results
           path: |
