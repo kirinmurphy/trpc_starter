@@ -7,10 +7,12 @@ import { PublicHomepage } from '../modules/public/PublicHomepage';
 import { VerifyAccount } from '../modules/public/authenticating/VerifyAccount';
 import { AuthenticatedApp } from '../modules/authenticated/AuthenticatedApp';
 import { AuthenticatedHomepage } from '../modules/authenticated/AuthenticatedHomepage';
+import { CreateAccount } from '../modules/public/authenticating/CreateAccount';
+import { RequestResetPasswordEmail } from '../modules/public/authenticating/resetPassword/RequestResetPasswordEmail';
 import { ROUTE_URLS } from './routeUrls';
 import { redirectIfAuthenticated, redirectIfNotAuthenticated } from './authenticationRedirects';
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';
-import { CreateAccount } from '../modules/public/authenticating/CreateAccount';
+import { VerifyPasswordResetToken } from '../modules/public/authenticating/resetPassword/VerifyPasswordResetEmail';
 
 const rootRoute = createRootRoute({
   component: App,
@@ -54,10 +56,26 @@ const verifyAccountRoute = createRoute({
   component: () => <PublicApp><VerifyAccount/></PublicApp>,
 });
 
+const requestResetPasswordEmailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: ROUTE_URLS.requestResetPasswordEmail,
+  beforeLoad: redirectIfAuthenticated, 
+  component: () => <PublicApp><RequestResetPasswordEmail/></PublicApp>,
+});
+
+const resetPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: ROUTE_URLS.resetPassword,
+  beforeLoad: redirectIfAuthenticated, 
+  component: () => <PublicApp><VerifyPasswordResetToken/></PublicApp>,
+});
+
 export const routeTree = rootRoute.addChildren([
   publicHomepageRoute,
   loginPageRoute,
   createAccountPageRoute,
   authenticatedHomepageRoute,
-  verifyAccountRoute
+  verifyAccountRoute,
+  requestResetPasswordEmailRoute,
+  resetPasswordRoute
 ]);  

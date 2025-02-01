@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { z } from 'zod';
 import { TRPCError } from "@trpc/server";
 import { getPool } from '../../db/pool';
-import { SQL_GET_MEMBER_BY_EMAIL } from "../../db/sql";
+import { SQL_GET_USER_BY_EMAIL } from "../../db/sql";
 import { setAccessTokenCookie, setRefreshTokenCookie } from "../jwtActions";
 import { MutationPropsWithInput } from "../types";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
@@ -28,7 +28,7 @@ export async function loginUserMutation ({ input, ctx }: MutationPropsWithInput<
   const { email, password } = input;  
 
   try {    
-    const result = await getPool().query(SQL_GET_MEMBER_BY_EMAIL, [email]);
+    const result = await getPool().query(SQL_GET_USER_BY_EMAIL, [email]);
     const user = parseDBQueryResult(result, LoginUserSchema);
     
     if ( !user ) { throw new TRPCError(errorLoginFailed); }

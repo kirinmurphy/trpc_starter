@@ -44,3 +44,20 @@ export const VerificationTokenMinimalSchema = z.object({
 export const MemberEmailSchema =  z.object({
   email: z.string()
 });
+
+export const GetUserIdByEmailSchema = z.object({
+  // TODO: do we want z.uuid() here? 
+  user_id: z.union([z.string(), z.number()]),
+});
+
+
+export const PasswordResetTokenSchema = z.object({
+  token: z.string()
+    .length(43, 'Invalid token'),
+  user_id: z.union([z.string(), z.number()]),
+  email: z.string(),
+  expires_at:  z.union([
+    z.string().datetime(),
+    z.date()
+  ])  
+});

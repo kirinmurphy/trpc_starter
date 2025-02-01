@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSearch } from '@tanstack/react-router';
+import { Link, useSearch } from '@tanstack/react-router';
 import { ERR_ACCOUNT_NOT_VERIFIED, ERR_VERIFICATION_FAILED } from '../../../../utils/messageCodes';
 import { trpcService } from '../../../trpcService/trpcClientService';
 import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries';
@@ -8,6 +8,7 @@ import { InputField } from '../../../widgets/forms/InputField';
 import { useFormState } from '../../../widgets/forms/utils/useFormState';
 import { InlineNotification } from '../../../widgets/InlineNotification';
 import { GetNewVerificationEmail } from './GetNewVerificationEmail';
+import { ROUTE_URLS } from '../../../routing/routeUrls';
 
 const loginNotifications = {
   [ERR_VERIFICATION_FAILED]: 'There was a problem verifying your account.  Login to request another verification email.'
@@ -82,7 +83,12 @@ export function Login ({ onLoginSuccess }: LoginProps) {
                   />                
                 </>
               )}
-          </SimpleForm>        
+          </SimpleForm>
+          <div>
+              <Link to={ROUTE_URLS.requestResetPasswordEmail} preload={false}>
+                Forgot password?
+              </Link>
+          </div>        
         </>
       )}
 
