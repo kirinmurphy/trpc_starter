@@ -6,7 +6,7 @@ import {
 import { getPool } from "../../db/pool";
 import { 
   SQL_DELETE_VERIFICATION_RECORD, 
-  SQL_SET_MEMBER_AS_VERIFIED, 
+  SQL_SET_USER_AS_VERIFIED, 
   SQL_GET_VERIFICATION_RECORD_BY_TOKEN 
 } from "../../db/sql";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
@@ -54,7 +54,7 @@ export async function verifyAccountMutation (
 
     await client.query('BEGIN');
     try {
-      await client.query(SQL_SET_MEMBER_AS_VERIFIED, [userId]);
+      await client.query(SQL_SET_USER_AS_VERIFIED, [userId]);
       await client.query(SQL_DELETE_VERIFICATION_RECORD, [token]);
       await client.query('COMMIT');
     } catch (err) {

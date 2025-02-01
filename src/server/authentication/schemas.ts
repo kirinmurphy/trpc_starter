@@ -44,3 +44,8 @@ export const VerificationTokenMinimalSchema = z.object({
 export const MemberEmailSchema =  z.object({
   email: z.string()
 });
+
+export const GetUserIdByEmailSchema = z.object({
+  // TODO: do we want z.uuid() here? 
+  user_id: z.union([z.string(), z.number()]),
+});

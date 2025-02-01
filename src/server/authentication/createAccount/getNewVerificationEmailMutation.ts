@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { getPool } from "../../db/pool";
-import { SQL_DELETE_VERIFICATION_RECORD, SQL_GET_MEMBER_EMAIL, SQL_GET_VERIFICATION_RECORD_BY_USERID } from "../../db/sql";
+import { SQL_DELETE_VERIFICATION_RECORD, SQL_GET_USER_EMAIL, SQL_GET_VERIFICATION_RECORD_BY_USERID } from "../../db/sql";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { ContextType } from "../types";
 import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
@@ -42,7 +42,7 @@ export async function getNewVerificationEmailMutation (
       email = tokenDetails.email;
       await client.query(SQL_DELETE_VERIFICATION_RECORD, [tokenDetails.token]);
     } else {
-      const result = await client.query(SQL_GET_MEMBER_EMAIL, [userId]);
+      const result = await client.query(SQL_GET_USER_EMAIL, [userId]);
       const parsedResult = parseDBQueryResult(result, MemberEmailSchema);
       email = parsedResult?.email;
     }
