@@ -10,6 +10,8 @@ import { verifyAccountMutation } from "./createAccount/verifyAccountMutation";
 import { getNewVerificationEmailMutation, GetNewVerificationEmailSchema } from "./createAccount/getNewVerificationEmailMutation";
 import { resendFailedVerificationEmailMutation, ResendFailedVerificationEmailSchema } from "./createAccount/resendFailedVerificationEmailMutation";
 import { getVerificationEmailSentStatusQuery, GetVerificationEmailSentStatusSchema } from "./createAccount/getVerificationEmailSentStatusQuery";
+import { requestResetPasswordEmailMutation, RequestResetPasswordEmailSchema } from "./resetPassword/requestResetPasswordEmailMutation";
+import { resetPasswordMutation, ResetPasswordSchema } from "./resetPassword/resetPasswordMutation";
 
 const { publicQuery, protectedQuery, publicMutation } = procedures;
 
@@ -52,4 +54,12 @@ export const authRouter = router({
 
   getUser: protectedQuery  
     .query(getUserQuery),
+
+  requestResetPasswordEmail: publicMutation
+    .input(RequestResetPasswordEmailSchema)
+    .mutation(requestResetPasswordEmailMutation),
+
+  resetPassword: publicMutation
+    .input(ResetPasswordSchema)
+    .mutation(resetPasswordMutation)
 });  

@@ -4,7 +4,7 @@ import { SQL_GET_VERIFICATION_RECORD_BY_USERID } from "../../db/sql";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { ContextType } from "../types";
 import { VerificationTokenMinimalSchema } from "../schemas";
-import { sendVerificationEmail } from "./sendVerificationEmail";
+import { sendAccountVerificationEmail } from "./sendAccountVerificationEmail";
 
 export const ResendFailedVerificationEmailSchema = z.object({
   userId: z.string().uuid()
@@ -25,7 +25,7 @@ export async function resendFailedVerificationEmailMutation (props: ResendFailed
   const { email, token } = parseDBQueryResult(result, VerificationTokenMinimalSchema) || {};
 
   if ( email && token ) { 
-    return sendVerificationEmail({ to: email, verificationToken: token });
+    return sendAccountVerificationEmail({ to: email, verificationToken: token });
   } else {
     throw new Error('Missing verification fields');
   }

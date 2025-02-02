@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { escapeHTML } from "../../utils/escapeHtml";
 import { getPool } from '../../db/pool';
 import { isDuplicateDBValue } from "../../db/isPostgresError";
-import { SQL_CREATE_MEMBER } from "../../db/sql";
+import { SQL_CREATE_USER } from "../../db/sql";
 import { ContextType } from "../types";
 import { createEmailSchema, createPasswordSchema, inputIsUnsafe } from "../sharedSchema";
 import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
@@ -46,7 +46,7 @@ export async function createAccountMutation (
 
   try {
     const result = await getPool().query(
-      SQL_CREATE_MEMBER,
+      SQL_CREATE_USER,
       [name, email, hashedPassword]
     );
     

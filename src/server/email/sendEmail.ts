@@ -5,20 +5,30 @@ import { EmailOptions, EmailResult } from "./types";
 const defaultFromEmail = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS || 'test@email.com';
 const defaultFromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER || 'Test Sender';
 
-export async function sendEmail (options: EmailOptions): Promise<EmailResult>{
+export async function sendEmail (props: EmailOptions): Promise<EmailResult>{
   const { 
     fromEmail = defaultFromEmail,
     fromSender = defaultFromName, 
-    subject 
-  } = options;
-
-  const from = `"${fromSender}" <${fromEmail}>`;
+    emailTemplate    
+  } = props;
 
   const transporter = await createEmailTransporter();
 
+  const from = `"${fromSender}" <${fromEmail}>`;
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head></head>
+    <body>
+      ${emailTemplate}
+    </body>
+    </html>    
+  `;
+
   try {
     const info = await transporter.sendMail({
-      ...options, from, subject,
+      ...props, from, html
     });
 
     if ( process.env.NODE_ENV !== 'production' ) {
@@ -30,7 +40,7 @@ export async function sendEmail (options: EmailOptions): Promise<EmailResult>{
       messageId: info.messageId
     };
   } catch (error: unknown) {
-    throw getMailerError({ error, options });
+    throw getMailerError({ error, options: props });
   } finally {
     transporter.close();
   }
