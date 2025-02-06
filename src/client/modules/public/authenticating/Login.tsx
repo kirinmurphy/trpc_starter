@@ -56,7 +56,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
   return (
     <>
       {!isUnverified && (
-        <>         
+        <div className="max-w-md mx-auto">         
 
           <SimpleForm 
             onSubmit={onSubmit}
@@ -84,12 +84,12 @@ export function Login ({ onLoginSuccess }: LoginProps) {
                 </>
               )}
           </SimpleForm>
-          <div>
+          <div className="px-6 text-right">
               <Link to={ROUTE_URLS.requestResetPasswordEmail} preload={false}>
                 Forgot password?
               </Link>
           </div>        
-        </>
+        </div>
       )}
 
       {data && isUnverified && (

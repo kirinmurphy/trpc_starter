@@ -47,7 +47,7 @@ export const MemberEmailSchema =  z.object({
 
 export const GetUserIdByEmailSchema = z.object({
   // TODO: do we want z.uuid() here? 
-  user_id: z.union([z.string(), z.number()]),
+  id: z.union([z.string(), z.number()]),
 });
 
 

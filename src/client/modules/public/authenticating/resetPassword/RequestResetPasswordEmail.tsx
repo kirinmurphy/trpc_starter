@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { trpcService } from "../../../../trpcService/trpcClientService";
 import { InputField } from "../../../../widgets/forms/InputField";
 import { SimpleForm } from "../../../../widgets/forms/SimpleForm";
@@ -16,9 +17,15 @@ export function RequestResetPasswordEmail () {
   const {
     formData: { email },
     handleFieldChange
-  } = useFormState<RequestResetPasswordEmailFormPrompts>({ email: '' })
+  } = useFormState<RequestResetPasswordEmailFormPrompts>({ email: '' });
 
-  const { data, mutate, error, isLoading } = trpcService.auth.requestResetPasswordEmail.useMutation({});
+  const [isEmailSent, setIsEmailSent] = useState<boolean>(false);
+
+  const { data, mutate, error, isLoading } = trpcService.auth.requestResetPasswordEmail.useMutation({
+    onSuccess: () => {
+      setIsEmailSent(true);
+    }
+  });
 
   const onSubmit = () => {
     if ( !email ) { return; }
@@ -33,27 +40,30 @@ export function RequestResetPasswordEmail () {
 
   return (
     <>
-      <SimpleForm
-        onSubmit={onSubmit}
-        isLoading={isLoading}
-        error={error}
-        title="Reset Password">
-          {({ fieldErrors }) => (
-            <>
-              <div>{requestResetPasswordEmailCopy.formPrompt}</div>
-              <InputField 
-                name="email"
-                value={email}
-                label="Email"
-                onChange={handleFieldChange('email')}
-                fieldErrors={fieldErrors?.email}
-              />
-            </>            
-          )}
-      </SimpleForm>
-      {data?.success && (
+      {!isEmailSent && (
+        <SimpleForm
+          onSubmit={onSubmit}
+          isLoading={isLoading}
+          error={error}
+          title="Reset Password">
+            {({ fieldErrors }) => (
+              <>
+                <div>{requestResetPasswordEmailCopy.formPrompt}</div>
+                <InputField 
+                  name="email"
+                  value={email}
+                  label="Email"
+                  onChange={handleFieldChange('email')}
+                  fieldErrors={fieldErrors?.email}
+                />
+              </>            
+            )}
+        </SimpleForm>
+      )}
+      {isEmailSent && (
         <div>
-          Please check {email} for instructions to reset your password.
+          <h2>Email Verification Sent</h2>
+          <p>Please check <b>{email}</b> for instructions to reset your password.</p>
         </div>
       )}
     </>

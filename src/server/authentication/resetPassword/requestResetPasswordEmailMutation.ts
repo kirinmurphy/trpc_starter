@@ -28,14 +28,14 @@ export async function requestResetPasswordEmailMutation (props: RequestResetPass
   try {
     const result = await getPool().query(SQL_GET_USERID_BY_EMAIL, [email])
     const parsedResult = parseDBQueryResult(result, GetUserIdByEmailSchema);
-    const userId = parsedResult?.user_id;
+    const userId = parsedResult?.id;
     
     if ( userId ) {
       const verificationToken = getUniqueToken();
       
       await getPool().query(
         SQL_CREATE_RESET_PASSWORD_TOKEN,
-        [verificationToken, userId, VERIFICATION_TOKEN_EXPIRY]
+        [verificationToken, userId, email, VERIFICATION_TOKEN_EXPIRY]
       )
 
       await sendResetPasswordEmail({ to: email, verificationToken });
