@@ -33,7 +33,7 @@ export interface InlineNotificationProps {
 }
 
 export function InlineNotification ({ type, message }: InlineNotificationProps) {
-  if ( !message ) { return <></>; }
+  if ( !message || !type ) { return <></>; }
 
   const { bgColor, iconColor, Icon } = noficationOptions[type];
 

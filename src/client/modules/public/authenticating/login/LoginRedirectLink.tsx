@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
-import { Button } from "../../../widgets/Button";
-import { ROUTE_URLS } from "../../../routing/routeUrls";
+import { Button } from "../../../../widgets/Button";
+import { ROUTE_URLS } from "../../../../routing/routeUrls";
 
 interface Props {
   loginRedirectOverride?: () => void;

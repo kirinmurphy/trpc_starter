@@ -1,9 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
-import { trpcService } from "../../../trpcService/trpcClientService";
-import { ROUTE_URLS } from "../../../routing/routeUrls";
+import { trpcService } from "../../../../trpcService/trpcClientService";
+import { ROUTE_URLS } from "../../../../routing/routeUrls";
 import { GetNewVerificationEmail } from "./GetNewVerificationEmail";
-import { invalidateAuthCheckQuery } from "../../../trpcService/invalidateQueries";
-import { useTokenParamVerification } from "../../../utils/useTokenParamVerification";
+import { invalidateAuthCheckQuery } from "../../../../trpcService/invalidateQueries";
+import { useTokenParamVerification } from "../../../../utils/useTokenParamVerification";
 
 export function VerifyAccount () {
   const navigate = useNavigate();

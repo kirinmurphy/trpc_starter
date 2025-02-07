@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { EmailSentStatus } from '../../../../utils/types';
-import { trpcService } from '../../../trpcService/trpcClientService';
-import { SimpleForm } from '../../../widgets/forms/SimpleForm';
-import { InputField } from '../../../widgets/forms/InputField';
-import { useFormState } from '../../../widgets/forms/utils/useFormState';
+import { EmailSentStatus } from '../../../../../utils/types';
+import { trpcService } from '../../../../trpcService/trpcClientService';
+import { SimpleForm } from '../../../../widgets/forms/SimpleForm';
+import { InputField } from '../../../../widgets/forms/InputField';
+import { useFormState } from '../../../../widgets/forms/utils/useFormState';
 import { VerifyAccountInstructions } from './VerifyAccountInstructions';
 import { UnsentVerificationEmailInstructions } from './UnsentVerificationEmailInstructions';
 import { CheckingEmailSent } from './CheckingIfEmailSent';

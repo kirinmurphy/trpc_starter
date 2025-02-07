@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { trpcService } from "../../../trpcService/trpcClientService";
-import { Button } from "../../../widgets/Button";
-import { LoginRedirectLink } from "./LoginRedirectLink";
+import { trpcService } from "../../../../trpcService/trpcClientService";
+import { Button } from "../../../../widgets/Button";
+import { LoginRedirectLink } from "../login/LoginRedirectLink";
 
 interface Props {
   email: string;

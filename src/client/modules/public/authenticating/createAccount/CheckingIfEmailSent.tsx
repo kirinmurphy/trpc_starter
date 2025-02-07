@@ -1,5 +1,5 @@
-import { EmailSentStatus } from "../../../../utils/types";
-import { trpcService } from "../../../trpcService/trpcClientService";
+import { EmailSentStatus } from "../../../../../utils/types";
+import { trpcService } from "../../../../trpcService/trpcClientService";
 
 interface Props {
   userId: string;

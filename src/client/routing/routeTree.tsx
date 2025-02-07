@@ -4,10 +4,10 @@ import { LOGIN_NOTIFICATIONS } from '../../utils/messageCodes';
 import App from '../App'
 import { PublicApp } from '../modules/public/PublicApp';
 import { PublicHomepage } from '../modules/public/PublicHomepage';
-import { VerifyAccount } from '../modules/public/authenticating/VerifyAccount';
+import { VerifyAccount } from '../modules/public/authenticating/createAccount/VerifyAccount';
 import { AuthenticatedApp } from '../modules/authenticated/AuthenticatedApp';
 import { AuthenticatedHomepage } from '../modules/authenticated/AuthenticatedHomepage';
-import { CreateAccount } from '../modules/public/authenticating/CreateAccount';
+import { CreateAccount } from '../modules/public/authenticating/createAccount/CreateAccount';
 import { RequestResetPasswordEmail } from '../modules/public/authenticating/resetPassword/RequestResetPasswordEmail';
 import { ROUTE_URLS } from './routeUrls';
 import { redirectIfAuthenticated, redirectIfNotAuthenticated } from './authenticationRedirects';

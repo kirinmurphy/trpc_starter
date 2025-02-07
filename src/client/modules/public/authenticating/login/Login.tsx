@@ -1,28 +1,15 @@
 import { useState } from 'react';
 import { Link, useSearch } from '@tanstack/react-router';
-import { ERR_ACCOUNT_NOT_VERIFIED, ERR_VERIFICATION_FAILED, PASSWORD_RESET_SUCCESS } from '../../../../utils/messageCodes';
-import { trpcService } from '../../../trpcService/trpcClientService';
-import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries';
-import { SimpleForm } from '../../../widgets/forms/SimpleForm';
-import { InputField } from '../../../widgets/forms/InputField';
-import { useFormState } from '../../../widgets/forms/utils/useFormState';
-import { InlineNotification } from '../../../widgets/InlineNotification';
-import { GetNewVerificationEmail } from './GetNewVerificationEmail';
-import { ROUTE_URLS } from '../../../routing/routeUrls';
-
-// TODO: need a default if we have no match here.
-const loginNotifications = {
-  [ERR_VERIFICATION_FAILED]: { 
-    type: 'warning', 
-    message: 'There was a problem verifying your account.  Login to request another verification email.'
-  },
-  [PASSWORD_RESET_SUCCESS]: { 
-    type: 'success',
-    message:  'Your password was updated successfully.  Login with your new password to continue.'
-  }
-} as const;
-
-type LoginNotificationType = keyof typeof loginNotifications;
+import { ERR_ACCOUNT_NOT_VERIFIED } from '../../../../../utils/messageCodes';
+import { trpcService } from '../../../../trpcService/trpcClientService';
+import { invalidateAuthCheckQuery } from '../../../../trpcService/invalidateQueries';
+import { SimpleForm } from '../../../../widgets/forms/SimpleForm';
+import { InputField } from '../../../../widgets/forms/InputField';
+import { useFormState } from '../../../../widgets/forms/utils/useFormState';
+import { InlineNotification } from '../../../../widgets/InlineNotification';
+import { GetNewVerificationEmail } from '../createAccount/GetNewVerificationEmail';
+import { ROUTE_URLS } from '../../../../routing/routeUrls';
+import { loginNotifications, LoginNotificationType } from './loginNotifications';
 
 interface LoginProps {
   onLoginSuccess?: () => void;
@@ -37,7 +24,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
   const [isUnverified, setIsUnverified] = useState(false);
 
   const search = useSearch({ from: '/login' });
-  const notification = search.notification as LoginNotificationType;
+  const notificationType = search.notification as LoginNotificationType;
 
   const { 
     formData: { email, password },
@@ -73,7 +60,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
             title="Login">
               {({ fieldErrors }) => (
                 <>
-                  <InlineNotification {...loginNotifications[notification]} />
+                  <InlineNotification {...loginNotifications[notificationType]} />
         
                   <InputField 
                     name="email" 
