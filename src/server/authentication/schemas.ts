@@ -52,12 +52,15 @@ export const GetUserIdByEmailSchema = z.object({
 
 
 export const PasswordResetTokenSchema = z.object({
-  token: z.string()
-    .length(43, 'Invalid token'),
+  token: z.string().length(43, 'Invalid token'),
   user_id: z.union([z.string(), z.number()]),
   email: z.string(),
   expires_at:  z.union([
     z.string().datetime(),
     z.date()
   ])  
+});
+
+export const PasswordResetTokenMinimalSchema = z.object({
+  token: z.string().length(43, 'Invalid token'),
 });
