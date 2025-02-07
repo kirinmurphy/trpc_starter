@@ -31,6 +31,8 @@ export async function requestResetPasswordEmailMutation (props: RequestResetPass
     const userId = parsedResult?.id;
     
     if ( userId ) {
+      // TODO: look for any existing password verification tokens and delete them 
+      
       const verificationToken = getUniqueToken();
       
       await getPool().query(

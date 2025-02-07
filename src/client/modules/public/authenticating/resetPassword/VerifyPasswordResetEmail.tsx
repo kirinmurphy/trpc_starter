@@ -10,17 +10,20 @@ export function VerifyPasswordResetToken () {
     } 
   });
 
+  // console.log('foooosh', { tokenExpired, userId, isLoading });
+
   if ( isLoading ) {
     return <>Verifying...</>
   }
 
   if ( userId && tokenExpired ) {
+    console.log('floooooop');
     // TODO: add better handler 
     return <>Token expired</>
   }
 
   if ( userId ) {
-    <ResetPasswordForm userId={userId} />
+    return <ResetPasswordForm userId={userId} />
   }
 
   // TODO: what do we do here, should this ever return? 

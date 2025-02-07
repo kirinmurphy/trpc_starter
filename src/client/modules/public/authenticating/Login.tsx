@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useSearch } from '@tanstack/react-router';
-import { ERR_ACCOUNT_NOT_VERIFIED, ERR_VERIFICATION_FAILED } from '../../../../utils/messageCodes';
+import { ERR_ACCOUNT_NOT_VERIFIED, ERR_VERIFICATION_FAILED, PASSWORD_RESET_SUCCESS } from '../../../../utils/messageCodes';
 import { trpcService } from '../../../trpcService/trpcClientService';
 import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries';
 import { SimpleForm } from '../../../widgets/forms/SimpleForm';
@@ -10,8 +10,16 @@ import { InlineNotification } from '../../../widgets/InlineNotification';
 import { GetNewVerificationEmail } from './GetNewVerificationEmail';
 import { ROUTE_URLS } from '../../../routing/routeUrls';
 
+// TODO: need a default if we have no match here.
 const loginNotifications = {
-  [ERR_VERIFICATION_FAILED]: 'There was a problem verifying your account.  Login to request another verification email.'
+  [ERR_VERIFICATION_FAILED]: { 
+    type: 'warning', 
+    message: 'There was a problem verifying your account.  Login to request another verification email.'
+  },
+  [PASSWORD_RESET_SUCCESS]: { 
+    type: 'success',
+    message:  'Your password was updated successfully.  Login with your new password to continue.'
+  }
 } as const;
 
 type LoginNotificationType = keyof typeof loginNotifications;
@@ -65,7 +73,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
             title="Login">
               {({ fieldErrors }) => (
                 <>
-                  <InlineNotification message={loginNotifications[notification]} />
+                  <InlineNotification {...loginNotifications[notification]} />
         
                   <InputField 
                     name="email" 
@@ -76,6 +84,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
                   />
                   <InputField 
                     name="password" 
+                    type="password"
                     value={password}
                     label="Password" 
                     onChange={handleFieldChange('password')}

@@ -6,7 +6,6 @@ import { useFormState } from "../../../../widgets/forms/utils/useFormState";
 
 const requestResetPasswordEmailCopy = {
   formPrompt: "We well send a confirmation email to this address:",
-  customerSupportPrompt: "For "
 }
 
 interface RequestResetPasswordEmailFormPrompts {
@@ -49,6 +48,7 @@ export function RequestResetPasswordEmail () {
             {({ fieldErrors }) => (
               <>
                 <div>{requestResetPasswordEmailCopy.formPrompt}</div>
+
                 <InputField 
                   name="email"
                   value={email}
@@ -62,8 +62,8 @@ export function RequestResetPasswordEmail () {
       )}
       {isEmailSent && (
         <div>
-          <h2>Email Verification Sent</h2>
-          <p>Please check <b>{email}</b> for instructions to reset your password.</p>
+          <h2 className="text-xl mb-2">Thank you.</h2>
+          <p className="max-w-[370px]">If there is an account associated with this email, we will send you a link to reset your password.</p>
         </div>
       )}
     </>

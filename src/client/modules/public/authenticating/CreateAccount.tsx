@@ -71,6 +71,7 @@ export function CreateAccount () {
                 />
                 <InputField 
                   name="password" 
+                  type="password"
                   value={password}
                   label="Password" 
                   onChange={handleFieldChange('password')}

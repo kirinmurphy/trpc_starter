@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createRootRoute, createRoute } from '@tanstack/react-router'
-import { ERR_VERIFICATION_FAILED } from '../../utils/messageCodes';
+import { LOGIN_NOTIFICATIONS } from '../../utils/messageCodes';
 import App from '../App'
 import { PublicApp } from '../modules/public/PublicApp';
 import { PublicHomepage } from '../modules/public/PublicHomepage';
@@ -38,7 +38,7 @@ const loginPageRoute = createRoute({
   beforeLoad: redirectIfAuthenticated,
   component: () => <PublicApp><LoginRedirectWrapper/></PublicApp>,
   validateSearch: z.object({
-    notification: z.enum([ERR_VERIFICATION_FAILED] as const).optional()
+    notification: z.enum(LOGIN_NOTIFICATIONS).optional()
   }),
 });
 

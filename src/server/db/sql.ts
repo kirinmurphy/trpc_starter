@@ -18,4 +18,4 @@ export const SQL_GET_VERIFICATION_EMAIL_SEND_STATE = 'SELECT email_sent_status F
 // RESET PASSWORD 
 export const SQL_CREATE_RESET_PASSWORD_TOKEN = 'INSERT INTO reset_password_tokens (token, user_id, email, expires_at) VALUES ($1, $2, $3, CURRENT_TIMESTAMP + $4::interval)';
 export const SQL_GET_PASSWORD_RESET_RECORD_BY_TOKEN = 'SELECT token, user_id, email, expires_at FROM reset_password_tokens WHERE token = $1';
-export const SQL_DELETE_PASSWORD_RESET_RECORD = 'DELETE FROM reset_password_tokens WHERE WHERE token = $1';
+export const SQL_DELETE_PASSWORD_RESET_RECORD = 'DELETE FROM reset_password_tokens WHERE token = $1';
