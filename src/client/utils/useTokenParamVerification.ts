@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
-import { ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED, ERR_VERIFICATION_FAILED } from "../../utils/messageCodes";
+import { ERR_VERIFICATION_TOKEN_EXPIRED, ERR_VERIFICATION_FAILED } from "../../utils/messageCodes";
 import { ROUTE_URLS } from "../routing/routeUrls";
 import { MutationProcedure } from "./trpcTypes";
 
@@ -28,6 +28,7 @@ interface TokenInput {
 interface UseTokenParamVerificationProps<TProcedure> {
   verifyTokenProcedure: MutationProcedure<TProcedure, TokenInput, VerificationData>;
   onVerificationSuccess?: (data: VerificationData) => Promise<void> | void;
+  onVerificationExpired?: () => Promise<void>;
   verificationType: keyof typeof errorRedirectConfigs;
 }
 
@@ -41,7 +42,12 @@ export function useTokenParamVerification<TProcedure> (
   props: UseTokenParamVerificationProps<TProcedure>
 ): UseTokenVerificationResult {
 
-  const { verificationType, verifyTokenProcedure, onVerificationSuccess } = props;
+  const { 
+    verificationType, 
+    verifyTokenProcedure, 
+    onVerificationSuccess, 
+    onVerificationExpired 
+  } = props;
 
   const errorRedirectConfig = errorRedirectConfigs[verificationType];
 
@@ -53,14 +59,17 @@ export function useTokenParamVerification<TProcedure> (
 
   const { mutate, data, isLoading } = verifyTokenProcedure.useMutation({
     onSuccess: async (data) => {
+      console.log('DATA', data);
       if ( data?.success ) {
         if ( onVerificationSuccess ) { await onVerificationSuccess(data); }        
         return;
       }
       
       if ( data?.error ) {
-        if ( data?.error === ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED ) {
+        if ( data?.error === ERR_VERIFICATION_TOKEN_EXPIRED ) {
           setTokenExpired(true);
+          if ( onVerificationExpired ) { await onVerificationExpired(); } 
+          return;
         } else {
           navigate(errorRedirectConfig);
         }
@@ -72,12 +81,11 @@ export function useTokenParamVerification<TProcedure> (
     }
   });
 
-
-  useEffect(() => {    
+  useEffect(() => { 
     if ( !token ) { navigate(errorRedirectConfig); return; }
     mutate({ token });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, []);
 
   const userId = data?.userId?.toString();
 

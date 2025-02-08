@@ -1,7 +1,7 @@
 import { PoolClient } from "pg";
 import { z } from "zod";
 import { 
-  ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED, 
+  ERR_VERIFICATION_TOKEN_EXPIRED, 
   ERR_NO_ACCOUNT_VERIFICATION_TOKEN, 
   ERR_VERIFICATION_FAILED
 } from "../../../utils/messageCodes";
@@ -59,7 +59,7 @@ export async function verifyToken (props: VerifyTokenProps): Promise<VerifyToken
     const { user_id: userId, expires_at: expiresAt } = tokenDetails;
 
     if ( new Date(expiresAt) < new Date() ) {
-      return { success: false, userId, error: ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED };
+      return { success: false, userId, error: ERR_VERIFICATION_TOKEN_EXPIRED };
     }
 
     await onSuccess({ client, userId, token });
