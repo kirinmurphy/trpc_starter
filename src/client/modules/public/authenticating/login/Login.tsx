@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import { Link, useSearch } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { ERR_ACCOUNT_NOT_VERIFIED } from '../../../../../utils/messageCodes';
 import { trpcService } from '../../../../trpcService/trpcClientService';
 import { invalidateAuthCheckQuery } from '../../../../trpcService/invalidateQueries';
 import { SimpleForm } from '../../../../widgets/forms/SimpleForm';
 import { InputField } from '../../../../widgets/forms/InputField';
 import { useFormState } from '../../../../widgets/forms/utils/useFormState';
-import { InlineNotification } from '../../../../widgets/InlineNotification';
+import { InlineNotification } from '../../../../widgets/InlineNotification/InlineNotification';
 import { GetNewVerificationEmail } from '../createAccount/GetNewVerificationEmail';
 import { ROUTE_URLS } from '../../../../routing/routeUrls';
 import { loginNotifications, LoginNotificationType } from './loginNotifications';
+import { useNotificationQueryParam } from '../../../../widgets/InlineNotification/useNotificationQueryParam';
 
 interface LoginProps {
   onLoginSuccess?: () => void;
@@ -23,8 +24,9 @@ interface LoginFormProps {
 export function Login ({ onLoginSuccess }: LoginProps) {
   const [isUnverified, setIsUnverified] = useState(false);
 
-  const search = useSearch({ from: '/login' });
-  const notificationType = search.notification as LoginNotificationType;
+  const notificationType = useNotificationQueryParam<LoginNotificationType>({
+    from: '/login'
+  });
 
   const { 
     formData: { email, password },

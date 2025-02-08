@@ -4,10 +4,16 @@ import { ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED, ERR_VERIFICATION_FAILED } from 
 import { ROUTE_URLS } from "../routing/routeUrls";
 import { MutationProcedure } from "./trpcTypes";
 
-const verificationErrorRedirectConfig = {
-  to: ROUTE_URLS.login,   
-  search: { notification: ERR_VERIFICATION_FAILED }
-};
+const errorRedirectConfigs = {
+  account: {
+    to: ROUTE_URLS.login,   
+    search: { notification: ERR_VERIFICATION_FAILED }
+  },
+  password: {
+    to: ROUTE_URLS.requestResetPasswordEmail,   
+    search: { notification: ERR_VERIFICATION_FAILED }    
+  }
+}
 
 interface VerificationData {
   success: boolean; 
@@ -22,6 +28,7 @@ interface TokenInput {
 interface UseTokenParamVerificationProps<TProcedure> {
   verifyTokenProcedure: MutationProcedure<TProcedure, TokenInput, VerificationData>;
   onVerificationSuccess?: (data: VerificationData) => Promise<void> | void;
+  verificationType: keyof typeof errorRedirectConfigs;
 }
 
 interface UseTokenVerificationResult {
@@ -34,7 +41,9 @@ export function useTokenParamVerification<TProcedure> (
   props: UseTokenParamVerificationProps<TProcedure>
 ): UseTokenVerificationResult {
 
-  const { verifyTokenProcedure, onVerificationSuccess } = props;
+  const { verificationType, verifyTokenProcedure, onVerificationSuccess } = props;
+
+  const errorRedirectConfig = errorRedirectConfigs[verificationType];
 
   const router = useRouter();
   const token = router.state.location.search.token;
@@ -53,19 +62,19 @@ export function useTokenParamVerification<TProcedure> (
         if ( data?.error === ERR_ACCOUNT_VERIFICATION_TOKEN_EXPIRED ) {
           setTokenExpired(true);
         } else {
-          navigate(verificationErrorRedirectConfig);
+          navigate(errorRedirectConfig);
         }
       }
     },
     onError: (err) => {
       console.error('Verification error', err);
-      navigate(verificationErrorRedirectConfig);
+      navigate(errorRedirectConfig);
     }
   });
 
 
   useEffect(() => {    
-    if ( !token ) { navigate(verificationErrorRedirectConfig); return; }
+    if ( !token ) { navigate(errorRedirectConfig); return; }
     mutate({ token });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);

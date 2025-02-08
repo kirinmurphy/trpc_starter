@@ -3,16 +3,33 @@ import { trpcService } from "../../../../trpcService/trpcClientService";
 import { InputField } from "../../../../widgets/forms/InputField";
 import { SimpleForm } from "../../../../widgets/forms/SimpleForm";
 import { useFormState } from "../../../../widgets/forms/utils/useFormState";
+import { ERR_VERIFICATION_FAILED } from "../../../../../utils/messageCodes";
+import { ROUTE_URLS } from "../../../../routing/routeUrls";
+import { useNotificationQueryParam } from "../../../../widgets/InlineNotification/useNotificationQueryParam";
+import { InlineNotification } from "../../../../widgets/InlineNotification/InlineNotification";
 
 const requestResetPasswordEmailCopy = {
   formPrompt: "We well send a confirmation email to this address:",
 }
+
+const verificationNotifications = {
+  [ERR_VERIFICATION_FAILED]: {
+    type: 'warning' as const,
+    message: 'There was a problem verifying your account. If you think this is an error, please try again.'
+  }
+}
+
+type VerificationNotificationType = keyof typeof verificationNotifications;
 
 interface RequestResetPasswordEmailFormPrompts {
   email: string;
 }
 
 export function RequestResetPasswordEmail () {
+  const notificationType = useNotificationQueryParam<VerificationNotificationType>({ 
+    from: ROUTE_URLS.requestResetPasswordEmail 
+  })
+
   const {
     formData: { email },
     handleFieldChange
@@ -47,6 +64,9 @@ export function RequestResetPasswordEmail () {
           title="Reset Password">
             {({ fieldErrors }) => (
               <>
+                <InlineNotification {...verificationNotifications[notificationType]} />
+
+
                 <div>{requestResetPasswordEmailCopy.formPrompt}</div>
 
                 <InputField 

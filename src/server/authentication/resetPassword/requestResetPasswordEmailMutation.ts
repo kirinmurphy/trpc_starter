@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { ContextType } from "../types";
 import { getPool } from "../../db/pool";
-import { SQL_CREATE_RESET_PASSWORD_TOKEN, SQL_GET_USERID_BY_EMAIL } from "../../db/sql";
+import { SQL_CREATE_RESET_PASSWORD_TOKEN, SQL_DELETE_PASSWORD_RESET_RECORD, SQL_GET_PASSWORD_RESET_RECORD_BY_USERID, SQL_GET_USERID_BY_EMAIL } from "../../db/sql";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
-import { GetUserIdByEmailSchema } from "../schemas";
+import { GetUserIdByEmailSchema, PasswordResetTokenMinimalSchema } from "../schemas";
 import { getUniqueToken } from "../utils/getUniqueToken";
 import { VERIFICATION_TOKEN_EXPIRY } from "../expiryConstants";
 import { sendResetPasswordEmail } from "./sendResetPasswordEmail";
@@ -31,7 +31,11 @@ export async function requestResetPasswordEmailMutation (props: RequestResetPass
     const userId = parsedResult?.id;
     
     if ( userId ) {
-      // TODO: look for any existing password verification tokens and delete them 
+      const existingTokenRecord = await getPool().query(SQL_GET_PASSWORD_RESET_RECORD_BY_USERID, [userId]);
+      const existingToken = parseDBQueryResult(existingTokenRecord, PasswordResetTokenMinimalSchema)?.token;
+      if ( existingToken ) {
+        await getPool().query(SQL_DELETE_PASSWORD_RESET_RECORD, [existingToken]);
+      }
       
       const verificationToken = getUniqueToken();
       

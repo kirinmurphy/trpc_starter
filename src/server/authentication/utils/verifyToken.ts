@@ -43,6 +43,11 @@ export async function verifyToken (props: VerifyTokenProps): Promise<VerifyToken
 
   const client = await getPool().connect();
 
+  if ( !token ) {
+    // TODO: should I throw an error instead of returning false here? 
+    return { success: false, error: ERR_VERIFICATION_FAILED };
+  }
+
   try {
     const tokenResult = await client.query(getTokenSql, [token]);
     const tokenDetails = parseDBQueryResult(tokenResult, getTokenResponseSchema) as z.infer<typeof getTokenResponseSchema>;

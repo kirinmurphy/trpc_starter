@@ -5,6 +5,7 @@ import { ResetPasswordForm } from "./ResetPasswordForm";
 
 export function VerifyPasswordResetToken () {
   const { tokenExpired, userId, isLoading } = useTokenParamVerification({
+    verificationType: 'password',
     verifyTokenProcedure: trpcService.auth.verifyPasswordResetToken,
     onVerificationSuccess: async () => {
     } 

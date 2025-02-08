@@ -8,6 +8,7 @@ import { useTokenParamVerification } from "../../../../utils/useTokenParamVerifi
 export function VerifyAccount () {
   const navigate = useNavigate();
   const { tokenExpired, userId, isLoading } = useTokenParamVerification({
+    verificationType: 'account',
     verifyTokenProcedure: trpcService.auth.verifyAccount,
     onVerificationSuccess: async () => {
       await invalidateAuthCheckQuery();
