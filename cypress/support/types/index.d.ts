@@ -71,6 +71,11 @@ declare global {
       getLastEmail: (props: { email: string }) => Chainable<MailhogEmailProps>;
       resetMockEmailServer: () => Chainable<void>;
       simulateEmailSendFailure: (type: EmailErrorType) => Chainable<void>;
+
+      requestPasswordReset: (props: { email: string }) => Chainable<void>;
+      resetPassword: (props: { token: string; newPassword: string; confirmPassword?: string; }) => Chainable<void>;
+      getPasswordResetToken: (props: { email: string; }) => Chainable<string>;
+
     }
   }  
 }

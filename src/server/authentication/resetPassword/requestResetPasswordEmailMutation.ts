@@ -57,8 +57,8 @@ export async function requestResetPasswordEmailMutation (props: RequestResetPass
     // in order to not reveal account details
     // we only return an error if there was an error sending the message 
     return { success: true }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err: unknown) {
+    console.log('ERRRRRRRR', err);
     // TODO: add logging 
     throw 'There was a problem completing the request.  Please wait a moment and try again.';
   } 

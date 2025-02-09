@@ -9,10 +9,13 @@ import { AuthenticatedApp } from '../modules/authenticated/AuthenticatedApp';
 import { AuthenticatedHomepage } from '../modules/authenticated/AuthenticatedHomepage';
 import { CreateAccount } from '../modules/public/authenticating/createAccount/CreateAccount';
 import { RequestResetPasswordEmail } from '../modules/public/authenticating/resetPassword/RequestResetPasswordEmail';
+import { VerifyPasswordResetToken } from '../modules/public/authenticating/resetPassword/VerifyPasswordResetToken';
+import { tokenVerificationLoader } from '../utils/tokenVerificationLoader';
+import { trpcVanillaClient } from '../trpcService/trpcClientService';
+import { invalidateAuthCheckQuery } from '../trpcService/invalidateQueries';
 import { ROUTE_URLS } from './routeUrls';
 import { redirectIfAuthenticated, redirectIfNotAuthenticated } from './authenticationRedirects';
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';
-import { VerifyPasswordResetToken } from '../modules/public/authenticating/resetPassword/VerifyPasswordResetEmail';
 
 const rootRoute = createRootRoute({
   component: App,
@@ -53,7 +56,17 @@ const verifyAccountRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.verifyAccount,
   beforeLoad: redirectIfAuthenticated, 
-  component: () => <PublicApp><VerifyAccount/></PublicApp>,
+  component: () => <PublicApp><VerifyAccount<typeof verifyAccountRoute> /></PublicApp>,
+  loader: async (context) => {
+    const token = new URLSearchParams(context.location.search).get('token');
+    return tokenVerificationLoader<typeof trpcVanillaClient.auth.verifyAccount>({
+      token,
+      verificationType: 'account',
+      verifyTokenProcedure: trpcVanillaClient.auth.verifyAccount,
+      pathToRedirectOnSuccess: ROUTE_URLS.authenticatedHomepage,
+      onVerificationSuccess: async () => { await invalidateAuthCheckQuery(); }
+    })    
+  },
 });
 
 const requestResetPasswordEmailRoute = createRoute({
@@ -67,7 +80,15 @@ const resetPasswordRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.resetPassword,
   beforeLoad: redirectIfAuthenticated, 
-  component: () => <PublicApp><VerifyPasswordResetToken/></PublicApp>,
+  component: () => <PublicApp><VerifyPasswordResetToken<typeof resetPasswordRoute>/></PublicApp>,
+  loader: async (context) => {
+    const token = new URLSearchParams(context.location.search).get('token');
+    return tokenVerificationLoader<typeof trpcVanillaClient.auth.verifyPasswordResetToken>({
+      token,
+      verificationType: 'password',
+      verifyTokenProcedure: trpcVanillaClient.auth.verifyPasswordResetToken,      
+    });
+  }
 });
 
 export const routeTree = rootRoute.addChildren([

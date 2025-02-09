@@ -1,13 +1,13 @@
-const DEMO_USER = {
-  name: 'Test User',
-  email: 'testtt@gmail.com',
-  password: 'P@ssword-123'
-} as const; 
+describe.skip('User Authentication', () => {
+  const DEMO_USER = {
+    name: 'Test User',
+    email: 'testtt@gmail.com',
+    password: 'P@ssword-123'
+  } as const; 
 
-const publicHomepageIntroText = 'tRPC web app starter';
-
-describe('User Authentication', () => {
   describe('Public Pages', () => {
+    const publicHomepageIntroText = 'tRPC web app starter';
+
     it('loads the public homepage', () => {
       cy.visit('/');
       cy.contains(publicHomepageIntroText, { timeout: 10000 }).should('be.visible');

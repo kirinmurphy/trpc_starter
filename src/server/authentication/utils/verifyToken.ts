@@ -2,7 +2,7 @@ import { PoolClient } from "pg";
 import { z } from "zod";
 import { 
   ERR_VERIFICATION_TOKEN_EXPIRED, 
-  ERR_NO_ACCOUNT_VERIFICATION_TOKEN, 
+  ERR_NO_VERIFICATION_TOKEN, 
   ERR_VERIFICATION_FAILED
 } from "../../../utils/messageCodes";
 import { getPool } from "../../db/pool";
@@ -53,7 +53,7 @@ export async function verifyToken (props: VerifyTokenProps): Promise<VerifyToken
     const tokenDetails = parseDBQueryResult(tokenResult, getTokenResponseSchema) as z.infer<typeof getTokenResponseSchema>;
 
     if ( !tokenDetails ) {
-      return { success: false, error: ERR_NO_ACCOUNT_VERIFICATION_TOKEN }; 
+      return { success: false, error: ERR_NO_VERIFICATION_TOKEN }; 
     }
 
     const { user_id: userId, expires_at: expiresAt } = tokenDetails;

@@ -1,25 +1,29 @@
-import { useNavigate } from "@tanstack/react-router";
-import { trpcService } from "../../../../trpcService/trpcClientService";
-import { useTokenParamVerification } from "../../../../utils/useTokenParamVerification";
+import { AnyRoute, useLoaderData, useNavigate } from "@tanstack/react-router";
 import { ResetPasswordForm } from "./ResetPasswordForm";
 import { ROUTE_URLS } from "../../../../routing/routeUrls";
 import { ERR_VERIFICATION_TOKEN_EXPIRED } from "../../../../../utils/messageCodes";
+import { useEffect } from "react";
 
 
-export function VerifyPasswordResetToken () {
+export function VerifyPasswordResetToken<TRoute extends AnyRoute>() {
   const navigate = useNavigate();
-  const { tokenExpired, userId, isLoading } = useTokenParamVerification({
-    verificationType: 'password',
-    verifyTokenProcedure: trpcService.auth.verifyPasswordResetToken,
-    onVerificationExpired: async () => {
+  const { userId, tokenExpired } = useLoaderData<TRoute>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    from: ROUTE_URLS.resetPassword as any
+  });
+  
+  useEffect(() => {
+    if ( tokenExpired ) {
       navigate({
         to: ROUTE_URLS.requestResetPasswordEmail,
         search: { notification: ERR_VERIFICATION_TOKEN_EXPIRED }
-      })
+      });
+      return;
     }
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokenExpired]);
 
-  if ( isLoading ) {
+  if ( !userId ) {
     return <>Verifying...</>
   }
  

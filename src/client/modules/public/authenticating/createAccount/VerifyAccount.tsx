@@ -1,22 +1,14 @@
-import { useNavigate } from "@tanstack/react-router";
-import { trpcService } from "../../../../trpcService/trpcClientService";
+import { AnyRoute, useLoaderData } from "@tanstack/react-router";
 import { ROUTE_URLS } from "../../../../routing/routeUrls";
 import { GetNewVerificationEmail } from "./GetNewVerificationEmail";
-import { invalidateAuthCheckQuery } from "../../../../trpcService/invalidateQueries";
-import { useTokenParamVerification } from "../../../../utils/useTokenParamVerification";
 
-export function VerifyAccount () {
-  const navigate = useNavigate();
-  const { tokenExpired, userId, isLoading } = useTokenParamVerification({
-    verificationType: 'account',
-    verifyTokenProcedure: trpcService.auth.verifyAccount,
-    onVerificationSuccess: async () => {
-      await invalidateAuthCheckQuery();
-      navigate({ to: ROUTE_URLS.authenticatedHomepage });
-    } 
-  })
-    
-  if ( isLoading ) {
+export function VerifyAccount<TRoute extends AnyRoute> () {
+  const { userId, tokenExpired } = useLoaderData<TRoute>({ 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    from: ROUTE_URLS.verifyAccount as any 
+  });
+
+  if ( !userId ) {
     return <>Verifying...</>;
   }
 
