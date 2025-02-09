@@ -43,8 +43,6 @@ export function RequestResetPasswordEmail () {
     }
   };
 
-  const possibleNotification = verificationNotifications[notificationType];
-
   return (
     <>
       {!isEmailSent && (
@@ -55,16 +53,14 @@ export function RequestResetPasswordEmail () {
           title="Reset Password">
             {({ fieldErrors }) => (
               <>
-                {possibleNotification && <InlineNotification {...possibleNotification} />}
+                <InlineNotification {...verificationNotifications[notificationType]} />
 
-                {!possibleNotification && (
-                  <div>{requestResetPasswordEmailCopy.formPrompt}</div>
-                )}
+                <div>{requestResetPasswordEmailCopy.formPrompt}</div>
 
                 <InputField 
                   name="email"
                   value={email}
-                  label="Email"
+                  label="Account Email"
                   onChange={handleFieldChange('email')}
                   fieldErrors={fieldErrors?.email}
                 />
@@ -72,7 +68,6 @@ export function RequestResetPasswordEmail () {
             )}
         </SimpleForm>
       )}
-      
       {isEmailSent && (
         <div>
           <h2 className="text-xl mb-2">Thank you.</h2>

@@ -3,9 +3,9 @@ import { AuthActionProps } from "./types";
 Cypress.Commands.add('createAccountAttempt', ({ demoUser }: AuthActionProps) => {
   cy.visit('/');
   cy.contains('a', 'SIGN UP').click();  
-  cy.get('input[type="name"]').type(demoUser.name, { delay: 100 });
-  cy.get('input[type="email"]').type(demoUser.email, { delay: 100 });
-  cy.get('input[type="password"]').type(demoUser.password, { delay: 100 });
+  cy.get('input[name="name"]').type(demoUser.name, { delay: 100 });
+  cy.get('input[name="email"]').type(demoUser.email, { delay: 100 });
+  cy.get('input[name="password"]').type(demoUser.password, { delay: 100 });
   cy.get('button[type="submit"]').click();
 });
 
@@ -32,8 +32,8 @@ Cypress.Commands.add('createAccountAndVerify', ({ demoUser }: AuthActionProps) =
 Cypress.Commands.add('login', ({ demoUser }: AuthActionProps) => {
   cy.visit('/');
   cy.contains('a', 'LOGIN').click();
-  cy.get('input[type="email"]').type(demoUser.email);
-  cy.get('input[type="password"]').type(demoUser.password);
+  cy.get('input[name="email"]').type(demoUser.email);
+  cy.get('input[name="password"]').type(demoUser.password);
   cy.get('button[type="submit"]').click();
 });
 

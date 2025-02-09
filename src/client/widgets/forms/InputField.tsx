@@ -29,6 +29,7 @@ export function InputField (props: Props) {
       <input
         className="w-full px-3 py-2 border rounded-md"
         id={name}
+        name={name}
         type={type}
         value={value}
         autoComplete="off"

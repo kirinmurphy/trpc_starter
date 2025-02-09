@@ -6,7 +6,8 @@ App starter built in Typescript, tRPC, Node and React
     <td style="vertical-align: top;">Authentication</td>
     <td>
       • <a href="./docs/auth.md">Account creation with email verification</a><br>
-      • Authentication (& refresh) session management
+      • Authentication (& refresh) session management<br>
+      • <a href="./docs/password_reset.md">Password reset workflow</a>
     </td>
   </tr>
   <tr>

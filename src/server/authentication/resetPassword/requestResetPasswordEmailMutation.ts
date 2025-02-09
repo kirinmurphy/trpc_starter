@@ -1,7 +1,12 @@
 import { z } from "zod";
 import { ContextType } from "../types";
 import { getPool } from "../../db/pool";
-import { SQL_CREATE_RESET_PASSWORD_TOKEN, SQL_DELETE_PASSWORD_RESET_RECORD, SQL_GET_PASSWORD_RESET_RECORD_BY_USERID, SQL_GET_USERID_BY_EMAIL } from "../../db/sql";
+import { 
+  SQL_CREATE_RESET_PASSWORD_TOKEN, 
+  SQL_DELETE_PASSWORD_RESET_RECORD, 
+  SQL_GET_PASSWORD_RESET_RECORD_BY_USERID, 
+  SQL_GET_USERID_BY_EMAIL   
+} from "../../db/sql";
 import { parseDBQueryResult } from "../../db/parseDBQueryResult";
 import { GetUserIdByEmailSchema, PasswordResetTokenMinimalSchema } from "../schemas";
 import { getUniqueToken } from "../utils/getUniqueToken";
@@ -39,6 +44,7 @@ export async function requestResetPasswordEmailMutation (props: RequestResetPass
       
       const verificationToken = getUniqueToken();
       
+      // TODO: Rollback the token creation if password email fails to be sent
       await getPool().query(
         SQL_CREATE_RESET_PASSWORD_TOKEN,
         [verificationToken, userId, email, VERIFICATION_TOKEN_EXPIRY]
@@ -54,6 +60,6 @@ export async function requestResetPasswordEmailMutation (props: RequestResetPass
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err: unknown) {
     // TODO: add logging 
-    throw 'Email failed';
+    throw 'There was a problem completing the request.  Please wait a moment and try again.';
   } 
 }
