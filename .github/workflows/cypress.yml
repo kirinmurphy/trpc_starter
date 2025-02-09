@@ -22,7 +22,7 @@ jobs:
       AUTH_TOKEN_SECRET: test-secret
       REFRESH_TOKEN_SECRET: test-refresh-secret
       VITE_PORT: 5173
-      VITE_EMAIL_ADDRESS_SUPPORT: 'test@support.com'
+      # VITE_EMAIL_ADDRESS_SUPPORT: 'test@support.com'
 
     steps: 
       - uses: actions/checkout@v4

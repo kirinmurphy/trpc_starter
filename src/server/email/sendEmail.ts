@@ -2,8 +2,10 @@ import { createEmailTransporter } from "./createEmailTransporter";
 import { getMailerError } from "./getMailerError";
 import { EmailOptions, EmailResult } from "./types";
 
-const defaultFromEmail = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS || 'test@email.com';
-const defaultFromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER || 'Test Sender';
+const websiteDomain = process.env.WEBSITE_DOMAIN;
+const systemEmailDefault = `noreply@${websiteDomain}`;
+const defaultFromEmail = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS || systemEmailDefault;
+const defaultFromName = process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER || websiteDomain;
 
 export async function sendEmail (props: EmailOptions): Promise<EmailResult>{
   const { 

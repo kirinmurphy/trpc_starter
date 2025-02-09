@@ -16,7 +16,12 @@ const supportEmail = import.meta.env.VITE_EMAIL_ADDRESS_SUPPORT!;
 
 export function UnsentVerificationEmailInstructions (props: Props) {
 
-  const { email, userId, onResendSuccess, loginRedirectOverride } = props;
+  const { 
+    email, 
+    userId, 
+    onResendSuccess, 
+    loginRedirectOverride 
+  } = props;
 
   const [resendRequestCount, setResendRequestCount] = useState<number>(0);
 

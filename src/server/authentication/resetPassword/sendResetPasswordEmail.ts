@@ -6,7 +6,10 @@ import { getVerificationUrl } from "../utils/getVerificationUrl";
 export async function sendResetPasswordEmail (props: SendVerificationEmailProps) {
   const { to, verificationToken } = props;
 
-  const passwordResetUrl = getVerificationUrl({ verificationToken, route: ROUTE_URLS.resetPassword });
+  const passwordResetUrl = getVerificationUrl({ 
+    verificationToken, 
+    route: ROUTE_URLS.resetPassword 
+  });
 
   return sendEmail({
     to,

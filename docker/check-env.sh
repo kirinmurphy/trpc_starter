@@ -11,12 +11,10 @@ required_vars=(
 
 if [ "$NODE_ENV" = "production" ]; then
   required_vars+=(
+    "WEBSITE_DOMAIN"
     "EMAIL_SERVICE_HOST"
     "EMAIL_SERVICE_USER"
     "EMAIL_SERVICE_PASS"
-    "EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS"
-    "EMAIL_SERVICE_SYSTEM_EMAIL_SENDER"
-    "CLIENT_DOMAIN"
   )
 fi
 

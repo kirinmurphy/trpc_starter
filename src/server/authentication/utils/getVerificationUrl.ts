@@ -6,7 +6,7 @@ interface GetVerificationUrlProps {
 }
 
 export function getVerificationUrl ({ verificationToken, route }: GetVerificationUrlProps): string {
-  const domain = process.env.CLIENT_DOMAIN || 'localhost';
+  const domain = process.env.WEBSITE_DOMAIN || 'localhost';
   const protocol = process.env.API_PROTOCOL || 'http';
   return `${protocol}://${domain}${route}?token=${verificationToken}`;
 }
