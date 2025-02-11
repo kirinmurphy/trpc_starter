@@ -39,15 +39,6 @@ flowchart LR
     WasEmailSent --> |No| Rerequest[User Requests Resend] --> WasEmailSent2{Email Sent?} --> |Yes| UserVerifies
     WasEmailSent2 --> |No| Rerequest
     WasEmailSent2 --> |No| TryLater([Try Again Later<br>or Contact Support])
-
-    RequestPasswordReset([Request Password Reset]) --> SubmitEmail[Submit Email]
-    SubmitEmail --> IsEmailValid{Is Email Valid?}
-    IsEmailValid --> |No| FormError3[Form Error] --> SubmitEmail
-    IsEmailValid --> |Yes| EmailSent3{Email Sent?} --> |No| RerequestEmail([TBDDDDD])
-    EmailSent3 --> |Yes| UserVerifies3[User Verifies] --> TokenValid3{Token Valid?} --> |No - Not Found| Floop[Floop]
-    TokenValid3 --> |No - Expired| Floop2[Floop2]
-    TokenValid3 --> |Yes| UserUpdatesPassword[User Updates Password] --> PasswordValidSaved{Password Valid/Saved?} --> |No| FormError4[Form Error] --> UserUpdatesPassword
-    PasswordValidSaved --> |Yes| RedirectToLogin([Redirect To Login<br/>W/ Success Msg])
 ```
 
     

@@ -1,6 +1,6 @@
 const { defineConfig } = require('cypress');
 const { verifyTestEnvironment, cleanupTestUsers } = require('./cypress/support/tasks/db.cjs');
-const { getVerificationToken, getPasswordResetTokenImpl } = require('./cypress/support/tasks/auth.cjs'); 
+const { getVerificationToken, getPasswordResetToken } = require('./cypress/support/tasks/auth.cjs'); 
 const mailhogApi = require('./cypress/plugins/mailhog.cjs');
 
 require('dotenv').config();
@@ -45,8 +45,7 @@ module.exports = defineConfig({
           return await getVerificationToken({ email });
         },
         async getPasswordResetToken({ email }) {
-          console.log('Task getPasswordResetToken called with email:', email);
-          return await getPasswordResetTokenImpl({ email });
+          return await getPasswordResetToken({ email });
         },
         ...mailhogApi
       });

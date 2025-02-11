@@ -25,7 +25,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
   const [isUnverified, setIsUnverified] = useState(false);
 
   const notificationType = useNotificationQueryParam<LoginNotificationType>({
-    from: '/login'
+    from: ROUTE_URLS.login
   });
 
   const { 

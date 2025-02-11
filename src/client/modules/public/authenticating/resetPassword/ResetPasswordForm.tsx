@@ -14,7 +14,6 @@ interface ResetPasswordEmailFormProps {
 }
 
 export function ResetPasswordForm ({ userId }: { userId: string; }) {
-  // console.log('UZSERRRRRRR', userId);
   const navigate = useNavigate();
 
   const {

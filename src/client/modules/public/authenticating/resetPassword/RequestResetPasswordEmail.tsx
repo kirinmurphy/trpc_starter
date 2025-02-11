@@ -6,7 +6,7 @@ import { useFormState } from "../../../../widgets/forms/utils/useFormState";
 import { ROUTE_URLS } from "../../../../routing/routeUrls";
 import { useNotificationQueryParam } from "../../../../widgets/InlineNotification/useNotificationQueryParam";
 import { InlineNotification } from "../../../../widgets/InlineNotification/InlineNotification";
-import { VerificationNotificationType, verificationNotifications } from "./requestPasswordNotifications";
+import { PasswordVerificationNotificationType, passwordVerificationNotifications } from "./requestPasswordNotifications";
 
 const requestResetPasswordEmailCopy = {
   formPrompt: "We well send a confirmation email to this address:",
@@ -17,7 +17,7 @@ interface RequestResetPasswordEmailFormPrompts {
 }
 
 export function RequestResetPasswordEmail () {
-  const notificationType = useNotificationQueryParam<VerificationNotificationType>({ 
+  const notificationType = useNotificationQueryParam<PasswordVerificationNotificationType>({ 
     from: ROUTE_URLS.requestResetPasswordEmail 
   });
 
@@ -53,7 +53,7 @@ export function RequestResetPasswordEmail () {
           title="Reset Password">
             {({ fieldErrors }) => (
               <>
-                <InlineNotification {...verificationNotifications[notificationType]} />
+                <InlineNotification {...passwordVerificationNotifications[notificationType]} />
 
                 <div>{requestResetPasswordEmailCopy.formPrompt}</div>
 

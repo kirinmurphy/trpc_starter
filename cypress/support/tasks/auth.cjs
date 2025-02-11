@@ -6,7 +6,7 @@ async function getVerificationToken ({ email }) {
   return await getTokenFromDB({ email, table: 'verification_tokens' });
 }
 
-async function getPasswordResetTokenImpl ({ email }) {
+async function getPasswordResetToken ({ email }) {
   return await getTokenFromDB({ email, table: 'reset_password_tokens' });
 }
 
@@ -18,5 +18,5 @@ async function getTokenFromDB ({ email, table }) {
 
 module.exports = {
   getVerificationToken,
-  getPasswordResetTokenImpl
+  getPasswordResetToken
 };

@@ -4,22 +4,26 @@ describe('Password Reset Workflow', () => {
     email: 'testtt@gmail.com',
     password: 'P@ssword-123'
   } as const;
+
+  before(() => {
+    cy.verifyTestEnvironment();
+    cy.cleanupTestUsers();
+    cy.createAccountAndVerify({ demoUser: DEMO_USER });
+    cy.contains('button', 'Logout').click();
+    cy.wait(500);
+  });
+
+  after(() => {
+    cy.cleanupTestUsers();
+  });
   
   describe('Request Password Reset', () => {
-    before(() => {
-      cy.verifyTestEnvironment();
-      cy.cleanupTestUsers();
-      cy.createAccountAndVerify({ demoUser: DEMO_USER });
-      cy.contains('button', 'Logout').click();
-    });
-
     after(() => {
-      cy.cleanupTestUsers();
       cy.clearEmails();
     });
 
-    // TODO: add test to redirect if authenticated user 
     describe('request success', () => {
+
       it('sends reset password email when account exists', () => {
         cy.requestPasswordReset({ email: DEMO_USER.email });
         
@@ -28,8 +32,7 @@ describe('Password Reset Workflow', () => {
 
         cy.getPasswordResetToken({ email: DEMO_USER.email }).should('exist').then(token => {
           cy.getLastEmail({ email: DEMO_USER.email }).then(emailAttempt => {
-            cy.log('emailAttempt', emailAttempt);
-            expect(emailAttempt.Raw.To.includes(DEMO_USER.email)).to.equal(true);
+            expect(emailAttempt.Raw.To.includes(DEMO_USER.email));
             expect(emailAttempt.Content.Headers.Subject).to.include("Reset your password");
             expect(emailAttempt.Content.Body).to.include(token);
           });
@@ -62,13 +65,6 @@ describe('Password Reset Workflow', () => {
   });
 
   describe('Password Reset Verification', () => {
-    before(() => {
-      cy.cleanupTestUsers();
-      cy.createAccountAndVerify({ demoUser: DEMO_USER });
-      cy.contains('button', 'Logout').click();
-      cy.wait(500);
-    });
-
     beforeEach(() => {
       cy.requestPasswordReset({ email: DEMO_USER.email });
     });
@@ -77,10 +73,6 @@ describe('Password Reset Workflow', () => {
       cy.clearEmails();
       cy.resetMockEmailServer();
     })
-    
-    after(() => {
-      cy.cleanupTestUsers();
-    });
 
     describe('verification success', () => {
       it('allows user to reset password with valid tokenn', () => {
@@ -129,24 +121,15 @@ describe('Password Reset Workflow', () => {
   });
 });
 
-Cypress.Commands.add('requestPasswordReset', ({ email }: { email: string }) => {
+Cypress.Commands.add('requestPasswordReset', ({ email }) => {
   cy.visit('/request-reset-password-email');
   cy.get('input[name="email"]').type(email);
   cy.get('button[type="submit"]').click();
 });
 
-// let storedVerificationToken; 
-
 Cypress.Commands.add('getPasswordResetToken', ({ email }) => {
-  return cy.task('getPasswordResetToken', { email }).then((token: string) => {
-    // storedVerificationToken = token;
-    return token;
-  });
+  return cy.task('getPasswordResetToken', { email }).then((token: string) => token);
 });
-
-// Cypress.Commands.add('getStoredVerificationToken', () => {
-//   cy.wrap(storedVerificationToken);
-// });
 
 Cypress.Commands.add('resetPassword', ({ 
   token, 

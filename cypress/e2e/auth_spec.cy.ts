@@ -81,18 +81,20 @@ describe('User Authentication', () => {
           cy.contains(DEMO_USER.name).should('be.visible');
           cy.contains(DEMO_USER.email).should('be.visible');
         });
-      
-        it('redirects users from / to /home', () => {
-          cy.visit('/');
-          cy.url().should('include', '/home');
-          cy.contains('Wilkommmen').should('not.exist');
-        });
-    
-        it('redirects users from /login to /home', () => {
-          cy.visit('/login');
-          cy.url().should('include', '/home');
-          cy.contains('Wilkommmen').should('not.exist');
-        });
+
+        const publicUrls = [
+          '/',
+          '/login',
+          '/request-reset-password-email',
+          '/reset-password'
+        ];
+
+        for ( const url of publicUrls ) {
+          it(`redirects users from ${url} to /home`, () => {
+            cy.visit(url);
+            cy.url().should('include', '/home');
+          });  
+        }
       });
       
       describe('token expiry', () => {

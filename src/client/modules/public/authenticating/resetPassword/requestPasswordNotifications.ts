@@ -1,6 +1,6 @@
 import { ERR_VERIFICATION_TOKEN_EXPIRED, ERR_VERIFICATION_FAILED } from "../../../../../utils/messageCodes";
 
-export const verificationNotifications = {
+export const passwordVerificationNotifications = {
   [ERR_VERIFICATION_FAILED]: {
     type: 'warning' as const,
     message: 'There was a problem verifying your account. If you think this is an error, please try again.'
@@ -11,4 +11,4 @@ export const verificationNotifications = {
   },
 }
 
-export type VerificationNotificationType = keyof typeof verificationNotifications;
+export type PasswordVerificationNotificationType = keyof typeof passwordVerificationNotifications;
