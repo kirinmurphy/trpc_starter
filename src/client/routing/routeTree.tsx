@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createRootRoute, createRoute } from '@tanstack/react-router'
+import { createRootRoute, createRoute, redirect } from '@tanstack/react-router'
 import { LOGIN_NOTIFICATIONS } from '../../utils/messageCodes';
 import App from '../App'
 import { PublicApp } from '../modules/public/PublicApp';
@@ -59,13 +59,18 @@ const verifyAccountRoute = createRoute({
   component: () => <PublicApp><VerifyAccount<typeof verifyAccountRoute> /></PublicApp>,
   loader: async (context) => {
     const token = new URLSearchParams(context.location.search).get('token');
-    return tokenVerificationLoader<typeof trpcVanillaClient.auth.verifyAccount>({
+    const preloadData = await tokenVerificationLoader<typeof trpcVanillaClient.auth.verifyAccount>({
       token,
-      verificationType: 'account',
       verifyTokenProcedure: trpcVanillaClient.auth.verifyAccount,
-      pathToRedirectOnSuccess: ROUTE_URLS.authenticatedHomepage,
-      onVerificationSuccess: async () => { await invalidateAuthCheckQuery(); }
-    })    
+      redirectToOnError: ROUTE_URLS.login,
+    });
+
+    if ( preloadData.success ) {
+      await invalidateAuthCheckQuery();
+      throw redirect({ to: ROUTE_URLS.authenticatedHomepage });  
+    }
+
+    return preloadData;
   },
 });
 
@@ -85,8 +90,8 @@ const resetPasswordRoute = createRoute({
     const token = new URLSearchParams(context.location.search).get('token');
     return tokenVerificationLoader<typeof trpcVanillaClient.auth.verifyPasswordResetToken>({
       token,
-      verificationType: 'password',
       verifyTokenProcedure: trpcVanillaClient.auth.verifyPasswordResetToken,      
+      redirectToOnError: ROUTE_URLS.requestResetPasswordEmail
     });
   }
 });

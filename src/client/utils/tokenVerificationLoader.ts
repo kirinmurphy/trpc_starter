@@ -1,18 +1,7 @@
 import { redirect } from "@tanstack/react-router";
 import { ERR_VERIFICATION_FAILED, ERR_VERIFICATION_TOKEN_EXPIRED } from "../../utils/messageCodes";
-import { ROUTE_URLS, RouteUrlsEnum } from "../routing/routeUrls";
+import { RouteUrlsEnum } from "../routing/routeUrls";
 import { MutateProcedure } from "./trpcTypes";
-
-const errorRedirectConfigs = {
-  account: {
-    to: ROUTE_URLS.login,   
-    search: { notification: ERR_VERIFICATION_FAILED }
-  },
-  password: {
-    to: ROUTE_URLS.requestResetPasswordEmail,   
-    search: { notification: ERR_VERIFICATION_FAILED }    
-  }
-}
 
 interface TokenInput {
   token: string;
@@ -25,27 +14,27 @@ export interface TokenVerificationResult {
 }
 
 interface VerificationLoaderProps<TProcedure> {
-  verificationType: keyof typeof errorRedirectConfigs;
-  verifyTokenProcedure: MutateProcedure<TProcedure, TokenInput, TokenVerificationResult>;
   token: string | null;
-  pathToRedirectOnSuccess?: RouteUrlsEnum;
+  verifyTokenProcedure: MutateProcedure<TProcedure, TokenInput, TokenVerificationResult>;
+  redirectToOnError: RouteUrlsEnum;
   onVerificationSuccess?: () => void;
 }
 
-export async function tokenVerificationLoader<TProcedure>(props: VerificationLoaderProps<TProcedure>) {
+export async function tokenVerificationLoader<TProcedure>(
+  props: VerificationLoaderProps<TProcedure>
+) {
   const {
     token,
-    verificationType,
     verifyTokenProcedure,
-    pathToRedirectOnSuccess,
-    onVerificationSuccess,    
+    redirectToOnError,
   } = props;
 
-  const errorRedirectConfig = errorRedirectConfigs[verificationType];
+  const errorRedirectConfig = {
+    to: redirectToOnError,   
+    search: { notification: ERR_VERIFICATION_FAILED }    
+  };
 
-  if (!token) {
-    throw redirect(errorRedirectConfig);
-  }
+  if ( !token ) { throw redirect(errorRedirectConfig); }
 
   try {
     const result = await verifyTokenProcedure.mutate({ token });
@@ -55,15 +44,7 @@ export async function tokenVerificationLoader<TProcedure>(props: VerificationLoa
       return { ...result, tokenExpired: true } 
     }
 
-    if ( !success ) {
-      throw redirect(errorRedirectConfig)      
-    } else {
-      if ( onVerificationSuccess ) { await onVerificationSuccess(); }
-
-      if ( pathToRedirectOnSuccess ) {
-        throw redirect({ to: pathToRedirectOnSuccess })
-      }
-    }
+    if ( !success ) { throw redirect(errorRedirectConfig); } 
 
     return { ...result, tokenExpired: false };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
