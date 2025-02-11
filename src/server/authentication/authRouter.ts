@@ -10,6 +10,9 @@ import { verifyAccountMutation } from "./createAccount/verifyAccountMutation";
 import { getNewVerificationEmailMutation, GetNewVerificationEmailSchema } from "./createAccount/getNewVerificationEmailMutation";
 import { resendFailedVerificationEmailMutation, ResendFailedVerificationEmailSchema } from "./createAccount/resendFailedVerificationEmailMutation";
 import { getVerificationEmailSentStatusQuery, GetVerificationEmailSentStatusSchema } from "./createAccount/getVerificationEmailSentStatusQuery";
+import { requestResetPasswordEmailMutation, RequestResetPasswordEmailSchema } from "./resetPassword/requestResetPasswordEmailMutation";
+import { resetPasswordMutation, ResetPasswordSchema } from "./resetPassword/resetPasswordMutation";
+import { verifyPasswordResetTokenMutation } from "./resetPassword/verifyPasswordResetTokenMutation";
 
 const { publicQuery, protectedQuery, publicMutation } = procedures;
 
@@ -52,4 +55,17 @@ export const authRouter = router({
 
   getUser: protectedQuery  
     .query(getUserQuery),
+
+  // -- Reset Password
+  requestResetPasswordEmail: publicMutation
+    .input(RequestResetPasswordEmailSchema)
+    .mutation(requestResetPasswordEmailMutation),
+
+  verifyPasswordResetToken: publicMutation
+    .input(z.object({ token: z.string() }))
+    .mutation(verifyPasswordResetTokenMutation),
+
+  resetPassword: publicMutation
+    .input(ResetPasswordSchema)
+    .mutation(resetPasswordMutation)
 });  

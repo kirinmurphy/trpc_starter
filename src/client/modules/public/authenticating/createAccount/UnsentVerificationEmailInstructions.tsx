@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { trpcService } from "../../../trpcService/trpcClientService";
-import { Button } from "../../../widgets/Button";
-import { LoginRedirectLink } from "./LoginRedirectLink";
+import { trpcService } from "../../../../trpcService/trpcClientService";
+import { Button } from "../../../../widgets/Button";
+import { LoginRedirectLink } from "../login/LoginRedirectLink";
 
 interface Props {
   email: string;
@@ -16,7 +16,12 @@ const supportEmail = import.meta.env.VITE_EMAIL_ADDRESS_SUPPORT!;
 
 export function UnsentVerificationEmailInstructions (props: Props) {
 
-  const { email, userId, onResendSuccess, loginRedirectOverride } = props;
+  const { 
+    email, 
+    userId, 
+    onResendSuccess, 
+    loginRedirectOverride 
+  } = props;
 
   const [resendRequestCount, setResendRequestCount] = useState<number>(0);
 

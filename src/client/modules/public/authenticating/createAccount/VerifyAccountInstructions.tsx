@@ -1,4 +1,4 @@
-import { LoginRedirectLink } from "./LoginRedirectLink";
+import { LoginRedirectLink } from "../login/LoginRedirectLink";
 
 interface Props {
   loginRedirectOverride?: () => void;

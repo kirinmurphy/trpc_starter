@@ -5,8 +5,9 @@ App starter built in Typescript, tRPC, Node and React
   <tr>
     <td style="vertical-align: top;">Authentication</td>
     <td>
-      • <a href="./docs/verification.md">Account creation with email verification</a><br>
-      • Authentication (& refresh) session management
+      • <a href="./docs/auth.md">Account creation with email verification</a><br>
+      • Authentication (& refresh) session management<br>
+      • <a href="./docs/password_reset.md">Password reset workflow</a>
     </td>
   </tr>
   <tr>
@@ -45,30 +46,25 @@ App starter built in Typescript, tRPC, Node and React
 
 
 # Setup
-## ENV Variables
+## Evironment Variables
 ```env 
-# -- DB
-DB_NAME=app_db_name
-DB_USER=app_db_username
-DB_PASSWORD=app_db_password
+# -- REQUIRED
+DB_NAME=posgtres_db_name
+DB_USER=postgres_db_username
+DB_PASSWORD=postgres_db_password
 
-# -- AUTH
 AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
 REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
-# -- MISC
-VITE_EMAIL_ADDRESS_SUPPORT=support@yourdomain.com
 
-# -- PRODUCTION
-CLIENT_DOMAIN=yourdomain.com
+# -- FOR PRODUCTION
+WEBSITE_DOMAIN=yourdomain.com
 
 EMAIL_SERVICE_HOST=smtp.some-provider.com
 EMAIL_SERVICE_USER=email_service_user
 EMAIL_SERVICE_PASS=email_service_password_or_api_key
-EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS=noreply@yourdomain.com
-EMAIL_SERVICE_SYSTEM_EMAIL_SENDER=yourdomain.com
 ``` 
-additional optional override variables available [here](./.env.example)
+[full variable list](./.env.example) with additional overrides
 
 
 ## Running App With Docker

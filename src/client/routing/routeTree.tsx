@@ -1,16 +1,21 @@
 import { z } from 'zod';
 import { createRootRoute, createRoute } from '@tanstack/react-router'
-import { ERR_VERIFICATION_FAILED } from '../../utils/messageCodes';
+import { LOGIN_NOTIFICATIONS } from '../../utils/messageCodes';
 import App from '../App'
 import { PublicApp } from '../modules/public/PublicApp';
 import { PublicHomepage } from '../modules/public/PublicHomepage';
-import { VerifyAccount } from '../modules/public/authenticating/VerifyAccount';
+import { VerifyAccount } from '../modules/public/authenticating/createAccount/VerifyAccount';
 import { AuthenticatedApp } from '../modules/authenticated/AuthenticatedApp';
 import { AuthenticatedHomepage } from '../modules/authenticated/AuthenticatedHomepage';
+import { CreateAccount } from '../modules/public/authenticating/createAccount/CreateAccount';
+import { RequestResetPasswordEmail } from '../modules/public/authenticating/resetPassword/RequestResetPasswordEmail';
+import { VerifyPasswordResetToken } from '../modules/public/authenticating/resetPassword/VerifyPasswordResetToken';
+import { tokenVerificationLoader } from '../utils/tokenVerificationLoader';
+import { trpcVanillaClient } from '../trpcService/trpcClientService';
+import { invalidateAuthCheckQuery } from '../trpcService/invalidateQueries';
 import { ROUTE_URLS } from './routeUrls';
 import { redirectIfAuthenticated, redirectIfNotAuthenticated } from './authenticationRedirects';
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';
-import { CreateAccount } from '../modules/public/authenticating/CreateAccount';
 
 const rootRoute = createRootRoute({
   component: App,
@@ -36,7 +41,7 @@ const loginPageRoute = createRoute({
   beforeLoad: redirectIfAuthenticated,
   component: () => <PublicApp><LoginRedirectWrapper/></PublicApp>,
   validateSearch: z.object({
-    notification: z.enum([ERR_VERIFICATION_FAILED] as const).optional()
+    notification: z.enum(LOGIN_NOTIFICATIONS).optional()
   }),
 });
 
@@ -51,7 +56,39 @@ const verifyAccountRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTE_URLS.verifyAccount,
   beforeLoad: redirectIfAuthenticated, 
-  component: () => <PublicApp><VerifyAccount/></PublicApp>,
+  component: () => <PublicApp><VerifyAccount<typeof verifyAccountRoute> /></PublicApp>,
+  loader: async (context) => {
+    const token = new URLSearchParams(context.location.search).get('token');
+    return tokenVerificationLoader<typeof trpcVanillaClient.auth.verifyAccount>({
+      token,
+      verificationType: 'account',
+      verifyTokenProcedure: trpcVanillaClient.auth.verifyAccount,
+      pathToRedirectOnSuccess: ROUTE_URLS.authenticatedHomepage,
+      onVerificationSuccess: async () => { await invalidateAuthCheckQuery(); }
+    })    
+  },
+});
+
+const requestResetPasswordEmailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: ROUTE_URLS.requestResetPasswordEmail,
+  beforeLoad: redirectIfAuthenticated, 
+  component: () => <PublicApp><RequestResetPasswordEmail/></PublicApp>,
+});
+
+const resetPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: ROUTE_URLS.resetPassword,
+  beforeLoad: redirectIfAuthenticated, 
+  component: () => <PublicApp><VerifyPasswordResetToken<typeof resetPasswordRoute>/></PublicApp>,
+  loader: async (context) => {
+    const token = new URLSearchParams(context.location.search).get('token');
+    return tokenVerificationLoader<typeof trpcVanillaClient.auth.verifyPasswordResetToken>({
+      token,
+      verificationType: 'password',
+      verifyTokenProcedure: trpcVanillaClient.auth.verifyPasswordResetToken,      
+    });
+  }
 });
 
 export const routeTree = rootRoute.addChildren([
@@ -59,5 +96,7 @@ export const routeTree = rootRoute.addChildren([
   loginPageRoute,
   createAccountPageRoute,
   authenticatedHomepageRoute,
-  verifyAccountRoute
+  verifyAccountRoute,
+  requestResetPasswordEmailRoute,
+  resetPasswordRoute
 ]);  

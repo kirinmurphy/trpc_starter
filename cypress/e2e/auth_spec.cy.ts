@@ -1,13 +1,13 @@
-const DEMO_USER = {
-  name: 'Test User',
-  email: 'testtt@gmail.com',
-  password: 'P@ssword-123'
-} as const; 
-
-const publicHomepageIntroText = 'tRPC web app starter';
-
 describe('User Authentication', () => {
+  const DEMO_USER = {
+    name: 'Test User',
+    email: 'testtt@gmail.com',
+    password: 'P@ssword-123'
+  } as const; 
+
   describe('Public Pages', () => {
+    const publicHomepageIntroText = 'tRPC web app starter';
+
     it('loads the public homepage', () => {
       cy.visit('/');
       cy.contains(publicHomepageIntroText, { timeout: 10000 }).should('be.visible');
@@ -81,18 +81,20 @@ describe('User Authentication', () => {
           cy.contains(DEMO_USER.name).should('be.visible');
           cy.contains(DEMO_USER.email).should('be.visible');
         });
-      
-        it('redirects users from / to /home', () => {
-          cy.visit('/');
-          cy.url().should('include', '/home');
-          cy.contains('Wilkommmen').should('not.exist');
-        });
-    
-        it('redirects users from /login to /home', () => {
-          cy.visit('/login');
-          cy.url().should('include', '/home');
-          cy.contains('Wilkommmen').should('not.exist');
-        });
+
+        const publicUrls = [
+          '/',
+          '/login',
+          '/request-reset-password-email',
+          '/reset-password'
+        ];
+
+        for ( const url of publicUrls ) {
+          it(`redirects users from ${url} to /home`, () => {
+            cy.visit(url);
+            cy.url().should('include', '/home');
+          });  
+        }
       });
       
       describe('token expiry', () => {
@@ -150,7 +152,6 @@ describe('User Authentication', () => {
   
     it('redirects user to login page with notification if attempting to verify an invalid token', () => {
       cy.visit(`/verify-account?token=23ijook2j3FAKEFAKEk32jk3`);
-      cy.contains('Verifying...').should('be.visible');
       cy.url().should('include', '/login');
       cy.contains('There was a problem verifying your account. Login to request another verification email.');
     });

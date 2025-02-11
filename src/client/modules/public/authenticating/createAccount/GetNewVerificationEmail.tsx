@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { EmailSentStatus } from "../../../../utils/types";
-import { trpcService } from "../../../trpcService/trpcClientService";
-import { Button } from "../../../widgets/Button";
+import { EmailSentStatus } from "../../../../../utils/types";
+import { trpcService } from "../../../../trpcService/trpcClientService";
+import { Button } from "../../../../widgets/Button";
 import { VerifyAccountInstructions } from "./VerifyAccountInstructions";
-import { LoginRedirectLink } from "./LoginRedirectLink";
+import { LoginRedirectLink } from "../login/LoginRedirectLink";
 import { UnsentVerificationEmailInstructions } from "./UnsentVerificationEmailInstructions";
 
 const userPromptCopy = {

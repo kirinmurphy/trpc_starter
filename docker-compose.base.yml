@@ -28,7 +28,7 @@ services:
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
 
       # EMAIL
-      VITE_EMAIL_ADDRESS_SUPPORT: ${VITE_EMAIL_ADDRESS_SUPPORT}
+      VITE_EMAIL_ADDRESS_SUPPORT: ${VITE_EMAIL_ADDRESS_SUPPORT:-support@${WEBSITE_DOMAIN:-localhost}}
     healthcheck:
       interval: 10s
       timeout: 5s

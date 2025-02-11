@@ -1,9 +1,9 @@
-import crypto from 'crypto';
 import { EmailSentStatus } from '../../../utils/types';
 import { getPool } from '../../db/pool';
 import { SQL_CREATE_VERIFICATION_RECORD, SQL_SET_VERIFICIATION_EMAIL_SEND_STATE } from "../../db/sql";
 import { VERIFICATION_TOKEN_EXPIRY } from '../expiryConstants';
-import { sendVerificationEmail, SendVerificationEmailProps } from "./sendVerificationEmail";
+import { getUniqueToken } from '../utils/getUniqueToken';
+import { sendAccountVerificationEmail, SendVerificationEmailProps } from "./sendAccountVerificationEmail";
 
 interface Props { 
   email: string;
@@ -14,7 +14,7 @@ interface Props {
 export async function initVerifyAccountFlow (props: Props): Promise<void> {
   const{ email, userId, waitForEmailConfirmation = false } = props;
 
-  const verificationToken = crypto.randomBytes(32).toString('base64url');
+  const verificationToken = getUniqueToken();
 
   try {
     await getPool().query(
@@ -45,7 +45,7 @@ async function sendVerificationEmailAsync (props: SendVerificationEmailAsyncProp
   const { userId } = props;
 
   try {
-    const { success } = await sendVerificationEmail(props);
+    const { success } = await sendAccountVerificationEmail(props);
     
     if ( success ) {
       await updateEmailStatus({ userId, emailStatus: EmailSentStatus.emailSent })
@@ -57,7 +57,12 @@ async function sendVerificationEmailAsync (props: SendVerificationEmailAsyncProp
   }
 }
 
-async function updateEmailStatus ({ userId, emailStatus }: { userId: string; emailStatus: EmailSentStatus }) {
+interface UpdateEmailStatusProps { 
+  userId: string; 
+  emailStatus: EmailSentStatus 
+}
+
+async function updateEmailStatus ({ userId, emailStatus }: UpdateEmailStatusProps) {
   try {
     await getPool().query(SQL_SET_VERIFICIATION_EMAIL_SEND_STATE, [emailStatus, userId]);
   } catch (err) {

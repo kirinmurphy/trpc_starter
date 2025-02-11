@@ -1,19 +1,16 @@
 import { useState } from 'react';
-import { useSearch } from '@tanstack/react-router';
-import { ERR_ACCOUNT_NOT_VERIFIED, ERR_VERIFICATION_FAILED } from '../../../../utils/messageCodes';
-import { trpcService } from '../../../trpcService/trpcClientService';
-import { invalidateAuthCheckQuery } from '../../../trpcService/invalidateQueries';
-import { SimpleForm } from '../../../widgets/forms/SimpleForm';
-import { InputField } from '../../../widgets/forms/InputField';
-import { useFormState } from '../../../widgets/forms/utils/useFormState';
-import { InlineNotification } from '../../../widgets/InlineNotification';
-import { GetNewVerificationEmail } from './GetNewVerificationEmail';
-
-const loginNotifications = {
-  [ERR_VERIFICATION_FAILED]: 'There was a problem verifying your account.  Login to request another verification email.'
-} as const;
-
-type LoginNotificationType = keyof typeof loginNotifications;
+import { Link } from '@tanstack/react-router';
+import { ERR_ACCOUNT_NOT_VERIFIED } from '../../../../../utils/messageCodes';
+import { trpcService } from '../../../../trpcService/trpcClientService';
+import { invalidateAuthCheckQuery } from '../../../../trpcService/invalidateQueries';
+import { SimpleForm } from '../../../../widgets/forms/SimpleForm';
+import { InputField } from '../../../../widgets/forms/InputField';
+import { useFormState } from '../../../../widgets/forms/utils/useFormState';
+import { InlineNotification } from '../../../../widgets/InlineNotification/InlineNotification';
+import { GetNewVerificationEmail } from '../createAccount/GetNewVerificationEmail';
+import { ROUTE_URLS } from '../../../../routing/routeUrls';
+import { loginNotifications, LoginNotificationType } from './loginNotifications';
+import { useNotificationQueryParam } from '../../../../widgets/InlineNotification/useNotificationQueryParam';
 
 interface LoginProps {
   onLoginSuccess?: () => void;
@@ -27,8 +24,9 @@ interface LoginFormProps {
 export function Login ({ onLoginSuccess }: LoginProps) {
   const [isUnverified, setIsUnverified] = useState(false);
 
-  const search = useSearch({ from: '/login' });
-  const notification = search.notification as LoginNotificationType;
+  const notificationType = useNotificationQueryParam<LoginNotificationType>({
+    from: ROUTE_URLS.login
+  });
 
   const { 
     formData: { email, password },
@@ -55,7 +53,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
   return (
     <>
       {!isUnverified && (
-        <>         
+        <div className="max-w-md mx-auto">         
 
           <SimpleForm 
             onSubmit={onSubmit}
@@ -64,7 +62,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
             title="Login">
               {({ fieldErrors }) => (
                 <>
-                  <InlineNotification message={loginNotifications[notification]} />
+                  <InlineNotification {...loginNotifications[notificationType]} />
         
                   <InputField 
                     name="email" 
@@ -75,6 +73,7 @@ export function Login ({ onLoginSuccess }: LoginProps) {
                   />
                   <InputField 
                     name="password" 
+                    type="password"
                     value={password}
                     label="Password" 
                     onChange={handleFieldChange('password')}
@@ -82,8 +81,13 @@ export function Login ({ onLoginSuccess }: LoginProps) {
                   />                
                 </>
               )}
-          </SimpleForm>        
-        </>
+          </SimpleForm>
+          <div className="px-6 text-right">
+              <Link to={ROUTE_URLS.requestResetPasswordEmail} preload={false}>
+                Forgot password?
+              </Link>
+          </div>        
+        </div>
       )}
 
       {data && isUnverified && (

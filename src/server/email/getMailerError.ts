@@ -21,8 +21,11 @@ export function getMailerError ({ error, options }: Props) {
   });
 
   let errorType: EmailFailure['error']['type'] = 'UNKNOWN';
-  
-  if ( mailerError.code === '' || mailerError.code === 'ETIMEDOUT' || mailerError.message?.includes('socket close') ) {
+
+  if ( mailerError.code === '' 
+    || mailerError.code === 'ETIMEDOUT' 
+    || mailerError.message?.includes('socket close') 
+  ) {
     errorType = 'CONNECTION_ERROR';
 
   } else if ( mailerError.responseCode === 500 ) {
