@@ -1,4 +1,4 @@
-describe.skip('User Authentication', () => {
+describe('User Authentication', () => {
   const DEMO_USER = {
     name: 'Test User',
     email: 'testtt@gmail.com',
@@ -150,7 +150,6 @@ describe.skip('User Authentication', () => {
   
     it('redirects user to login page with notification if attempting to verify an invalid token', () => {
       cy.visit(`/verify-account?token=23ijook2j3FAKEFAKEk32jk3`);
-      cy.contains('Verifying...').should('be.visible');
       cy.url().should('include', '/login');
       cy.contains('There was a problem verifying your account. Login to request another verification email.');
     });

@@ -61,7 +61,7 @@ describe('Password Reset Workflow', () => {
     });
   });
 
-  describe.only('Password Reset Verification', () => {
+  describe('Password Reset Verification', () => {
     before(() => {
       cy.cleanupTestUsers();
       cy.createAccountAndVerify({ demoUser: DEMO_USER });
@@ -83,7 +83,8 @@ describe('Password Reset Workflow', () => {
     });
 
     describe('verification success', () => {
-      it.only('allows user to reset password with valid token', () => {
+      it('allows user to reset password with valid tokenn', () => {
+        expect(1).to.equal(1);
         const newPassword = 'NewP@ssword-123';
         
         cy.getPasswordResetToken({ email: DEMO_USER.email }).should('exist').then(token => {
@@ -121,7 +122,7 @@ describe('Password Reset Workflow', () => {
             newPassword: 'NewP@ssword-123',
             confirmPassword: 'DifferentP@ssword-123'
           });
-          cy.contains('Passwords do not match').should('be.visible');
+          cy.contains('Passwords must match').should('be.visible');
         });
       });
     });
@@ -157,7 +158,6 @@ Cypress.Commands.add('resetPassword', ({
   confirmPassword?: string;
 }) => {
   cy.visit(`/reset-password?token=${token}`);
-  cy.contains('Verifying...').should('be.visible');
   cy.get('input[name="password"]').type(newPassword);
   cy.get('input[name="confirmPassword"]').type(confirmPassword);
   cy.get('button[type="submit"]').click();

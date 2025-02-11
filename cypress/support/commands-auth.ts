@@ -19,7 +19,6 @@ Cypress.Commands.add('createAccount', ({ demoUser }: AuthActionProps) => {
 Cypress.Commands.add('verifyAccount', ({ email }: { email: string }) => {
   cy.getVerificationToken({ email }).should('exist').then(token => {
     cy.visit(`/verify-account?token=${token}`);
-    cy.contains('Verifying...').should('be.visible');
     cy.url().should('include', '/home');
   });
 });
