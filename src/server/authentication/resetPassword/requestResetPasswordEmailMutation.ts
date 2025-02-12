@@ -2,9 +2,9 @@ import { z } from 'zod';
 import { ContextType } from '../types';
 import { getPool } from '../../db/pool';
 import {
-  SQL_CREATE_RESET_PASSWORD_TOKEN,
-  SQL_DELETE_PASSWORD_RESET_RECORD,
-  SQL_GET_PASSWORD_RESET_RECORD_BY_USERID,
+  SQL_CREATE_PASSWORD_RESET_REQUEST,
+  SQL_DELETE_PASSWORD_RESET_REQUEST,
+  SQL_GET_PASSWORD_RESET_REQUEST_BY_USERID,
   SQL_GET_USERID_BY_EMAIL,
 } from '../../db/sql';
 import { parseDBQueryResult } from '../../db/parseDBQueryResult';
@@ -47,7 +47,7 @@ export async function requestResetPasswordEmailMutation(
 
     if (userId) {
       const existingTokenRecord = await getPool().query(
-        SQL_GET_PASSWORD_RESET_RECORD_BY_USERID,
+        SQL_GET_PASSWORD_RESET_REQUEST_BY_USERID,
         [userId]
       );
       const existingToken = parseDBQueryResult(
@@ -55,7 +55,7 @@ export async function requestResetPasswordEmailMutation(
         PasswordResetTokenMinimalSchema
       )?.token;
       if (existingToken) {
-        await getPool().query(SQL_DELETE_PASSWORD_RESET_RECORD, [
+        await getPool().query(SQL_DELETE_PASSWORD_RESET_REQUEST, [
           existingToken,
         ]);
       }
@@ -63,7 +63,7 @@ export async function requestResetPasswordEmailMutation(
       const verificationToken = getUniqueToken();
 
       // TODO: Rollback the token creation if password email fails to be sent
-      await getPool().query(SQL_CREATE_RESET_PASSWORD_TOKEN, [
+      await getPool().query(SQL_CREATE_PASSWORD_RESET_REQUEST, [
         verificationToken,
         userId,
         email,

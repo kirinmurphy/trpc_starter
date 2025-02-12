@@ -1,4 +1,3 @@
-import { PoolClient } from 'pg';
 import { z } from 'zod';
 import {
   ERR_VERIFICATION_TOKEN_EXPIRED,
@@ -8,6 +7,7 @@ import {
 import { getPool } from '../../db/pool';
 import { parseDBQueryResult } from '../../db/parseDBQueryResult';
 import { ContextType } from '../types';
+import { SQL_SET_USER_AS_VERIFIED } from '../../db/sql';
 
 export interface VerifyTokenMutationProps {
   ctx: ContextType;
@@ -19,12 +19,8 @@ export interface VerifyTokenMutationProps {
 interface VerifyTokenProps {
   token: string;
   getTokenSql: string;
+  deleteTokenSql: string;
   getTokenResponseSchema: z.ZodSchema;
-  onSuccess: (props: {
-    userId: string;
-    client: PoolClient;
-    token: string;
-  }) => Promise<void>;
 }
 
 export interface VerifyTokenReturnProps {
@@ -36,7 +32,7 @@ export interface VerifyTokenReturnProps {
 export async function verifyToken(
   props: VerifyTokenProps
 ): Promise<VerifyTokenReturnProps> {
-  const { token, getTokenSql, getTokenResponseSchema, onSuccess } = props;
+  const { token, getTokenSql, deleteTokenSql, getTokenResponseSchema } = props;
 
   const client = await getPool().connect();
 
@@ -59,12 +55,25 @@ export async function verifyToken(
     const { user_id: userId, expires_at: expiresAt } = tokenDetails;
 
     if (new Date(expiresAt) < new Date()) {
+      // TODO: create logger of all sql failure calls
+      client.query(deleteTokenSql, [token]).catch((err) => {
+        console.error('failed to delete expired token', err);
+      });
+
       return { success: false, userId, error: ERR_VERIFICATION_TOKEN_EXPIRED };
     }
 
-    await onSuccess({ client, userId, token });
+    await client.query('BEGIN');
+    try {
+      await client.query(SQL_SET_USER_AS_VERIFIED, [userId]);
+      await client.query(deleteTokenSql, [token]);
+      await client.query('COMMIT');
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    }
 
-    return { success: !!tokenDetails, userId };
+    return { success: true, userId };
   } catch (err: unknown) {
     console.log('auth error', err);
     return { success: false, error: ERR_VERIFICATION_FAILED };

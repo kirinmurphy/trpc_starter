@@ -16,7 +16,7 @@ export function getAuthLink(): TRPCLink<AppRouter> {
           },
 
           error(err: unknown) {
-            void handleAuthLinkErrors({ err, req, observer, forward });
+            handleAuthLinkErrors({ err, req, observer, forward });
           },
 
           complete() {

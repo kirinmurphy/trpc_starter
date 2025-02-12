@@ -39,7 +39,7 @@ export async function initVerifyAccountFlow(props: Props): Promise<void> {
     if (waitForEmailConfirmation) {
       await emailPromise;
     } else {
-      void emailPromise.catch((err) => {
+      emailPromise.catch((err) => {
         console.error('Async email sending failed: ', err);
       });
     }
@@ -67,7 +67,6 @@ async function sendVerificationEmailAsync(
         emailStatus: EmailSentStatus.emailSent,
       });
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     await updateEmailStatus({
       userId,
