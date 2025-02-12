@@ -1,5 +1,5 @@
 export enum EmailSentStatus {
-  emailQueued= 'emailQueued',
+  emailQueued = 'emailQueued',
   emailSent = 'emailSent',
-  emailFailed = 'emailFailed'
+  emailFailed = 'emailFailed',
 }

@@ -1,20 +1,20 @@
 name: Cypress Tests
 
-on: 
-  push: 
+on:
+  push:
     branches: ['main']
   pull_request:
     types: [opened, synchronize, reopened]
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-jobs: 
+jobs:
   cypress-tests:
     runs-on: ubuntu-latest
 
-    env: 
+    env:
       DB_NAME: ci_db
       TEST_DB_NAME: ci_db_cypress
       DB_USER: postgres
@@ -23,7 +23,7 @@ jobs:
       REFRESH_TOKEN_SECRET: test-refresh-secret
       VITE_PORT: 5173
 
-    steps: 
+    steps:
       - uses: actions/checkout@v4
 
       - name: Install make
@@ -39,10 +39,9 @@ jobs:
           echo "Checking for artifacts..."
           ls -la cypress || true
 
-
       - name: Build test containers
         run: make build-tests
-  
+
       - name: Run tests
         run: make run-tests
         id: run_tests
@@ -55,10 +54,10 @@ jobs:
           ls -la cypress/screenshots || true
           ls -la cypress/videos || true
 
-      - name: Upload test artifacts 
+      - name: Upload test artifacts
         if: failure()
         uses: actions/upload-artifact@v4
-        with: 
+        with:
           name: cypress-results
           path: |
             cypress/videos

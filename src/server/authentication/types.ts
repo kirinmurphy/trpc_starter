@@ -1,10 +1,10 @@
-import { CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { CreateNextContextOptions } from '@trpc/server/adapters/next';
 
 export type User = {
   id: number;
   name: string;
   email: string;
-}
+};
 
 export const AUTH_STATUSES = {
   noToken: 'NO_TOKEN',
@@ -23,24 +23,25 @@ export const AUTH_ERROR_MESSAGES = {
   [AUTH_STATUSES.invalidToken]: 'Invalid token',
   [AUTH_STATUSES.unknownError]: 'Authentication error',
   [AUTH_STATUSES.csrfError]: 'CSRF error',
-  [AUTH_STATUSES.authenticated]: null
+  [AUTH_STATUSES.authenticated]: null,
 } as const;
 
-export type AuthStatusOptionType =  typeof AUTH_STATUSES[keyof typeof AUTH_STATUSES];
+export type AuthStatusOptionType =
+  (typeof AUTH_STATUSES)[keyof typeof AUTH_STATUSES];
 
 export type ContextType = {
   req: CreateNextContextOptions['req'];
   res: CreateNextContextOptions['res'];
   userId: string | null;
   authStatus: AuthStatusOptionType;
-}
+};
 
 export interface MutationPropsWithInput<InputType> {
-  input: InputType
-  ctx: ContextType
+  input: InputType;
+  ctx: ContextType;
 }
 
-export interface SimpleMutationReturnType { 
-  success: boolean; 
-  message: string; 
+export interface SimpleMutationReturnType {
+  success: boolean;
+  message: string;
 }

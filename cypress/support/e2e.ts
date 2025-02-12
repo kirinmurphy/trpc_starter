@@ -3,5 +3,5 @@ import './commands-db';
 import './commands-email';
 
 beforeEach(() => {
-  cy.reload(true)
+  cy.reload(true);
 });

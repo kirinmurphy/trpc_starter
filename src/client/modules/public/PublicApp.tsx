@@ -1,18 +1,19 @@
-import { ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
-import { ROUTE_URLS } from "../../routing/routeUrls";
-import { StyledButton } from "../../widgets/Button";
-import { ActiveLink } from "../../widgets/ActiveLink";
+import { ReactNode } from 'react';
+import { Link } from '@tanstack/react-router';
+import { ROUTE_URLS } from '../../routing/routeUrls';
+import { StyledButton } from '../../widgets/Button';
+import { ActiveLink } from '../../widgets/ActiveLink';
 
-export function PublicApp ({ children }: { children: ReactNode }) {
-
+export function PublicApp({ children }: { children: ReactNode }) {
   return (
     <>
       <header className="flex py-4 mb-8 border-b border-gray-600">
         <div className="flex-grow">
-          <Link  to={ROUTE_URLS.publicHomepage} preload={false}>Home</Link>
+          <Link to={ROUTE_URLS.publicHomepage} preload={false}>
+            Home
+          </Link>
         </div>
-        
+
         <div>
           <ActiveLink className="mr-2" to={ROUTE_URLS.login}>
             <StyledButton>LOGIN</StyledButton>
@@ -24,9 +25,7 @@ export function PublicApp ({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main>
-        {children}
-      </main>
+      <main>{children}</main>
     </>
-  )
+  );
 }

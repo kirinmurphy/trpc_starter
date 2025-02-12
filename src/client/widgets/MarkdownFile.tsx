@@ -9,19 +9,22 @@ export interface ReadmeFileProps {
   externalLink?: string;
 }
 
-
 type QueryKey = ['markdown', string];
 
-export function MarkdownFile (props: ReadmeFileProps) {
+export function MarkdownFile(props: ReadmeFileProps) {
   const { markdownUrl, externalLink } = props;
   const styles = getMarkdownStyles();
 
-  const { data: mdText, error, isLoading } = useQuery<string, Error, string, QueryKey>({
+  const {
+    data: mdText,
+    error,
+    isLoading,
+  } = useQuery<string, Error, string, QueryKey>({
     queryKey: ['markdown', markdownUrl],
     queryFn: fetchMarkdownContent,
   });
 
-  if ( isLoading ) {
+  if (isLoading) {
     return (
       <div className={styles.loading}>
         <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
@@ -30,43 +33,50 @@ export function MarkdownFile (props: ReadmeFileProps) {
     );
   }
 
-  if ( error instanceof Error ) {
+  if (error instanceof Error) {
     return (
       <div className={styles.error}>
-        Failed to load markdown content. Please try again later. 
+        Failed to load markdown content. Please try again later.
       </div>
     );
   }
 
-  if ( !mdText ) {
+  if (!mdText) {
     return null;
   }
- 
+
   const sanitizedContent = DOMPurify.sanitize(mdText);
 
   return (
     <article className={styles.wrapper}>
-      {externalLink && <a 
-        className="block mb-4 absolute top-7 right-8"
-        href={externalLink} target="_blank" rel="noreferrer">
-        <FaLink className="size-6" />
-      </a>}
+      {externalLink && (
+        <a
+          className="block mb-4 absolute top-7 right-8"
+          href={externalLink}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <FaLink className="size-6" />
+        </a>
+      )}
 
-      <Markdown rehypePlugins={[rehypeRaw]}>{sanitizedContent}</Markdown>       
+      <Markdown rehypePlugins={[rehypeRaw]}>{sanitizedContent}</Markdown>
     </article>
   );
 }
 
-
-async function fetchMarkdownContent ({ queryKey }: { queryKey: QueryKey }): Promise<string> {
+async function fetchMarkdownContent({
+  queryKey,
+}: {
+  queryKey: QueryKey;
+}): Promise<string> {
   const url = queryKey[1];
   const response = await fetch(url);
-  if ( !response.ok ) {
+  if (!response.ok) {
     throw new Error(`Failed to fetch markdown: ${response.statusText}`);
   }
   return response.text();
 }
-
 
 function getMarkdownStyles() {
   // Using a function to organize our styles
@@ -113,25 +123,33 @@ function getMarkdownStyles() {
       dark:prose-invert
       dark:prose-pre:bg-[#222]
       dark:prose-code:text-gray-200
-    `.replace(/\s+/g, ' ').trim(),
-    
+    `
+      .replace(/\s+/g, ' ')
+      .trim(),
+
     loading: `
       animate-pulse
       space-y-4
-    `.replace(/\s+/g, ' ').trim(),
-    
+    `
+      .replace(/\s+/g, ' ')
+      .trim(),
+
     loadingBar: `
       h-4 
       bg-gray-200 
       rounded 
-    `.replace(/\s+/g, ' ').trim(),
-    
+    `
+      .replace(/\s+/g, ' ')
+      .trim(),
+
     error: `
       text-red-500 
       p-4 
       rounded 
       bg-red-50
       dark:bg-red-900/20
-    `.replace(/\s+/g, ' ').trim()
+    `
+      .replace(/\s+/g, ' ')
+      .trim(),
   };
 }

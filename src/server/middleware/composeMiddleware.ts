@@ -1,4 +1,4 @@
-import { NodeHTTPRequest } from "@trpc/server/adapters/node-http";
+import { NodeHTTPRequest } from '@trpc/server/adapters/node-http';
 import { ServerResponse } from 'http';
 
 type MiddlewareFunction = (
@@ -7,14 +7,18 @@ type MiddlewareFunction = (
   next: () => void
 ) => void;
 
-export function composeMiddleware (...middlewares: MiddlewareFunction[]) {
-  return async (req: NodeHTTPRequest, res: ServerResponse, next: () => void) => {
+export function composeMiddleware(...middlewares: MiddlewareFunction[]) {
+  return async (
+    req: NodeHTTPRequest,
+    res: ServerResponse,
+    next: () => void
+  ) => {
     try {
-      for ( const middleware of middlewares ) {
+      for (const middleware of middlewares) {
         await promisifyMiddleware(middleware)(req, res);
       }
       next();
-    } catch ( err: unknown ) {
+    } catch (err: unknown) {
       console.error('Middleware error: ', err);
       res.statusCode = 500;
       res.end('Internal Server Error');
@@ -22,13 +26,16 @@ export function composeMiddleware (...middlewares: MiddlewareFunction[]) {
   };
 }
 
-function promisifyMiddleware (middleware: MiddlewareFunction) {
+function promisifyMiddleware(middleware: MiddlewareFunction) {
   return (req: NodeHTTPRequest, res: ServerResponse) => {
     return new Promise<void>((resolve, reject) => {
-      middleware(req, res, (err?: unknown ) => {
-        if ( err ) { reject(err); }
-        else { resolve(); }
+      middleware(req, res, (err?: unknown) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
       });
     });
-  }
+  };
 }

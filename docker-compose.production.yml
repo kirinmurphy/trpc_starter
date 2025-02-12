@@ -1,17 +1,17 @@
 services:
-  app: 
-    build: 
+  app:
+    build:
       target: production
     expose:
-      - "4173"
+      - '4173'
     environment:
       NODE_ENV: production
       WEBSITE_DOMAIN: ${WEBSITE_DOMAIN}
-      INTERNAL_CLIENT_URL: "${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}"
-      VITE_API_URL: "${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}"
-      VITE_PORT: "4173"
+      INTERNAL_CLIENT_URL: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}'
+      VITE_API_URL: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}'
+      VITE_PORT: '4173'
 
-      # EMAIL SERVICE 
+      # EMAIL SERVICE
       EMAIL_SERVICE_HOST: ${EMAIL_SERVICE_HOST}
       EMAIL_SERVICE_USER: ${EMAIL_SERVICE_USER}
       EMAIL_SERVICE_PASS: ${EMAIL_SERVICE_PASS}
@@ -20,10 +20,11 @@ services:
       EMAIL_SERVICE_PORT: ${EMAIL_SERViCE_PORT}
       EMAIL_SERVICE_SECURE: ${EMAIL_SERVICE_SECURE}
     healthcheck:
-      test: [
-        "CMD-SHELL", 
-        "curl -v http://localhost:3000/ping?batch=1&input=%7B%7D && curl -v http://localhost:4173",
-      ]
+      test:
+        [
+          'CMD-SHELL',
+          'curl -v http://localhost:3000/ping?batch=1&input=%7B%7D && curl -v http://localhost:4173',
+        ]
     deploy:
       resources:
         limits:
@@ -36,14 +37,14 @@ services:
         limits:
           memory: ${DOCKER_DB_MEMORY_LIMIT:-1G}
           cpus: ${DOCKER_DB_CPU_LIMIT:-0.5}
-    ulimits: 
+    ulimits:
       nproc: 65535
-      nofile: 
+      nofile:
         soft: 20000
         hard: 40000
 
   nginx:
-    environment: 
+    environment:
       # TODO: move this to env file
-      ALLOWED_ORIGINS: "${API_PROTOCOL:-https}://${WEBSITE_DOMAIN},${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}:80"
-      VITE_PORT: "4173"
+      ALLOWED_ORIGINS: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN},${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}:80'
+      VITE_PORT: '4173'

@@ -1,37 +1,36 @@
-x-test-app-defaults: &test-app-defaults 
+x-test-app-defaults: &test-app-defaults
   NODE_ENV: test
   WEBSITE_DOMAIN: 'localhost'
-  INTERNAL_CLIENT_URL: "http://nginx:80"
-  VITE_API_URL: "http://nginx:80"
+  INTERNAL_CLIENT_URL: 'http://nginx:80'
+  VITE_API_URL: 'http://nginx:80'
   DB_NAME: ${DB_NAME}
   TEST_DB_NAME: ${DB_NAME}_cypress
   EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS: ${EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS}
   EMAIL_SERVICE_SYSTEM_EMAIL_SENDER: ${EMAIL_SERVICE_SYSTEM_EMAIL_SENDER}
   VITE_EMAIL_ADDRESS_SUPPORT: ${VITE_EMAIL_ADDRESS_SUPPORT:-support@${WEBSITE_DOMAIN:-localhost}}
 
-
-services: 
+services:
   app:
     environment:
       <<: *test-app-defaults
-      
-  cypress: 
+
+  cypress:
     build:
       context: .
       dockerfile: Dockerfile.cypress
-      args: 
+      args:
         DOCKER_BUILDKIT: 1
     networks:
-      - "app_network"
+      - 'app_network'
 
     depends_on:
-      nginx: 
+      nginx:
         condition: service_healthy
       app:
         condition: service_healthy
       db:
         condition: service_healthy
-    environment: 
+    environment:
       <<: *test-app-defaults
       # DB
       DB_USER: ${DB_USER}
@@ -40,7 +39,7 @@ services:
       FORCE_COLOR: 1
       DEBUG: cypress:user:log
       NODE_DEBUG: console
-    volumes: 
+    volumes:
       # Read-only source files
       - ./tsconfig.json:/e2e/tsconfig.json:ro
       - ./cypress/tsconfig.json:/e2e/cypress/tsconfig.json:ro
@@ -49,7 +48,7 @@ services:
       - ./cypress/fixtures:/e2e/cypress/fixtures:ro
       - ./cypress/plugins:/e2e/cypress/plugins:ro
       - ./cypress.config.cjs:/e2e/cypress.config.cjs:ro
-      
+
       # Writable output directories
       - type: bind
         source: ./cypress/videos
@@ -64,17 +63,18 @@ services:
         target: /e2e/cypress/downloads
         consistency: delegated
       # - ./cypress/screenshots:/e2e/cypress/screenshots
-      # - ./cypress/downloads:/e2e/cypress/downloads  
-      
+      # - ./cypress/downloads:/e2e/cypress/downloads
+
     working_dir: /e2e
-    
+
     command: bun run test:docker
 
   nginx:
-    environment: 
-      AUTH_RATE: "1000r/m"
-      VERIFY_RATE: "500r/m"
+    environment:
+      AUTH_RATE: '1000r/m'
+      VERIFY_RATE: '500r/m'
 
-  mailhog: 
+  mailhog:
     # command: ["-invite-jim"]
-    command: ["-invite-jim", "-jim-linkspeed-min=100", "-jim-linkspeed-max=1000"]
+    command:
+      ['-invite-jim', '-jim-linkspeed-min=100', '-jim-linkspeed-max=1000']

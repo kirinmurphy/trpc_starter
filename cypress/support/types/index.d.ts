@@ -5,7 +5,7 @@ export interface AuthActionProps {
     name?: string;
     email: string;
     password: string;
-  }
+  };
 }
 
 interface MailhogRecipient {
@@ -65,7 +65,9 @@ declare global {
       createAccountAndVerify: (props: AuthActionProps) => Chainable<void>;
       login: (props: AuthActionProps) => Chainable<void>;
       getVerificationToken: (options: { email: string }) => Chainable<string>;
-      getStoredVerificationToken: (options: { email: string }) => Chainable<string>;
+      getStoredVerificationToken: (options: {
+        email: string;
+      }) => Chainable<string>;
 
       clearEmails: () => Chainable<void>;
       getLastEmail: (props: { email: string }) => Chainable<MailhogEmailProps>;
@@ -73,9 +75,12 @@ declare global {
       simulateEmailSendFailure: (type: EmailErrorType) => Chainable<void>;
 
       requestPasswordReset: (props: { email: string }) => Chainable<void>;
-      resetPassword: (props: { token: string; newPassword: string; confirmPassword?: string; }) => Chainable<void>;
-      getPasswordResetToken: (props: { email: string; }) => Chainable<string>;
-
+      resetPassword: (props: {
+        token: string;
+        newPassword: string;
+        confirmPassword?: string;
+      }) => Chainable<void>;
+      getPasswordResetToken: (props: { email: string }) => Chainable<string>;
     }
-  }  
+  }
 }

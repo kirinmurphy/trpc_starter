@@ -1,34 +1,46 @@
 import { EmailSentStatus } from '../../../utils/types';
 import { getPool } from '../../db/pool';
-import { SQL_CREATE_VERIFICATION_RECORD, SQL_SET_VERIFICIATION_EMAIL_SEND_STATE } from "../../db/sql";
+import {
+  SQL_CREATE_VERIFICATION_RECORD,
+  SQL_SET_VERIFICIATION_EMAIL_SEND_STATE,
+} from '../../db/sql';
 import { VERIFICATION_TOKEN_EXPIRY } from '../expiryConstants';
 import { getUniqueToken } from '../utils/getUniqueToken';
-import { sendAccountVerificationEmail, SendVerificationEmailProps } from "./sendAccountVerificationEmail";
+import {
+  sendAccountVerificationEmail,
+  SendVerificationEmailProps,
+} from './sendAccountVerificationEmail';
 
-interface Props { 
+interface Props {
   email: string;
-  userId: string; 
+  userId: string;
   waitForEmailConfirmation?: boolean;
 }
 
-export async function initVerifyAccountFlow (props: Props): Promise<void> {
-  const{ email, userId, waitForEmailConfirmation = false } = props;
+export async function initVerifyAccountFlow(props: Props): Promise<void> {
+  const { email, userId, waitForEmailConfirmation = false } = props;
 
   const verificationToken = getUniqueToken();
 
   try {
-    await getPool().query(
-      SQL_CREATE_VERIFICATION_RECORD,
-      [verificationToken, userId, email, VERIFICATION_TOKEN_EXPIRY]
-    );
-  
-    const emailPromise = sendVerificationEmailAsync({ to: email, verificationToken, userId });
+    await getPool().query(SQL_CREATE_VERIFICATION_RECORD, [
+      verificationToken,
+      userId,
+      email,
+      VERIFICATION_TOKEN_EXPIRY,
+    ]);
 
-    if ( waitForEmailConfirmation ) {
+    const emailPromise = sendVerificationEmailAsync({
+      to: email,
+      verificationToken,
+      userId,
+    });
+
+    if (waitForEmailConfirmation) {
       await emailPromise;
     } else {
-      void emailPromise.catch(err => {
-        console.error("Async email sending failed: ", err);
+      void emailPromise.catch((err) => {
+        console.error('Async email sending failed: ', err);
       });
     }
   } catch (err) {
@@ -41,32 +53,46 @@ interface SendVerificationEmailAsyncProps extends SendVerificationEmailProps {
   userId: string;
 }
 
-async function sendVerificationEmailAsync (props: SendVerificationEmailAsyncProps): Promise<void> {
+async function sendVerificationEmailAsync(
+  props: SendVerificationEmailAsyncProps
+): Promise<void> {
   const { userId } = props;
 
   try {
     const { success } = await sendAccountVerificationEmail(props);
-    
-    if ( success ) {
-      await updateEmailStatus({ userId, emailStatus: EmailSentStatus.emailSent })
+
+    if (success) {
+      await updateEmailStatus({
+        userId,
+        emailStatus: EmailSentStatus.emailSent,
+      });
     }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    await updateEmailStatus({ userId, emailStatus: EmailSentStatus.emailFailed });
+    await updateEmailStatus({
+      userId,
+      emailStatus: EmailSentStatus.emailFailed,
+    });
     throw error;
   }
 }
 
-interface UpdateEmailStatusProps { 
-  userId: string; 
-  emailStatus: EmailSentStatus 
+interface UpdateEmailStatusProps {
+  userId: string;
+  emailStatus: EmailSentStatus;
 }
 
-async function updateEmailStatus ({ userId, emailStatus }: UpdateEmailStatusProps) {
+async function updateEmailStatus({
+  userId,
+  emailStatus,
+}: UpdateEmailStatusProps) {
   try {
-    await getPool().query(SQL_SET_VERIFICIATION_EMAIL_SEND_STATE, [emailStatus, userId]);
+    await getPool().query(SQL_SET_VERIFICIATION_EMAIL_SEND_STATE, [
+      emailStatus,
+      userId,
+    ]);
   } catch (err) {
     console.error('updateEmailStatus error', err);
     throw err;
-  } 
+  }
 }

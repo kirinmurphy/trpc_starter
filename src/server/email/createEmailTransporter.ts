@@ -7,7 +7,7 @@ interface EmailConfigProps {
   auth?: {
     user: string;
     pass: string;
-  }
+  };
 }
 
 const mailhogConfig = {
@@ -22,15 +22,15 @@ const productionConfig = {
   secure: process.env.EMAIL_SERVICE_SECURE === 'true',
   auth: {
     user: process.env.EMAIL_SERVICE_USER!,
-    pass: process.env.EMAIL_SERVICE_PASS!
-  }
+    pass: process.env.EMAIL_SERVICE_PASS!,
+  },
 };
 
 const isProd = process.env.NODE_ENV === 'production';
 
 const emailConfig: EmailConfigProps = isProd ? productionConfig : mailhogConfig;
 
-export async function createEmailTransporter () {
+export async function createEmailTransporter() {
   console.log('Creating email transporter for env', process.env.NODE_ENV);
   return nodemailer.createTransport(emailConfig);
 }

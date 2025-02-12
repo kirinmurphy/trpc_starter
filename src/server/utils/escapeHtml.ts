@@ -7,6 +7,6 @@ const htmlEscapes: Record<string, string> = {
   '/': '&#x2F;',
 };
 
-export function escapeHTML (string: string): string {
-  return string.replace(/[&<>"'/]/g, char => htmlEscapes[char]);  
+export function escapeHTML(string: string): string {
+  return string.replace(/[&<>"'/]/g, (char) => htmlEscapes[char]);
 }

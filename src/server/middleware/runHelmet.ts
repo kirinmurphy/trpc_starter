@@ -1,4 +1,4 @@
-import helmet from "helmet";
+import helmet from 'helmet';
 
 export const runHelmet = helmet({
   contentSecurityPolicy: {
@@ -6,14 +6,14 @@ export const runHelmet = helmet({
       defaultSrc: ["'self'"],
       connectSrc: ["'self'", process.env.INTERNAL_CLIENT_URL!],
       scriptSrc: ["'self'"],
-      styleSrc: ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:"],
+      styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+      imgSrc: ["'self'", 'data:'],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
-    }
+    },
   },
   crossOriginEmbedderPolicy: false,
-  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
   crossOriginOpenerPolicy: { policy: 'same-origin' },
 });

@@ -1,17 +1,23 @@
-import { z } from "zod";
-import { getPool } from "../../db/pool";
-import { SQL_DELETE_VERIFICATION_RECORD, SQL_GET_USER_EMAIL, SQL_GET_VERIFICATION_RECORD_BY_USERID } from "../../db/sql";
-import { parseDBQueryResult } from "../../db/parseDBQueryResult";
-import { ContextType } from "../types";
-import { initVerifyAccountFlow } from "./initVerifyAccountFlow";
-import { MemberEmailSchema, VerificationTokenMinimalSchema } from "../schemas";
-import { EmailSentStatus } from "../../../utils/types";
+import { z } from 'zod';
+import { getPool } from '../../db/pool';
+import {
+  SQL_DELETE_VERIFICATION_RECORD,
+  SQL_GET_USER_EMAIL,
+  SQL_GET_VERIFICATION_RECORD_BY_USERID,
+} from '../../db/sql';
+import { parseDBQueryResult } from '../../db/parseDBQueryResult';
+import { ContextType } from '../types';
+import { initVerifyAccountFlow } from './initVerifyAccountFlow';
+import { MemberEmailSchema, VerificationTokenMinimalSchema } from '../schemas';
+import { EmailSentStatus } from '../../../utils/types';
 
 export const GetNewVerificationEmailSchema = z.object({
-  userId: z.string().uuid()
+  userId: z.string().uuid(),
 });
 
-type GetNewVerificationEmailInput = z.infer<typeof GetNewVerificationEmailSchema>;
+type GetNewVerificationEmailInput = z.infer<
+  typeof GetNewVerificationEmailSchema
+>;
 
 interface GetNewVerificationEmailMutationProps {
   input: GetNewVerificationEmailInput;
@@ -24,21 +30,28 @@ interface GetNewVerificationEmailResponse {
   emailSentStatus: EmailSentStatus;
 }
 
-export async function getNewVerificationEmailMutation (
+export async function getNewVerificationEmailMutation(
   props: GetNewVerificationEmailMutationProps
 ): Promise<GetNewVerificationEmailResponse> {
-  const { input: { userId }} = props;
+  const {
+    input: { userId },
+  } = props;
   const client = await getPool().connect();
 
-  const result = await client.query(SQL_GET_VERIFICATION_RECORD_BY_USERID, [userId])
-  const tokenDetails = parseDBQueryResult(result, VerificationTokenMinimalSchema);
+  const result = await client.query(SQL_GET_VERIFICATION_RECORD_BY_USERID, [
+    userId,
+  ]);
+  const tokenDetails = parseDBQueryResult(
+    result,
+    VerificationTokenMinimalSchema
+  );
 
   let email;
 
   await client.query('BEGIN');
 
   try {
-    if ( tokenDetails ) {
+    if (tokenDetails) {
       email = tokenDetails.email;
       await client.query(SQL_DELETE_VERIFICATION_RECORD, [tokenDetails.token]);
     } else {
@@ -47,7 +60,7 @@ export async function getNewVerificationEmailMutation (
       email = parsedResult?.email;
     }
 
-    if ( !email ) {
+    if (!email) {
       throw new Error('email not found');
     }
 
@@ -57,19 +70,18 @@ export async function getNewVerificationEmailMutation (
     throw err;
   }
 
-  if ( email ) {
+  if (email) {
     try {
-      await initVerifyAccountFlow({ 
-        userId, 
-        email, 
-        waitForEmailConfirmation: true 
+      await initVerifyAccountFlow({
+        userId,
+        email,
+        waitForEmailConfirmation: true,
       });
       return { emailSentStatus: EmailSentStatus.emailSent, userId, email };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch ( err ) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
       return { emailSentStatus: EmailSentStatus.emailFailed, userId, email };
     }
-    
   } else {
     throw new Error('Missing email');
   }

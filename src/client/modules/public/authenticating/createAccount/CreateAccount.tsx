@@ -16,78 +16,83 @@ interface SubmitFormDataProps {
 
 type AccountCreationStateType = 'default' | EmailSentStatus;
 
-export function CreateAccount () {
-  const [accountCreationState, setAccountCreationState] = useState<AccountCreationStateType>('default');
-  
-  const { 
-    formData: { email, name, password }, 
-    handleFieldChange 
+export function CreateAccount() {
+  const [accountCreationState, setAccountCreationState] =
+    useState<AccountCreationStateType>('default');
+
+  const {
+    formData: { email, name, password },
+    handleFieldChange,
   } = useFormState<SubmitFormDataProps>({ email: '', name: '', password: '' });
 
-  const { data, mutate, error, isLoading } = trpcService.auth.createAccount.useMutation({
-    onSuccess: async (data) => {
-      if ( data?.success ) { 
-        setAccountCreationState(EmailSentStatus.emailQueued); 
-      }
-    },
-  });
+  const { data, mutate, error, isLoading } =
+    trpcService.auth.createAccount.useMutation({
+      onSuccess: async (data) => {
+        if (data?.success) {
+          setAccountCreationState(EmailSentStatus.emailQueued);
+        }
+      },
+    });
 
   const onSubmit = () => {
-    if ( !email || !password || !name ) { return; }
+    if (!email || !password || !name) {
+      return;
+    }
     try {
-      mutate({ 
-        email: email.trim(), 
-        password: password.trim(), 
-        name: name.trim() 
+      mutate({
+        email: email.trim(),
+        password: password.trim(),
+        name: name.trim(),
       });
     } catch (err) {
       console.error('Mutation error:', err);
     }
-  }
+  };
 
   return (
     <>
       {accountCreationState === 'default' && (
-        <SimpleForm 
+        <SimpleForm
           onSubmit={onSubmit}
           isLoading={isLoading}
           error={error}
-          title="Sign Up">
-            {({ fieldErrors }) => (
-              <>
-                <InputField 
-                  name="name" 
-                  value={name}
-                  label="Name" 
-                  onChange={handleFieldChange('name')}
-                  fieldErrors={fieldErrors?.name}
-                />
-                <InputField 
-                  name="email" 
-                  value={email}
-                  label="Email" 
-                  onChange={handleFieldChange('email')}
-                  fieldErrors={fieldErrors?.email}
-                />
-                <InputField 
-                  name="password" 
-                  type="password"
-                  value={password}
-                  label="Password" 
-                  onChange={handleFieldChange('password')}
-                  fieldErrors={fieldErrors?.password}
-                />              
-              </>
-            )}
-        </SimpleForm>     
+          title="Sign Up"
+        >
+          {({ fieldErrors }) => (
+            <>
+              <InputField
+                name="name"
+                value={name}
+                label="Name"
+                onChange={handleFieldChange('name')}
+                fieldErrors={fieldErrors?.name}
+              />
+              <InputField
+                name="email"
+                value={email}
+                label="Email"
+                onChange={handleFieldChange('email')}
+                fieldErrors={fieldErrors?.email}
+              />
+              <InputField
+                name="password"
+                type="password"
+                value={password}
+                label="Password"
+                onChange={handleFieldChange('password')}
+                fieldErrors={fieldErrors?.password}
+              />
+            </>
+          )}
+        </SimpleForm>
       )}
 
       {accountCreationState === EmailSentStatus.emailQueued && data && (
-        <CheckingEmailSent 
-          userId={data.userId} 
-          onEmailChecked={state => {
+        <CheckingEmailSent
+          userId={data.userId}
+          onEmailChecked={(state) => {
             setAccountCreationState(state);
-          }} 
+          }}
         />
       )}
 
@@ -96,12 +101,14 @@ export function CreateAccount () {
       )}
 
       {accountCreationState === EmailSentStatus.emailFailed && data && (
-        <UnsentVerificationEmailInstructions 
-          email={email} 
+        <UnsentVerificationEmailInstructions
+          email={email}
           userId={data.userId}
-          onResendSuccess={() => { setAccountCreationState(EmailSentStatus.emailSent); }}
+          onResendSuccess={() => {
+            setAccountCreationState(EmailSentStatus.emailSent);
+          }}
         />
-      )} 
+      )}
     </>
   );
-};
+}

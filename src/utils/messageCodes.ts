@@ -7,5 +7,5 @@ export const PASSWORD_RESET_SUCCESS = 'password_reset_success';
 
 export const LOGIN_NOTIFICATIONS = [
   ERR_VERIFICATION_FAILED,
-  PASSWORD_RESET_SUCCESS
+  PASSWORD_RESET_SUCCESS,
 ] as const;
