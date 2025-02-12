@@ -1,24 +1,17 @@
-import React from "react";
-import { FormErrorMessage } from "./FormErrorMessage";
+import React from 'react';
+import { FormErrorMessage } from './FormErrorMessage';
 
 interface Props {
   name: string;
-  type?: 'text' | 'password'
+  type?: 'text' | 'password';
   label: string;
   value: string;
   onChange: (value: string) => void;
   fieldErrors?: string[];
 }
 
-export function InputField (props: Props) {
-  const { 
-    name, 
-    type = 'text', 
-    label, 
-    value, 
-    onChange, 
-    fieldErrors 
-  } = props;
+export function InputField(props: Props) {
+  const { name, type = 'text', label, value, onChange, fieldErrors } = props;
 
   return (
     <div>
@@ -37,13 +30,14 @@ export function InputField (props: Props) {
         required
       />
 
-      {fieldErrors?.length && fieldErrors.map(errorMsg => (
-        <React.Fragment key={errorMsg}>
-          <div className="text-sm">
-            <FormErrorMessage msg={errorMsg} />
-          </div>
-        </React.Fragment>
-      ))}
+      {fieldErrors?.length &&
+        fieldErrors.map((errorMsg) => (
+          <React.Fragment key={errorMsg}>
+            <div className="text-sm">
+              <FormErrorMessage msg={errorMsg} />
+            </div>
+          </React.Fragment>
+        ))}
     </div>
   );
 }

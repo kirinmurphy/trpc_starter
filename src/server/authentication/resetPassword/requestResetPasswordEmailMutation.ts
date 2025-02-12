@@ -1,65 +1,85 @@
-import { z } from "zod";
-import { ContextType } from "../types";
-import { getPool } from "../../db/pool";
-import { 
-  SQL_CREATE_RESET_PASSWORD_TOKEN, 
-  SQL_DELETE_PASSWORD_RESET_RECORD, 
-  SQL_GET_PASSWORD_RESET_RECORD_BY_USERID, 
-  SQL_GET_USERID_BY_EMAIL   
-} from "../../db/sql";
-import { parseDBQueryResult } from "../../db/parseDBQueryResult";
-import { GetUserIdByEmailSchema, PasswordResetTokenMinimalSchema } from "../schemas";
-import { getUniqueToken } from "../utils/getUniqueToken";
-import { VERIFICATION_TOKEN_EXPIRY } from "../expiryConstants";
-import { sendResetPasswordEmail } from "./sendResetPasswordEmail";
+import { z } from 'zod';
+import { ContextType } from '../types';
+import { getPool } from '../../db/pool';
+import {
+  SQL_CREATE_RESET_PASSWORD_TOKEN,
+  SQL_DELETE_PASSWORD_RESET_RECORD,
+  SQL_GET_PASSWORD_RESET_RECORD_BY_USERID,
+  SQL_GET_USERID_BY_EMAIL,
+} from '../../db/sql';
+import { parseDBQueryResult } from '../../db/parseDBQueryResult';
+import {
+  GetUserIdByEmailSchema,
+  PasswordResetTokenMinimalSchema,
+} from '../schemas';
+import { getUniqueToken } from '../utils/getUniqueToken';
+import { VERIFICATION_TOKEN_EXPIRY } from '../expiryConstants';
+import { sendResetPasswordEmail } from './sendResetPasswordEmail';
 
 export const RequestResetPasswordEmailSchema = z.object({
-  email: z.string()
+  email: z
+    .string()
     .trim()
     .max(254, 'Invalid email')
     .email('Invalid email format'),
 });
 
-type RequestResetPasswordEmailInput = z.infer<typeof RequestResetPasswordEmailSchema>;
+type RequestResetPasswordEmailInput = z.infer<
+  typeof RequestResetPasswordEmailSchema
+>;
 
 interface RequestResetPasswordEmailMutationProps {
   input: RequestResetPasswordEmailInput;
-  ctx: ContextType
+  ctx: ContextType;
 }
 
-export async function requestResetPasswordEmailMutation (props: RequestResetPasswordEmailMutationProps) {
-  const { input: { email } } = props;
+export async function requestResetPasswordEmailMutation(
+  props: RequestResetPasswordEmailMutationProps
+) {
+  const {
+    input: { email },
+  } = props;
 
   try {
-    const result = await getPool().query(SQL_GET_USERID_BY_EMAIL, [email])
+    const result = await getPool().query(SQL_GET_USERID_BY_EMAIL, [email]);
     const parsedResult = parseDBQueryResult(result, GetUserIdByEmailSchema);
     const userId = parsedResult?.id;
-    
-    if ( userId ) {
-      const existingTokenRecord = await getPool().query(SQL_GET_PASSWORD_RESET_RECORD_BY_USERID, [userId]);
-      const existingToken = parseDBQueryResult(existingTokenRecord, PasswordResetTokenMinimalSchema)?.token;
-      if ( existingToken ) {
-        await getPool().query(SQL_DELETE_PASSWORD_RESET_RECORD, [existingToken]);
+
+    if (userId) {
+      const existingTokenRecord = await getPool().query(
+        SQL_GET_PASSWORD_RESET_RECORD_BY_USERID,
+        [userId]
+      );
+      const existingToken = parseDBQueryResult(
+        existingTokenRecord,
+        PasswordResetTokenMinimalSchema
+      )?.token;
+      if (existingToken) {
+        await getPool().query(SQL_DELETE_PASSWORD_RESET_RECORD, [
+          existingToken,
+        ]);
       }
-      
+
       const verificationToken = getUniqueToken();
-      
+
       // TODO: Rollback the token creation if password email fails to be sent
-      await getPool().query(
-        SQL_CREATE_RESET_PASSWORD_TOKEN,
-        [verificationToken, userId, email, VERIFICATION_TOKEN_EXPIRY]
-      )
+      await getPool().query(SQL_CREATE_RESET_PASSWORD_TOKEN, [
+        verificationToken,
+        userId,
+        email,
+        VERIFICATION_TOKEN_EXPIRY,
+      ]);
 
       await sendResetPasswordEmail({ to: email, verificationToken });
     }
 
-    // whether or not the account exists, we'll return success 
+    // whether or not the account exists, we'll return success
     // in order to not reveal account details
-    // we only return an error if there was an error sending the message 
-    return { success: true }
+    // we only return an error if there was an error sending the message
+    return { success: true };
   } catch (err: unknown) {
     console.log('ERRRRRRRR', err);
-    // TODO: add logging 
+    // TODO: add logging
     throw 'There was a problem completing the request.  Please wait a moment and try again.';
-  } 
+  }
 }

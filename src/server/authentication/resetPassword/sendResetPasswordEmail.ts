@@ -1,14 +1,16 @@
-import { ROUTE_URLS } from "../../../client/routing/routeUrls";
-import { sendEmail } from "../../email/sendEmail";
-import { SendVerificationEmailProps } from "../createAccount/sendAccountVerificationEmail";
-import { getVerificationUrl } from "../utils/getVerificationUrl";
+import { ROUTE_URLS } from '../../../client/routing/routeUrls';
+import { sendEmail } from '../../email/sendEmail';
+import { SendVerificationEmailProps } from '../createAccount/sendAccountVerificationEmail';
+import { getVerificationUrl } from '../utils/getVerificationUrl';
 
-export async function sendResetPasswordEmail (props: SendVerificationEmailProps) {
+export async function sendResetPasswordEmail(
+  props: SendVerificationEmailProps
+) {
   const { to, verificationToken } = props;
 
-  const passwordResetUrl = getVerificationUrl({ 
-    verificationToken, 
-    route: ROUTE_URLS.resetPassword 
+  const passwordResetUrl = getVerificationUrl({
+    verificationToken,
+    route: ROUTE_URLS.resetPassword,
   });
 
   return sendEmail({
@@ -20,6 +22,6 @@ export async function sendResetPasswordEmail (props: SendVerificationEmailProps)
       <a href="${passwordResetUrl}">Reset password</a>
       <p>Or copy and paste this URL into your browser:</p>
       <p>${passwordResetUrl}</p>
-    `
+    `,
   });
 }

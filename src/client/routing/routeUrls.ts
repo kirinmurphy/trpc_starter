@@ -7,5 +7,5 @@ export const ROUTE_URLS = {
   login: '/login',
   verifyAccount: '/verify-account',
   requestResetPasswordEmail: '/request-reset-password-email',
-  resetPassword: '/reset-password'
+  resetPassword: '/reset-password',
 } as const;

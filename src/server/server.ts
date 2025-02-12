@@ -1,6 +1,6 @@
-import { createHTTPServer } from "@trpc/server/adapters/standalone";
+import { createHTTPServer } from '@trpc/server/adapters/standalone';
 import { getPool } from './db/pool';
-import { procedures, router } from "./trpcRouter";
+import { procedures, router } from './trpcRouter';
 import { authRouter } from './authentication/authRouter';
 import { createContext } from './authentication/createContext';
 import { apiMiddleware } from './middleware/apiMiddleware';
@@ -13,7 +13,7 @@ export const appRouter = router({
 const server = createHTTPServer({
   router: appRouter,
   createContext,
-  middleware: apiMiddleware
+  middleware: apiMiddleware,
 });
 
 const port = 3000;
@@ -24,10 +24,12 @@ server.listen(port, host);
 console.log(`Server running on ${protocol}://${host}:${port}`);
 
 process.on('SIGINT', () => {
-  getPool().end().then(() => {
-    console.log('Database pool has ended');
-    process.exit(0);
-  });
+  getPool()
+    .end()
+    .then(() => {
+      console.log('Database pool has ended');
+      process.exit(0);
+    });
 });
 
 export type AppRouter = typeof appRouter;

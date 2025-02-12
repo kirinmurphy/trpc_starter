@@ -1,20 +1,22 @@
-import { 
-  SQL_DELETE_VERIFICATION_RECORD, 
-  SQL_SET_USER_AS_VERIFIED, 
-  SQL_GET_VERIFICATION_RECORD_BY_TOKEN 
-} from "../../db/sql";
-import { setAccessTokenCookie, setRefreshTokenCookie } from "../jwtActions";
-import { VerificationTokenSchema } from "../schemas";
-import { verifyToken, VerifyTokenMutationProps, VerifyTokenReturnProps } from "../utils/verifyToken";
+import {
+  SQL_DELETE_VERIFICATION_RECORD,
+  SQL_SET_USER_AS_VERIFIED,
+  SQL_GET_VERIFICATION_RECORD_BY_TOKEN,
+} from '../../db/sql';
+import { setAccessTokenCookie, setRefreshTokenCookie } from '../jwtActions';
+import { VerificationTokenSchema } from '../schemas';
+import {
+  verifyToken,
+  VerifyTokenMutationProps,
+  VerifyTokenReturnProps,
+} from '../utils/verifyToken';
 
-
-export async function verifyAccountMutation (
+export async function verifyAccountMutation(
   props: VerifyTokenMutationProps
 ): Promise<VerifyTokenReturnProps> {
-
   const {
     ctx: { res },
-    input: { token }
+    input: { token },
   } = props;
 
   return verifyToken({
@@ -31,10 +33,9 @@ export async function verifyAccountMutation (
         await client.query('ROLLBACK');
         throw err;
       }
-      
+
       setAccessTokenCookie({ res, userId });
-      setRefreshTokenCookie({ res, userId });  
-    }
+      setRefreshTokenCookie({ res, userId });
+    },
   });
 }
-

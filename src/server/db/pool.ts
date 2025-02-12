@@ -9,24 +9,22 @@ const isTestEnv = process.env.NODE_ENV === 'test';
 const appDbName = isTestEnv ? process.env.TEST_DB_NAME! : process.env.DB_NAME!;
 
 export const getPool = (function () {
-  let pool: Pool | null  = null;  
+  let pool: Pool | null = null;
   return () => {
     pool = pool || createPool({ dbName: appDbName });
     return pool;
   };
 })();
 
-
-export function createPool ({ dbName }: { dbName: string }) {
+export function createPool({ dbName }: { dbName: string }) {
   return new Pool({
     user: process.env.DB_USER,
     host: 'db',
     database: dbName,
     password: process.env.DB_PASSWORD,
-    port: 5432
+    port: 5432,
   });
 }
-
 
 export async function testConnection() {
   const pool = getPool();

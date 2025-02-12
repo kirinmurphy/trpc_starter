@@ -9,7 +9,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "noEmit": true,
+    "noEmit": true
   },
   "include": ["../node_modules/cypress", "**/*.ts"]
 }

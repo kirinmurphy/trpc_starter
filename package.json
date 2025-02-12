@@ -18,7 +18,9 @@
     "cypress:open": "cypress open --config-file cypress.config.cjs",
     "cypress:run": "cypress run --config-file cypress.config.cjs",
     "lint": "eslint .",
-    "preview": "vite preview --host 0.0.0.0 --port 4173"
+    "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,yml,yaml,css,scss,md,html}\" --ignore-path .prettierignore",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,yml,yaml,css,scss,md,html}\" --ignore-path .prettierignore"
   },
   "dependencies": {
     "@tanstack/react-query": "4.36.1",
