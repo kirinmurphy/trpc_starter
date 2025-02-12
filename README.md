@@ -39,10 +39,11 @@ App starter built in Typescript, tRPC, Node and React
 </table>
 
 # Stack
-- **Runtime**: Node.js, Bun, Vite
+- **Runtime**: Node, Bun, Vite
 - **Server**: tRPC, Zod, Postgres, Nginx
 - **Client**: React, React Query, Tanstack Router, Tailwind, React Icons
 - **Devops**: Docker, Cypress, Mailhog, Github Actions 
+- **Dev Tools**: Prettier
 
 
 # Setup
