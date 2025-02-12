@@ -1,18 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { FaLink } from 'react-icons/fa';
-import Markdown from 'react-markdown';
+import Markdown, { Components } from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
+import rehypeSlug from 'rehype-slug';
 import DOMPurify from 'dompurify';
 
 export interface ReadmeFileProps {
   markdownUrl: string;
   externalLink?: string;
+  linkedFileRootPath?: string;
 }
 
 type QueryKey = ['markdown', string];
 
 export function MarkdownFile(props: ReadmeFileProps) {
-  const { markdownUrl, externalLink } = props;
+  const { markdownUrl, externalLink, linkedFileRootPath } = props;
   const styles = getMarkdownStyles();
 
   const {
@@ -47,6 +49,39 @@ export function MarkdownFile(props: ReadmeFileProps) {
 
   const sanitizedContent = DOMPurify.sanitize(mdText);
 
+  const components: Components = {
+    a: ({ children, ...props }) => {
+      const { href = '', ...propsMinusHref } = props;
+
+      const nonUrlLink =
+        !href || href.startsWith('mailto:') || href.startsWith('#');
+
+      if (nonUrlLink) {
+        return <a {...props}>{children}</a>;
+      }
+
+      const targetProps = { target: '_blank', rel: 'noreferrer' };
+      const newProps = { ...props, ...targetProps };
+
+      if (href.startsWith('http')) {
+        return <a {...newProps}>{children}</a>;
+      }
+
+      const newPropsMinusHref = { ...propsMinusHref, ...targetProps };
+      const formattedHref = getFormattedHref({
+        href,
+        markdownUrl,
+        linkedFileRootPath,
+      });
+
+      return (
+        <a href={formattedHref} {...newPropsMinusHref}>
+          {children}
+        </a>
+      );
+    },
+  };
+
   return (
     <article className={styles.wrapper}>
       {externalLink && (
@@ -60,9 +95,23 @@ export function MarkdownFile(props: ReadmeFileProps) {
         </a>
       )}
 
-      <Markdown rehypePlugins={[rehypeRaw]}>{sanitizedContent}</Markdown>
+      <Markdown rehypePlugins={[rehypeRaw, rehypeSlug]} components={components}>
+        {sanitizedContent}
+      </Markdown>
     </article>
   );
+}
+
+function getFormattedHref(props: ReadmeFileProps & { href: string }) {
+  const { href, markdownUrl, linkedFileRootPath } = props;
+
+  if (href.startsWith('/')) {
+    const linkedUrlBase = new URL(markdownUrl);
+    return `${linkedUrlBase.origin}${href}`;
+  } else {
+    const cleanPath = href.replace(/^\.\//, '');
+    return `${linkedFileRootPath}${cleanPath}`;
+  }
 }
 
 async function fetchMarkdownContent({
