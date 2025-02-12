@@ -1,6 +1,6 @@
 import {
-  SQL_DELETE_PASSWORD_RESET_RECORD,
-  SQL_GET_PASSWORD_RESET_RECORD_BY_TOKEN,
+  SQL_DELETE_PASSWORD_RESET_REQUEST,
+  SQL_GET_PASSWORD_RESET_REQUEST_BY_TOKEN,
 } from '../../db/sql';
 import {
   verifyToken,
@@ -18,10 +18,8 @@ export async function verifyPasswordResetTokenMutation(
 
   return verifyToken({
     token,
-    getTokenSql: SQL_GET_PASSWORD_RESET_RECORD_BY_TOKEN,
+    getTokenSql: SQL_GET_PASSWORD_RESET_REQUEST_BY_TOKEN,
+    deleteTokenSql: SQL_DELETE_PASSWORD_RESET_REQUEST,
     getTokenResponseSchema: PasswordResetTokenSchema,
-    onSuccess: async ({ client }) => {
-      await client.query(SQL_DELETE_PASSWORD_RESET_RECORD, [token]);
-    },
   });
 }

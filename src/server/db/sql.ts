@@ -27,11 +27,11 @@ export const SQL_GET_VERIFICATION_EMAIL_SEND_STATE =
   'SELECT email_sent_status FROM verification_tokens WHERE user_id = $1';
 
 // RESET PASSWORD
-export const SQL_CREATE_RESET_PASSWORD_TOKEN =
+export const SQL_CREATE_PASSWORD_RESET_REQUEST =
   'INSERT INTO reset_password_tokens (token, user_id, email, expires_at) VALUES ($1, $2, $3, CURRENT_TIMESTAMP + $4::interval)';
-export const SQL_GET_PASSWORD_RESET_RECORD_BY_TOKEN =
+export const SQL_GET_PASSWORD_RESET_REQUEST_BY_TOKEN =
   'SELECT token, user_id, email, expires_at FROM reset_password_tokens WHERE token = $1';
-export const SQL_GET_PASSWORD_RESET_RECORD_BY_USERID =
+export const SQL_GET_PASSWORD_RESET_REQUEST_BY_USERID =
   'SELECT token FROM reset_password_tokens WHERE user_id = $1';
-export const SQL_DELETE_PASSWORD_RESET_RECORD =
+export const SQL_DELETE_PASSWORD_RESET_REQUEST =
   'DELETE FROM reset_password_tokens WHERE token = $1';

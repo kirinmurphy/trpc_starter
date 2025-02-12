@@ -1,6 +1,5 @@
 import {
   SQL_DELETE_VERIFICATION_RECORD,
-  SQL_SET_USER_AS_VERIFIED,
   SQL_GET_VERIFICATION_RECORD_BY_TOKEN,
 } from '../../db/sql';
 import { setAccessTokenCookie, setRefreshTokenCookie } from '../jwtActions';
@@ -19,23 +18,19 @@ export async function verifyAccountMutation(
     input: { token },
   } = props;
 
-  return verifyToken({
+  const verificationResult = await verifyToken({
     token,
     getTokenSql: SQL_GET_VERIFICATION_RECORD_BY_TOKEN,
+    deleteTokenSql: SQL_DELETE_VERIFICATION_RECORD,
     getTokenResponseSchema: VerificationTokenSchema,
-    onSuccess: async ({ client, userId }) => {
-      await client.query('BEGIN');
-      try {
-        await client.query(SQL_SET_USER_AS_VERIFIED, [userId]);
-        await client.query(SQL_DELETE_VERIFICATION_RECORD, [token]);
-        await client.query('COMMIT');
-      } catch (err) {
-        await client.query('ROLLBACK');
-        throw err;
-      }
-
-      setAccessTokenCookie({ res, userId });
-      setRefreshTokenCookie({ res, userId });
-    },
   });
+
+  const { success, userId } = verificationResult;
+
+  if (success && userId) {
+    setAccessTokenCookie({ res, userId });
+    setRefreshTokenCookie({ res, userId });
+  }
+
+  return verificationResult;
 }

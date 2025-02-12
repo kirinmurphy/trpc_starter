@@ -8,7 +8,7 @@ const SQL_GET_MIGRATION_ENTRIES =
 const SQL_ADD_MIGRATION_ENTRY =
   'INSERT INTO schema_migrations (filename) VALUES ($1)';
 
-void runAllMigrations();
+runAllMigrations();
 
 async function runAllMigrations() {
   try {
