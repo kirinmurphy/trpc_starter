@@ -35,11 +35,10 @@ import { verifyPasswordResetTokenMutation } from './resetPassword/verifyPassword
 const { publicQuery, protectedQuery, publicMutation } = procedures;
 
 export const authRouter = router({
+  // -- Account creation
   createAccount: publicMutation
     .input(createAccountSchema)
     .mutation(createAccountMutation),
-
-  login: publicMutation.input(loginUserSchema).mutation(loginUserMutation),
 
   verifyAccount: publicMutation
     .input(z.object({ token: z.string() }))
@@ -56,6 +55,9 @@ export const authRouter = router({
   resendFailedVerificationEmail: publicMutation
     .input(ResendFailedVerificationEmailSchema)
     .mutation(resendFailedVerificationEmailMutation),
+
+  // -- Authentication
+  login: publicMutation.input(loginUserSchema).mutation(loginUserMutation),
 
   logout: publicMutation.mutation(logoutUserMutation),
 

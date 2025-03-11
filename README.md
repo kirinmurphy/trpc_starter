@@ -1,6 +1,8 @@
 # tRPC web app starter
 App starter built in Typescript, tRPC, Node and React 
 
+[Github Project board](https://github.com/users/kirinmurphy/projects/2)
+
 <table>
   <tr>
     <td style="vertical-align: top;">Authentication</td>
@@ -39,7 +41,7 @@ App starter built in Typescript, tRPC, Node and React
 </table>
 
 # Stack
-- **Runtime**: Node, Bun, Vite
+- **Runtime**: Bun, Vite
 - **Server**: tRPC, Zod, Postgres, Nginx
 - **Client**: React, React Query, Tanstack Router, Tailwind, React Icons
 - **Devops**: Docker, Cypress, Mailhog, Github Actions 
