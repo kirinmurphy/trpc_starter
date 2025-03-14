@@ -1,5 +1,5 @@
 # tRPC web app starter
-App starter built in Typescript, tRPC, Node and React 
+App starter built with Bun, Typescript, tRPC and React 
 
 [Github Project board](https://github.com/users/kirinmurphy/projects/2)
 
@@ -107,3 +107,8 @@ EMAIL_SERVICE_PASS=email_service_password_or_api_key
 
 Notes: 
 - DB Migration is run on every app/production start
+
+
+## Deploying App on VPS
+- [VPS setup](./docs/vps/vps_setup.md) with Digital Ocean
+- [VPS Security Hardening](./docs/vps/vps_hardening.md)
