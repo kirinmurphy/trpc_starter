@@ -13,9 +13,10 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add('createAccount', ({ demoUser }: AuthActionProps) => {
+  cy.intercept('POST', '**/auth.createAccount*').as('createAccountRequest');
   cy.createAccountAttempt({ demoUser });
+  cy.wait('@createAccountRequest', { timeout: 15000 });
   const msg = 'We have sent a verification link to the email you provided.';
-  // cy.wait(4200);
   cy.contains(msg).should('be.visible');
 });
 

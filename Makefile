@@ -39,9 +39,12 @@ reload-nginx:
 ## -- TESTING ------- ## 
 .PHONY: run-tests
 run-tests:
-	# $(DCT) up --exit-code-from cypress --abort-on-container-exit
-	# Toggle to hide nginx logs in terminal
-	set -o pipefail; $(DCT) up --exit-code-from cypress --abort-on-container-exit | grep -v "nginx.*\|.*nginx"
+	@if [ -n "$(FILE)" ]; then \
+		echo "Running test for: $(FILE)"; \
+		set -o pipefail; $(DCT) up -d mailhog app db nginx && $(DCT) run --rm cypress npx cypress run --spec "cypress/e2e/$(FILE).cy.ts" | grep -v "nginx.*\|.*nginx"; \
+	else \
+		set -o pipefail; $(DCT) up --exit-code-from cypress --abort-on-container-exit | grep -v "nginx.*\|.*nginx"; \
+	fi
 
 .PHONY: build-tests
 build-tests: clean-tests
