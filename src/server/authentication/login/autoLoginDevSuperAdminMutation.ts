@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { DEV_SUPER_ADMIN } from '../../../../docker/admin-setup-dev';
+import { DEV_SUPER_ADMIN } from '../../../../docker/admin-setup/admin-setup-dev';
 import { ContextType } from '../types';
 import { loginUserMutation } from './loginUserMutation';
 
