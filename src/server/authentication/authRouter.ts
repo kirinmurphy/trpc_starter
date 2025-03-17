@@ -31,6 +31,7 @@ import {
   ResetPasswordSchema,
 } from './resetPassword/resetPasswordMutation';
 import { verifyPasswordResetTokenMutation } from './resetPassword/verifyPasswordResetTokenMutation';
+import { autoLoginDevSuperAdminMutation } from './login/autoLoginDevSuperAdminMutation';
 
 const { publicQuery, protectedQuery, publicMutation } = procedures;
 
@@ -58,6 +59,10 @@ export const authRouter = router({
 
   // -- Authentication
   login: publicMutation.input(loginUserSchema).mutation(loginUserMutation),
+
+  autoLoginDevSuperAdmin: publicMutation.mutation(
+    autoLoginDevSuperAdminMutation
+  ),
 
   logout: publicMutation.mutation(logoutUserMutation),
 

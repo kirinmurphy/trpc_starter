@@ -25,6 +25,14 @@ if [ $? -ne 0 ]; then
 fi 
 echo "Migrations completed successfully" 
 
+echo "Setting up dev super admin..."
+bun run ./docker/admin-setup-dev.ts
+if [ $? -ne 0 ]; then
+  echo "Development setup failed"
+  exit 1
+fi
+echo "Development setup completed"
+
 echo "Starting API server..." 
 bun run server:dev & API_PID=$!
 echo "API server PID: $API_PID"
