@@ -1,4 +1,5 @@
 import { MarkdownFile } from '../../widgets/MarkdownFile';
+import { SuperAdminDevAutoLogin } from './authenticating/SuperAdminDevAutoLogin';
 
 const GITHUB_README = {
   markdownUrl:
@@ -10,6 +11,7 @@ const GITHUB_README = {
 export function PublicHomepage() {
   return (
     <>
+      <SuperAdminDevAutoLogin />
       <MarkdownFile {...GITHUB_README} />
     </>
   );
