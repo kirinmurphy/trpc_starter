@@ -130,3 +130,5 @@ help:
 	@echo "  make logs-prod              - View production logs"
 	@echo "  make prod-all               - Run prod build, start, and logs in sequence"
 	@echo "  make clean-prod             - Clean prod containers and volumes"
+
+	@echo "  make clean-all             - Clean all containers, systems and volumes"
