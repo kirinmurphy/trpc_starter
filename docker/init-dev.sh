@@ -26,7 +26,7 @@ fi
 echo "Migrations completed successfully" 
 
 echo "Setting up dev super admin..."
-bun run ./docker/admin-setup-dev.ts
+bun run ./docker/admin-setup/admin-setup-dev.ts
 if [ $? -ne 0 ]; then
   echo "Development setup failed"
   exit 1
