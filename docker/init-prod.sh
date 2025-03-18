@@ -20,19 +20,20 @@ fi
 
 echo "Database is ready!"
 
-echo "Setting up super admin..." 
-bun run ./docker/admin-setup-prod.ts
-if [ $? -ne 0 ]; then
-  echo "Super admin setup failed"
-  exit 1
-fi 
-echo "Super admin setup email sent" 
-
 echo "Building application..."
 bun run build
 
 echo "Running database migrations..."
 bun run migrate 
+
+
+echo "Setting up prod super admin..." 
+bun run ./docker/admin-setup/admin-setup-production.ts
+if [ $? -ne 0 ]; then
+  echo "Super admin setup failed"
+  exit 1
+fi 
+echo "Super admin setup email sent" 
 
 echo "Starting application..."
 exec bun run start

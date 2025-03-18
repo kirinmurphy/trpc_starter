@@ -52,7 +52,7 @@ async function main(): Promise<void> {
   const pool = getPool();
 
   try {
-    console.log('Checking for existing super admin...');
+    console.log('BBBBBBBBB Checking for existing super admin...');
     const superAdminExists = await checkSuperAdminExists(pool);
 
     if (superAdminExists) {

@@ -1,7 +1,6 @@
-// docker/admin-setup/utils/sendSuperAdminSetupEmail.ts
-import { ROUTE_URLS } from '../../src/client/routing/routeUrls';
-import { sendEmail } from '../../src/server/email/sendEmail';
-import { getVerificationUrl } from '../../src/server/authentication/utils/getVerificationUrl';
+import { ROUTE_URLS } from '../../../src/client/routing/routeUrls';
+import { sendEmail } from '../../../src/server/email/sendEmail';
+import { getVerificationUrl } from '../../../src/server/authentication/utils/getVerificationUrl';
 
 interface SendSuperAdminSetupEmailProps {
   to: string;
