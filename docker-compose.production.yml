@@ -23,8 +23,8 @@ services:
       test:
         [
           'CMD',
-          'bun',
-          './docker/app-health-check.ts',
+          '/bin/sh',
+          './docker/app-health-check.sh',
           'http://localhost:3000/ping',
           'http://localhost:4173',
         ]

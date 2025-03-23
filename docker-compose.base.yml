@@ -79,8 +79,8 @@ services:
       test:
         [
           'CMD',
-          'bun',
-          './docker/app-health-check.ts',
+          '/bin/sh',
+          './docker/app-health-check.sh',
           'http://localhost:80/ping',
         ]
       interval: 10s
