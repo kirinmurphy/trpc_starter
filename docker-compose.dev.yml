@@ -17,8 +17,11 @@ services:
     healthcheck:
       test:
         [
-          'CMD-SHELL',
-          "curl -v -f http://0.0.0.0:3000/ping && curl -v -f http://0.0.0.0:5173 || echo 'Health check failed with status $?'",
+          'CMD',
+          'bun',
+          './docker/app-health-check.ts',
+          'http://0.0.0.0:3000/ping',
+          'http://0.0.0.0:5173',
         ]
     logging:
       driver: 'json-file'

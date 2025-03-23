@@ -76,7 +76,13 @@ services:
       app:
         condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'curl -k -f http://localhost:80/ping']
+      test:
+        [
+          'CMD',
+          'bun',
+          './docker/app-health-check.ts',
+          'http://localhost:80/ping',
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
