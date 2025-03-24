@@ -3,12 +3,7 @@ import { Pool, QueryResult } from 'pg';
 import { getPool } from '../../src/server/db/pool';
 import { checkSuperAdminExists } from './utils/checkSuperAdminExists';
 import { SQL_CREATE_SUPER_ADMIN_USER } from '../../src/server/db/sql';
-
-export const DEV_SUPER_ADMIN = {
-  name: 'Dev Admin',
-  email: 'admin@local.dev',
-  password: 'admin123',
-};
+import { DEV_SUPER_ADMIN } from './utils/superAdminDevFakeCredentials';
 
 async function createDevSuperAdmin(pool: Pool) {
   try {
@@ -68,7 +63,9 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((err) => {
-  console.error('Unhandled error in dev-setup.ts: ', err);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((err) => {
+    console.error('Unhandled error in dev-setup.ts: ', err);
+    process.exit(1);
+  });
+}
