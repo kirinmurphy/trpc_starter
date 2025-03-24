@@ -5,11 +5,12 @@ App starter built with Bun, Typescript, tRPC and React
 
 <table>
   <tr>
-    <td style="vertical-align: top;">Authentication</td>
+    <td style="vertical-align: top;">User Management</td>
     <td>
       • <a href="./docs/auth.md">Account creation with email verification</a><br>
       • Authentication (& refresh) session management<br>
       • <a href="./docs/password_reset.md">Password reset workflow</a>
+      • Automated super-admin creation and RBAC enabled user admin
     </td>
   </tr>
   <tr>
@@ -66,6 +67,9 @@ WEBSITE_DOMAIN=yourdomain.com
 EMAIL_SERVICE_HOST=smtp.some-provider.com
 EMAIL_SERVICE_USER=email_service_user
 EMAIL_SERVICE_PASS=email_service_password_or_api_key
+
+# Set up super admin user on initial build
+SUPER_ADMIN_EMAIL=adminemail@gmail.com
 ``` 
 [full variable list](./.env.example) with additional overrides
 
