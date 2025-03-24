@@ -15,6 +15,7 @@ export async function sendSuperAdminSetupEmail(
   const adminAccountCreationUrl = getVerificationUrl({
     verificationToken,
     route: ROUTE_URLS.resetPassword,
+    addlParams: ['type=superAdminCreation'],
   });
 
   return sendEmail({
