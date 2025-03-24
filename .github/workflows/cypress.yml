@@ -89,7 +89,7 @@ jobs:
       #       docker-compose ps || echo "docker-compose command failed"
       #     fi
 
-      - name: Check for artifacts
+      - name: sCheck for artifacts
         if: failure()
         run: |
           echo "Checking for artifacts..."

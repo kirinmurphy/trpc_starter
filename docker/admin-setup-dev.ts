@@ -1,16 +1,28 @@
 import bcrypt from 'bcrypt';
 import { Pool, QueryResult } from 'pg';
-import { getPool } from '../../src/server/db/pool';
-import { checkSuperAdminExists } from './utils/checkSuperAdminExists';
-import { SQL_CREATE_SUPER_ADMIN_USER } from '../../src/server/db/sql';
+import { getPool } from '../src/server/db/pool';
 
 export const DEV_SUPER_ADMIN = {
   name: 'Dev Admin',
   email: 'admin@local.dev',
   password: 'admin123',
+  role: 'super_admin',
 };
 
-async function createDevSuperAdmin(pool: Pool) {
+async function checkSuperAdminExists(pool: Pool) {
+  try {
+    const result: QueryResult = await pool.query(
+      'SELECT id FROM users WHERE role = $1 LIMIT 1',
+      [DEV_SUPER_ADMIN.role]
+    );
+    return result.rows.length > 0;
+  } catch (err) {
+    console.error('Error checking for super admin:', err);
+    throw err;
+  }
+}
+
+async function createSuperAdmin(pool: Pool) {
   try {
     const hashedPassword = await bcrypt.hash(DEV_SUPER_ADMIN.password, 10);
     const client = await pool.connect();
@@ -19,12 +31,12 @@ async function createDevSuperAdmin(pool: Pool) {
       await client.query('BEGIN');
 
       const result: QueryResult = await client.query(
-        SQL_CREATE_SUPER_ADMIN_USER,
+        'INSERT INTO users (name, email, password, role, verified) VALUES ($1, $2, $3, $4, true) RETURNING id',
         [
           DEV_SUPER_ADMIN.name,
           DEV_SUPER_ADMIN.email,
           hashedPassword,
-          'super_admin',
+          DEV_SUPER_ADMIN.role,
         ]
       );
 
@@ -52,15 +64,15 @@ async function main(): Promise<void> {
   const pool = getPool();
 
   try {
-    console.log('BBBBBBBBB Checking for existing super admin...');
+    console.log('Checking for existing super admin...');
     const superAdminExists = await checkSuperAdminExists(pool);
 
     if (superAdminExists) {
       console.log('Super admin user already exists, skipping creation');
     } else {
       console.log('No super admin found, creating default super admin user...');
-      await createDevSuperAdmin(pool);
-      console.log('Dev super admin setup complete');
+      await createSuperAdmin(pool);
+      console.log('Dev environment setup complete');
     }
   } catch (err) {
     console.error('Dev setup failed: ', err);
