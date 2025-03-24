@@ -75,6 +75,6 @@ services:
       VERIFY_RATE: '500r/m'
 
   mailhog:
-    # command: ["-invite-jim"]
-    command:
-      ['-invite-jim', '-jim-linkspeed-min=100', '-jim-linkspeed-max=1000']
+    command: []
+    # command:
+    #   ['-invite-jim', '-jim-linkspeed-min=100', '-jim-linkspeed-max=1000']
