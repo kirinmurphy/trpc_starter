@@ -16,7 +16,7 @@ async function main(): Promise<void> {
   const client = await pool.connect();
 
   try {
-    console.log('EEEEEEE Checking for existing super admin...');
+    console.log('Checking for existing super admin...');
 
     const superAdminExists = await checkSuperAdminExists(pool);
 
