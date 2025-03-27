@@ -5,12 +5,12 @@ App starter built with Bun, Typescript, tRPC and React
 
 <table>
   <tr>
-    <td style="vertical-align: top;">User Management</td>
+    <td style="vertical-align: top;">Identity & Access Control</td>
     <td>
       • <a href="./docs/auth.md">Account creation with email verification</a><br>
       • Authentication (& refresh) session management<br>
       • <a href="./docs/password_reset.md">Password reset workflow</a>
-      • Automated super-admin creation and RBAC enabled user admin
+      <!-- • Automated super-admin creation and RBAC enabled user admin -->
     </td>
   </tr>
   <tr>
@@ -34,8 +34,8 @@ App starter built with Bun, Typescript, tRPC and React
   <tr>
     <td style="vertical-align: top;">Client</td>
     <td>
-      • Simple form library w/ tRPC integration<br>
-      • Markdown file import<br>
+      • Simple form library w/ tRPC support<br>
+      • Markdown file import tool<br>
       • Icon library
     </td>
   </tr>
