@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 export enum APP_STATE {
-  IN_PROGRESS = 'in-progres',
+  IN_PROGRESS = 'in-progress',
   READY = 'ready',
 }
 

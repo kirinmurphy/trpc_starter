@@ -1,11 +1,8 @@
 import { z } from 'zod';
-import { createRootRoute, createRoute, redirect } from '@tanstack/react-router';
+import { redirect } from '@tanstack/react-router';
 import { LOGIN_NOTIFICATIONS } from '../../utils/messageCodes';
-import App from '../App';
-import { PublicApp } from '../modules/public/PublicApp';
 import { PublicHomepage } from '../modules/public/PublicHomepage';
 import { VerifyAccount } from '../modules/public/authenticating/createAccount/VerifyAccount';
-import { AuthenticatedApp } from '../modules/authenticated/AuthenticatedApp';
 import { AuthenticatedHomepage } from '../modules/authenticated/AuthenticatedHomepage';
 import { CreateAccount } from '../modules/public/authenticating/createAccount/CreateAccount';
 import { RequestResetPasswordEmail } from '../modules/public/authenticating/resetPassword/RequestResetPasswordEmail';
@@ -14,72 +11,36 @@ import { tokenVerificationLoader } from '../utils/tokenVerificationLoader';
 import { trpcVanillaClient } from '../trpcService/trpcClientService';
 import { invalidateAuthCheckQuery } from '../trpcService/invalidateQueries';
 import { ROUTE_URLS } from './routeUrls';
-import {
-  redirectIfAuthenticated,
-  redirectIfNotAuthenticated,
-} from './authenticationRedirects';
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';
+import {
+  createAuthenticatedRoute,
+  createPublicRoute,
+  rootRoute,
+} from './createRouteWrappers';
 
-const rootRoute = createRootRoute({
-  component: App,
-});
+// -- PUBLIC ROUTE
 
-const publicHomepageRoute = createRoute({
-  getParentRoute: () => rootRoute,
+const publicHomepageRoute = createPublicRoute({
   path: ROUTE_URLS.publicHomepage,
-  beforeLoad: redirectIfAuthenticated,
-  component: () => (
-    <PublicApp>
-      <PublicHomepage />
-    </PublicApp>
-  ),
+  component: PublicHomepage,
 });
 
-const createAccountPageRoute = createRoute({
-  getParentRoute: () => rootRoute,
+const createAccountPageRoute = createPublicRoute({
   path: ROUTE_URLS.createAccount,
-  beforeLoad: redirectIfAuthenticated,
-  component: () => (
-    <PublicApp>
-      <CreateAccount />
-    </PublicApp>
-  ),
+  component: CreateAccount,
 });
 
-const loginPageRoute = createRoute({
-  getParentRoute: () => rootRoute,
+const loginPageRoute = createPublicRoute({
   path: ROUTE_URLS.login,
-  beforeLoad: redirectIfAuthenticated,
-  component: () => (
-    <PublicApp>
-      <LoginRedirectWrapper />
-    </PublicApp>
-  ),
+  component: LoginRedirectWrapper,
   validateSearch: z.object({
     notification: z.enum(LOGIN_NOTIFICATIONS).optional(),
   }),
 });
 
-const authenticatedHomepageRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: ROUTE_URLS.authenticatedHomepage,
-  beforeLoad: redirectIfNotAuthenticated,
-  component: () => (
-    <AuthenticatedApp>
-      <AuthenticatedHomepage />
-    </AuthenticatedApp>
-  ),
-});
-
-const verifyAccountRoute = createRoute({
-  getParentRoute: () => rootRoute,
+const verifyAccountRoute = createPublicRoute({
   path: ROUTE_URLS.verifyAccount,
-  beforeLoad: redirectIfAuthenticated,
-  component: () => (
-    <PublicApp>
-      <VerifyAccount<typeof verifyAccountRoute> />
-    </PublicApp>
-  ),
+  component: VerifyAccount,
   loader: async (context) => {
     const token = new URLSearchParams(context.location.search).get('token');
     const preloadData = await tokenVerificationLoader<
@@ -99,26 +60,14 @@ const verifyAccountRoute = createRoute({
   },
 });
 
-const requestResetPasswordEmailRoute = createRoute({
-  getParentRoute: () => rootRoute,
+const requestResetPasswordEmailRoute = createPublicRoute({
   path: ROUTE_URLS.requestResetPasswordEmail,
-  beforeLoad: redirectIfAuthenticated,
-  component: () => (
-    <PublicApp>
-      <RequestResetPasswordEmail />
-    </PublicApp>
-  ),
+  component: RequestResetPasswordEmail,
 });
 
-const resetPasswordRoute = createRoute({
-  getParentRoute: () => rootRoute,
+const resetPasswordRoute = createPublicRoute({
   path: ROUTE_URLS.resetPassword,
-  beforeLoad: redirectIfAuthenticated,
-  component: () => (
-    <PublicApp>
-      <VerifyPasswordResetToken<typeof resetPasswordRoute> />
-    </PublicApp>
-  ),
+  component: VerifyPasswordResetToken,
   loader: async (context) => {
     const token = new URLSearchParams(context.location.search).get('token');
     return tokenVerificationLoader<
@@ -129,6 +78,13 @@ const resetPasswordRoute = createRoute({
       redirectToOnError: ROUTE_URLS.requestResetPasswordEmail,
     });
   },
+});
+
+// -- AUTHENTICATED ROUTES
+
+const authenticatedHomepageRoute = createAuthenticatedRoute({
+  path: ROUTE_URLS.authenticatedHomepage,
+  component: AuthenticatedHomepage,
 });
 
 export const routeTree = rootRoute.addChildren([
