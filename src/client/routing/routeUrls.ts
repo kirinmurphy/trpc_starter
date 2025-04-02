@@ -8,4 +8,5 @@ export const ROUTE_URLS = {
   verifyAccount: '/verify-account',
   requestResetPasswordEmail: '/request-reset-password-email',
   resetPassword: '/reset-password',
+  superAdminSetup: '/admin-setup',
 } as const;

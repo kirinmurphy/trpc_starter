@@ -18,8 +18,7 @@ import {
   rootRoute,
 } from './createRouteWrappers';
 
-// -- PUBLIC ROUTE
-
+// -- PUBLIC ROUTES
 const publicHomepageRoute = createPublicRoute({
   path: ROUTE_URLS.publicHomepage,
   component: PublicHomepage,
@@ -80,8 +79,12 @@ const resetPasswordRoute = createPublicRoute({
   },
 });
 
-// -- AUTHENTICATED ROUTES
+const superAdminSetupRoute = createPublicRoute({
+  path: ROUTE_URLS.superAdminSetup,
+  component: () => <div>heyyyyy</div>,
+});
 
+// -- AUTHENTICATED ROUTES
 const authenticatedHomepageRoute = createAuthenticatedRoute({
   path: ROUTE_URLS.authenticatedHomepage,
   component: AuthenticatedHomepage,
@@ -95,4 +98,5 @@ export const routeTree = rootRoute.addChildren([
   verifyAccountRoute,
   requestResetPasswordEmailRoute,
   resetPasswordRoute,
+  superAdminSetupRoute,
 ]);
