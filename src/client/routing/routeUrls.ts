@@ -9,4 +9,6 @@ export const ROUTE_URLS = {
   requestResetPasswordEmail: '/request-reset-password-email',
   resetPassword: '/reset-password',
   superAdminSetup: '/admin-setup',
+  // TODO PR: create fail page
+  superAdminSetupFail: '/resend-admin-setup-email',
 } as const;

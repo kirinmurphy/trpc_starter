@@ -17,6 +17,7 @@ import {
   createPublicRoute,
   rootRoute,
 } from './createRouteWrappers';
+import { VerifySuperAdminSetupToken } from '../modules/public/authenticating/superAdminCreation/VerifySuperAdminSetupToken';
 
 // -- PUBLIC ROUTES
 const publicHomepageRoute = createPublicRoute({
@@ -81,7 +82,17 @@ const resetPasswordRoute = createPublicRoute({
 
 const superAdminSetupRoute = createPublicRoute({
   path: ROUTE_URLS.superAdminSetup,
-  component: () => <div>heyyyyy</div>,
+  component: VerifySuperAdminSetupToken,
+  loader: async (context) => {
+    const token = new URLSearchParams(context.location.search).get('token');
+    return tokenVerificationLoader<
+      typeof trpcVanillaClient.auth.verifySuperAdminSetupToken
+    >({
+      token,
+      verifyTokenProcedure: trpcVanillaClient.auth.verifySuperAdminSetupToken,
+      redirectToOnError: ROUTE_URLS.superAdminSetupFail,
+    });
+  },
 });
 
 // -- AUTHENTICATED ROUTES

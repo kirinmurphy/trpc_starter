@@ -1,6 +1,7 @@
 import {
   ERR_VERIFICATION_FAILED,
   PASSWORD_RESET_SUCCESS,
+  SUPER_ADMIN_SETUP_SUCCESS,
 } from '../../../../../utils/messageCodes';
 
 export const loginNotifications = {
@@ -13,6 +14,11 @@ export const loginNotifications = {
     type: 'success',
     message:
       'Your password was updated successfully.  Login with your new password to continue.',
+  },
+  [SUPER_ADMIN_SETUP_SUCCESS]: {
+    type: 'success',
+    message:
+      'Your app setup is now complete. Login with your new password to continue.',
   },
 } as const;
 

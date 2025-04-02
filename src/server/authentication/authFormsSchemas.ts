@@ -15,6 +15,14 @@ const errorMessages = {
     'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
 };
 
+export const userNameSchema = z
+  .string()
+  .min(2, 'Name must be at least 2 characters')
+  .max(70, 'Name cannot exceed 70 characters')
+  .trim()
+  .transform((html) => escapeHTML(html))
+  .refine(inputIsUnsafe, 'Name contains potentially unsafe content');
+
 export const createEmailSchema = z
   .string()
   .trim()
@@ -55,6 +63,25 @@ export const createPasswordSchema = z
     errorMessages.insecurePassword
   )
   .transform((password) => escapeHTML(password));
+
+export const resetPasswordBaseFields = {
+  userId: z.string().uuid(),
+  password: createPasswordSchema,
+  confirmPassword: z.string().min(1, 'Password confirmation is required'),
+};
+
+export function checkIfConfirmPasswordMatches(
+  data: { password: string; confirmPassword: string },
+  ctx: z.RefinementCtx
+) {
+  if (data.password !== data.confirmPassword) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'Passwords must match',
+      path: ['confirmPassword'],
+    });
+  }
+}
 
 export function inputIsUnsafe(string: string): boolean {
   return !/<script|javascript|alert|onclick/i.test(string);

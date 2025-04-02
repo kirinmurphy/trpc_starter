@@ -10,7 +10,7 @@ import { CheckingEmailSent } from './CheckingIfEmailSent';
 
 interface SubmitFormDataProps {
   email: string;
-  name: string;
+  userName: string;
   password: string;
 }
 
@@ -21,9 +21,13 @@ export function CreateAccount() {
     useState<AccountCreationStateType>('default');
 
   const {
-    formData: { email, name, password },
+    formData: { email, userName, password },
     handleFieldChange,
-  } = useFormState<SubmitFormDataProps>({ email: '', name: '', password: '' });
+  } = useFormState<SubmitFormDataProps>({
+    email: '',
+    userName: '',
+    password: '',
+  });
 
   const { data, mutate, error, isLoading } =
     trpcService.auth.createAccount.useMutation({
@@ -35,14 +39,15 @@ export function CreateAccount() {
     });
 
   const onSubmit = () => {
-    if (!email || !password || !name) {
+    if (!email || !password || !userName) {
       return;
     }
     try {
       mutate({
         email: email.trim(),
         password: password.trim(),
-        name: name.trim(),
+        // TODO PR: change to userName
+        userName: userName.trim(),
       });
     } catch (err) {
       console.error('Mutation error:', err);
@@ -61,11 +66,11 @@ export function CreateAccount() {
           {({ fieldErrors }) => (
             <>
               <InputField
-                name="name"
-                value={name}
+                name="userName"
+                value={userName}
                 label="Name"
-                onChange={handleFieldChange('name')}
-                fieldErrors={fieldErrors?.name}
+                onChange={handleFieldChange('userName')}
+                fieldErrors={fieldErrors?.userName}
               />
               <InputField
                 name="email"

@@ -1,10 +1,10 @@
 // USER
 export const SQL_CREATE_USER =
-  'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id';
+  'INSERT INTO users (user_name, email, password) VALUES ($1, $2, $3) RETURNING id';
 export const SQL_CREATE_SUPER_ADMIN_USER =
-  'INSERT INTO users (name, email, password, role, verified) VALUES ($1, $2, $3, $4, true) RETURNING id';
+  'INSERT INTO users (user_name, email, password, role, verified) VALUES ($1, $2, $3, $4, true) RETURNING id';
 export const SQL_GET_USER =
-  'SELECT id, name, email, role, verified, created_at FROM users WHERE id = $1';
+  'SELECT id, user_name, email, role, verified, created_at FROM users WHERE id = $1';
 export const SQL_GET_USER_BY_EMAIL =
   'SELECT id, password, role, verified FROM users WHERE email = $1';
 export const SQL_GET_USERID_BY_EMAIL = 'SELECT id FROM users WHERE email = $1';

@@ -3,7 +3,7 @@ import { EmailSentStatus } from '../../utils/types';
 
 export const UserSchema = z.object({
   id: z.union([z.string(), z.number()]),
-  name: z.string(),
+  userName: z.string(),
   email: z.string(),
   verified: z.boolean(),
   created_at: z.union([z.string().datetime(), z.date()]),

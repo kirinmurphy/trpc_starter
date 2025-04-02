@@ -6,7 +6,7 @@ export function AuthenticatedHomepage() {
 
   return (
     <>
-      <header>Welcome back, {user.name}</header>
+      <header>Welcome back, {user.userName}</header>
     </>
   );
 }
