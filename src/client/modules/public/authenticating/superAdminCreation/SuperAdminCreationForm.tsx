@@ -9,7 +9,7 @@ import { ROUTE_URLS } from '../../../../routing/routeUrls';
 import { SUPER_ADMIN_SETUP_SUCCESS } from '../../../../../utils/messageCodes';
 
 interface SuperAdminCreationFormProps {
-  userName: string;
+  username: string;
   password: string;
   confirmPassword: string;
 }
@@ -18,10 +18,10 @@ export function SuperAdminCreationForm({ userId }: { userId: string }) {
   const navigate = useNavigate();
 
   const {
-    formData: { userName, password, confirmPassword },
+    formData: { username, password, confirmPassword },
     handleFieldChange,
   } = useFormState<SuperAdminCreationFormProps>({
-    userName: '',
+    username: '',
     password: '',
     confirmPassword: '',
   });
@@ -42,7 +42,7 @@ export function SuperAdminCreationForm({ userId }: { userId: string }) {
     }
     try {
       mutate({
-        userName: userName.trim(),
+        username: username.trim(),
         userId,
         password: password.trim(),
         confirmPassword: confirmPassword.trim(),
@@ -63,11 +63,11 @@ export function SuperAdminCreationForm({ userId }: { userId: string }) {
         {({ fieldErrors }) => (
           <>
             <InputField
-              name="userName"
-              value={userName}
+              name="username"
+              value={username}
               label="Name"
-              onChange={handleFieldChange('userName')}
-              fieldErrors={fieldErrors?.userName}
+              onChange={handleFieldChange('username')}
+              fieldErrors={fieldErrors?.username}
             />
             <InputField
               name="password"

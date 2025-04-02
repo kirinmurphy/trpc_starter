@@ -17,7 +17,7 @@ const copy = {
 };
 
 export const createAccountSchema = z.object({
-  userName: userNameSchema,
+  username: userNameSchema,
   email: createEmailSchema,
   password: createPasswordSchema,
 });
@@ -37,13 +37,13 @@ interface CreateAccountResponseProps {
 export async function createAccountMutation({
   input,
 }: CreateAccountMutationProps): Promise<CreateAccountResponseProps> {
-  const { userName, email, password } = input;
+  const { username, email, password } = input;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
     const result = await getPool().query(SQL_CREATE_USER, [
-      userName,
+      username,
       email,
       hashedPassword,
     ]);

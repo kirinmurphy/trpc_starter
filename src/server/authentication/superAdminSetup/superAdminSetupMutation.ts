@@ -11,7 +11,7 @@ import {
 
 export const SuperAdminSetupSchema = z
   .object({
-    userName: userNameSchema,
+    username: userNameSchema,
     ...resetPasswordBaseFields,
   })
   .superRefine(checkIfConfirmPasswordMatches);
@@ -30,7 +30,7 @@ interface SuperAdminSetupResponseProps {
 export async function superAdminSetupMutation({
   input,
 }: SuperAdminSetupMutationProps): Promise<SuperAdminSetupResponseProps> {
-  const { userId, userName, password } = input;
+  const { userId, username, password } = input;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -38,7 +38,7 @@ export async function superAdminSetupMutation({
     // TODO PR:  new SQL command for setup
     const result = await getPool().query(SQL_SET_USER_PASSWORD, [
       userId,
-      userName,
+      username,
       hashedPassword,
     ]);
     console.log('result', result);

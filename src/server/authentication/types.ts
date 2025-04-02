@@ -2,7 +2,7 @@ import { CreateNextContextOptions } from '@trpc/server/adapters/next';
 
 export type User = {
   id: number;
-  userName: string;
+  username: string;
   email: string;
 };
 

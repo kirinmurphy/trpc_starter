@@ -1,5 +1,5 @@
 export const DEV_SUPER_ADMIN = {
-  userName: 'Dev Admin',
+  username: 'Dev Admin',
   email: 'admin@local.dev',
   password: 'admin123',
 };

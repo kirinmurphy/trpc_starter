@@ -2,12 +2,12 @@ import { createContext } from 'react';
 
 interface UserContextProps {
   email: string | null;
-  userName: string | null;
+  username: string | null;
   verified: boolean;
 }
 
 export const UserContext = createContext<UserContextProps>({
   email: null,
-  userName: null,
+  username: null,
   verified: false,
 });

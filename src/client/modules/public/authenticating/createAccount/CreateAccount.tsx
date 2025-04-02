@@ -10,7 +10,7 @@ import { CheckingEmailSent } from './CheckingIfEmailSent';
 
 interface SubmitFormDataProps {
   email: string;
-  userName: string;
+  username: string;
   password: string;
 }
 
@@ -21,11 +21,11 @@ export function CreateAccount() {
     useState<AccountCreationStateType>('default');
 
   const {
-    formData: { email, userName, password },
+    formData: { email, username, password },
     handleFieldChange,
   } = useFormState<SubmitFormDataProps>({
     email: '',
-    userName: '',
+    username: '',
     password: '',
   });
 
@@ -39,15 +39,15 @@ export function CreateAccount() {
     });
 
   const onSubmit = () => {
-    if (!email || !password || !userName) {
+    if (!email || !password || !username) {
       return;
     }
     try {
       mutate({
         email: email.trim(),
         password: password.trim(),
-        // TODO PR: change to userName
-        userName: userName.trim(),
+        // TODO PR: change to username
+        username: username.trim(),
       });
     } catch (err) {
       console.error('Mutation error:', err);
@@ -66,11 +66,11 @@ export function CreateAccount() {
           {({ fieldErrors }) => (
             <>
               <InputField
-                name="userName"
-                value={userName}
+                name="username"
+                value={username}
                 label="Name"
-                onChange={handleFieldChange('userName')}
-                fieldErrors={fieldErrors?.userName}
+                onChange={handleFieldChange('username')}
+                fieldErrors={fieldErrors?.username}
               />
               <InputField
                 name="email"
