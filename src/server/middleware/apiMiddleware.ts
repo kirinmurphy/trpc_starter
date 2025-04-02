@@ -1,6 +1,5 @@
 import { runHelmet } from './runHelmet';
 import { composeMiddleware } from './composeMiddleware';
-import { appStateMiddleware } from './appStateMiddleware';
 
 if (!process.env.INTERNAL_CLIENT_URL) {
   console.error(
@@ -9,4 +8,4 @@ if (!process.env.INTERNAL_CLIENT_URL) {
   process.exit(1);
 }
 
-export const apiMiddleware = composeMiddleware(appStateMiddleware, runHelmet);
+export const apiMiddleware = composeMiddleware(runHelmet);
