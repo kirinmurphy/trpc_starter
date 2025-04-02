@@ -33,6 +33,11 @@ import {
 import { verifyPasswordResetTokenMutation } from './resetPassword/verifyPasswordResetTokenMutation';
 import { autoLoginDevSuperAdminMutation } from './login/autoLoginDevSuperAdminMutation';
 import { getAppStateQuery } from './getAppStateQuery';
+import {
+  superAdminSetupMutation,
+  SuperAdminSetupSchema,
+} from './superAdminSetup/superAdminSetupMutation';
+import { verifySuperAdminSetupTokenMutation } from './superAdminSetup/verifySuperAdminSetupTokenMutation';
 
 const { publicQuery, protectedQuery, publicMutation } = procedures;
 
@@ -85,4 +90,13 @@ export const authRouter = router({
   resetPassword: publicMutation
     .input(ResetPasswordSchema)
     .mutation(resetPasswordMutation),
+
+  // -- Super Admin Setup
+  superAdminSetup: protectedQuery
+    .input(SuperAdminSetupSchema)
+    .mutation(superAdminSetupMutation),
+
+  verifySuperAdminSetupToken: publicMutation
+    .input(z.object({ token: z.string() }))
+    .mutation(verifySuperAdminSetupTokenMutation),
 });

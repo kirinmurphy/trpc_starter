@@ -6,30 +6,32 @@ import { InputField } from '../../../../widgets/forms/InputField';
 import { SimpleForm } from '../../../../widgets/forms/SimpleForm';
 import { useFormState } from '../../../../widgets/forms/utils/useFormState';
 import { ROUTE_URLS } from '../../../../routing/routeUrls';
-import { PASSWORD_RESET_SUCCESS } from '../../../../../utils/messageCodes';
+import { SUPER_ADMIN_SETUP_SUCCESS } from '../../../../../utils/messageCodes';
 
-interface ResetPasswordFormProps {
+interface SuperAdminCreationFormProps {
+  username: string;
   password: string;
   confirmPassword: string;
 }
 
-export function ResetPasswordForm({ userId }: { userId: string }) {
+export function SuperAdminCreationForm({ userId }: { userId: string }) {
   const navigate = useNavigate();
 
   const {
-    formData: { password, confirmPassword },
+    formData: { username, password, confirmPassword },
     handleFieldChange,
-  } = useFormState<ResetPasswordFormProps>({
+  } = useFormState<SuperAdminCreationFormProps>({
+    username: '',
     password: '',
     confirmPassword: '',
   });
 
   const { mutate, error, isLoading } =
-    trpcService.auth.resetPassword.useMutation({
+    trpcService.auth.superAdminSetup.useMutation({
       onSuccess: () => {
         navigate({
           to: ROUTE_URLS.login,
-          search: { notification: PASSWORD_RESET_SUCCESS },
+          search: { notification: SUPER_ADMIN_SETUP_SUCCESS },
         });
       },
     });
@@ -40,6 +42,7 @@ export function ResetPasswordForm({ userId }: { userId: string }) {
     }
     try {
       mutate({
+        username: username.trim(),
         userId,
         password: password.trim(),
         confirmPassword: confirmPassword.trim(),
@@ -59,6 +62,13 @@ export function ResetPasswordForm({ userId }: { userId: string }) {
       >
         {({ fieldErrors }) => (
           <>
+            <InputField
+              name="username"
+              value={username}
+              label="Name"
+              onChange={handleFieldChange('username')}
+              fieldErrors={fieldErrors?.username}
+            />
             <InputField
               name="password"
               type="password"

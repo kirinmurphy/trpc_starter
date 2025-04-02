@@ -52,7 +52,7 @@ async function createDevSuperAdmin(pool: Pool) {
       const result: QueryResult = await client.query(
         SQL_CREATE_SUPER_ADMIN_USER,
         [
-          DEV_SUPER_ADMIN.name,
+          DEV_SUPER_ADMIN.username,
           DEV_SUPER_ADMIN.email,
           hashedPassword,
           'super_admin',

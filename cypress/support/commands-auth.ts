@@ -5,7 +5,7 @@ Cypress.Commands.add(
   ({ demoUser }: AuthActionProps) => {
     cy.visit('/');
     cy.contains('a', 'SIGN UP').click();
-    cy.get('input[name="name"]').type(demoUser.name, { delay: 100 });
+    cy.get('input[name="username"]').type(demoUser.name, { delay: 100 });
     cy.get('input[name="email"]').type(demoUser.email, { delay: 100 });
     cy.get('input[name="password"]').type(demoUser.password, { delay: 100 });
     cy.get('button[type="submit"]').click();

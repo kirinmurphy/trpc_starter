@@ -17,9 +17,9 @@ import {
   createPublicRoute,
   rootRoute,
 } from './createRouteWrappers';
+import { VerifySuperAdminSetupToken } from '../modules/public/authenticating/superAdminCreation/VerifySuperAdminSetupToken';
 
-// -- PUBLIC ROUTE
-
+// -- PUBLIC ROUTES
 const publicHomepageRoute = createPublicRoute({
   path: ROUTE_URLS.publicHomepage,
   component: PublicHomepage,
@@ -80,8 +80,22 @@ const resetPasswordRoute = createPublicRoute({
   },
 });
 
-// -- AUTHENTICATED ROUTES
+const superAdminSetupRoute = createPublicRoute({
+  path: ROUTE_URLS.superAdminSetup,
+  component: VerifySuperAdminSetupToken,
+  loader: async (context) => {
+    const token = new URLSearchParams(context.location.search).get('token');
+    return tokenVerificationLoader<
+      typeof trpcVanillaClient.auth.verifySuperAdminSetupToken
+    >({
+      token,
+      verifyTokenProcedure: trpcVanillaClient.auth.verifySuperAdminSetupToken,
+      redirectToOnError: ROUTE_URLS.superAdminSetupFail,
+    });
+  },
+});
 
+// -- AUTHENTICATED ROUTES
 const authenticatedHomepageRoute = createAuthenticatedRoute({
   path: ROUTE_URLS.authenticatedHomepage,
   component: AuthenticatedHomepage,
@@ -95,4 +109,5 @@ export const routeTree = rootRoute.addChildren([
   verifyAccountRoute,
   requestResetPasswordEmailRoute,
   resetPasswordRoute,
+  superAdminSetupRoute,
 ]);

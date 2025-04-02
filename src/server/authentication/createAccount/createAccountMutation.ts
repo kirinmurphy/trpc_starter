@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
-import { escapeHTML } from '../../utils/escapeHtml';
 import { getPool } from '../../db/pool';
 import { isDuplicateDBValue } from '../../db/isPostgresError';
 import { SQL_CREATE_USER } from '../../db/sql';
@@ -8,8 +7,8 @@ import { ContextType } from '../types';
 import {
   createEmailSchema,
   createPasswordSchema,
-  inputIsUnsafe,
-} from '../sharedSchema';
+  userNameSchema,
+} from '../authFormsSchemas';
 import { initVerifyAccountFlow } from './initVerifyAccountFlow';
 
 const copy = {
@@ -18,13 +17,7 @@ const copy = {
 };
 
 export const createAccountSchema = z.object({
-  name: z
-    .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(70, 'Name cannot exceed 70 characters')
-    .trim()
-    .transform((html) => escapeHTML(html))
-    .refine(inputIsUnsafe, 'Name contains potentially unsafe content'),
+  username: userNameSchema,
   email: createEmailSchema,
   password: createPasswordSchema,
 });
@@ -44,13 +37,13 @@ interface CreateAccountResponseProps {
 export async function createAccountMutation({
   input,
 }: CreateAccountMutationProps): Promise<CreateAccountResponseProps> {
-  const { name, email, password } = input;
+  const { username, email, password } = input;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
     const result = await getPool().query(SQL_CREATE_USER, [
-      name,
+      username,
       email,
       hashedPassword,
     ]);
