@@ -10,7 +10,7 @@ import { AuthenticatedApp } from '../modules/authenticated/AuthenticatedApp';
 import {
   redirectIfAuthenticated,
   redirectIfNotAuthenticated,
-} from './authenticationRedirects';
+} from './appStateRedirects';
 import { APP_STATE } from '../../server/appState/appState';
 
 export const rootRoute = createRootRoute({

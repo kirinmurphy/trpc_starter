@@ -1,17 +1,17 @@
 import { redirect } from '@tanstack/react-router';
 import { ROUTE_URLS } from './routeUrls';
 
-import { isAuthenticated } from './isAuthenticated';
+import { getCurrentAppState } from './getCurrentAppState';
 
 export async function redirectIfAuthenticated() {
-  if (await isAuthenticated()) {
+  if ((await getCurrentAppState()).isAuthenticated) {
     // console.log('Redirecting to authenticated homepage');
     throw redirect({ to: ROUTE_URLS.authenticatedHomepage });
   }
 }
 
 export async function redirectIfNotAuthenticated() {
-  if (!(await isAuthenticated())) {
+  if (!(await getCurrentAppState()).isAuthenticated) {
     // console.log('Redirecting to public homepage');
     throw redirect({ to: ROUTE_URLS.publicHomepage });
   }
