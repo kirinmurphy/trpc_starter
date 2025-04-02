@@ -32,6 +32,7 @@ import {
 } from './resetPassword/resetPasswordMutation';
 import { verifyPasswordResetTokenMutation } from './resetPassword/verifyPasswordResetTokenMutation';
 import { autoLoginDevSuperAdminMutation } from './login/autoLoginDevSuperAdminMutation';
+import { getAppStateQuery } from './getAppStateQuery';
 
 const { publicQuery, protectedQuery, publicMutation } = procedures;
 
@@ -58,6 +59,8 @@ export const authRouter = router({
     .mutation(resendFailedVerificationEmailMutation),
 
   // -- Authentication
+  getAppState: publicQuery.query(getAppStateQuery),
+
   login: publicMutation.input(loginUserSchema).mutation(loginUserMutation),
 
   autoLoginDevSuperAdmin: publicMutation.mutation(
@@ -65,11 +68,6 @@ export const authRouter = router({
   ),
 
   logout: publicMutation.mutation(logoutUserMutation),
-
-  isAuthenticated: publicQuery.query(({ ctx: { userId } }) => ({
-    isAuthenticated: !!userId,
-    userId,
-  })),
 
   refreshToken: publicMutation.mutation(refreshTokenMutation),
 

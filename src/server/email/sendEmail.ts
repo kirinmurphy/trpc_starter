@@ -10,7 +10,6 @@ const defaultFromName =
   process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER || websiteDomain;
 
 export async function sendEmail(props: EmailOptions): Promise<EmailResult> {
-  console.log('======== defaultFromEmail', defaultFromEmail);
   const {
     fromEmail = defaultFromEmail,
     fromSender = defaultFromName,

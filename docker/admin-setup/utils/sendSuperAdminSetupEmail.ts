@@ -2,6 +2,8 @@ import { ROUTE_URLS } from '../../../src/client/routing/routeUrls';
 import { sendEmail } from '../../../src/server/email/sendEmail';
 import { getVerificationUrl } from '../../../src/server/authentication/utils/getVerificationUrl';
 
+const websiteDomain = process.env.WEBSITE_DOMAIN;
+
 interface SendSuperAdminSetupEmailProps {
   to: string;
   verificationToken: string;
@@ -15,14 +17,15 @@ export async function sendSuperAdminSetupEmail(
   const adminAccountCreationUrl = getVerificationUrl({
     verificationToken,
     route: ROUTE_URLS.resetPassword,
+    addlParams: ['type=superAdminCreation'],
   });
 
   return sendEmail({
     to,
-    subject: 'Complete Your Super Admin Account Setup',
+    subject: `Welcome!  Create your admin account for ${websiteDomain}`,
     emailTemplate: `
-      <h1>Welcome Super Admin</h1>
-      <p>Your account has been created as the initial Super Admin for the application.</p>
+      <h1>Welcome!</h1>
+      <p>Your website is almost ready for launch!</p> 
       <p>Please complete your account setup by setting your password using the link below:</p>
       <a href="${adminAccountCreationUrl}">Complete Setup</a>
       <p>Or copy and paste this URL into your browser:</p>

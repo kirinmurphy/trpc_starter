@@ -10,13 +10,14 @@ import {
 import { getUniqueToken } from '../../src/server/authentication/utils/getUniqueToken';
 import { validateSuperAdminEmail } from './utils/validateSuperAdminEmail';
 import { sendSuperAdminSetupEmail } from './utils/sendSuperAdminSetupEmail';
+import { APP_STATE, writeAppState } from '../../src/server/appState/appState';
 
 async function main(): Promise<void> {
   const pool = getPool();
   const client = await pool.connect();
 
   try {
-    console.log('EEEEEEE Checking for existing super admin...');
+    console.log('Checking for existing super admin...');
 
     const superAdminExists = await checkSuperAdminExists(pool);
 
@@ -36,6 +37,13 @@ async function main(): Promise<void> {
     await handleSendingSuperAdminEmail({ to: email, verificationToken });
 
     await client.query('COMMIT');
+
+    const appStateUpdated = writeAppState(APP_STATE.IN_PROGRESS, email);
+    if (appStateUpdated) {
+      console.log('App state set to IN_PROGRESS');
+    } else {
+      console.warn('Failed to set app state to IN_PROGRESS');
+    }
   } catch (err) {
     await client.query('ROLLBACK');
 
@@ -68,7 +76,7 @@ async function createProdSuperAdmin(
 
     const result: QueryResult = await client.query(
       SQL_CREATE_SUPER_ADMIN_USER,
-      // TODO: where should we create the username
+      // TODO: Remove after make registration UI workflow
       ['Site Owner Person', email, hashedPassword, 'super_admin']
     );
 
@@ -109,8 +117,7 @@ async function handleSendingSuperAdminEmail(props: {
 
     console.log('Setup email sent sucessfully');
   } catch (emailErr) {
-    throw new Error(
-      `Failed to send super admin setup email: ${emailErr.message}`
-    );
+    const errMsg = `Failed to send super admin setup email: ${emailErr.message}`;
+    throw new Error(errMsg);
   }
 }
