@@ -4,14 +4,22 @@ import { ROUTE_URLS } from '../../routing/routeUrls';
 import { StyledButton } from '../../widgets/Button';
 import { ActiveLink } from '../../widgets/ActiveLink';
 import { SuperAdminDevAutoLogin } from './authenticating/SuperAdminDevAutoLogin';
+import { APP_STATE } from '../../../server/appState/appState';
 
-export function PublicApp({ children }: { children: ReactNode }) {
+interface Props {
+  children: ReactNode;
+  appState: APP_STATE;
+}
+
+export function PublicApp({ children, appState }: Props) {
+  console.log('appState', appState);
+
   return (
     <>
       <header className="flex py-4 mb-8 border-b border-gray-600">
         <div className="flex-grow">
           <Link to={ROUTE_URLS.publicHomepage} preload={false}>
-            Home
+            Home {appState}
           </Link>
         </div>
 

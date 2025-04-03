@@ -12,17 +12,12 @@ interface VerifyUpdateTokenProps {
   tokenFailRedirect: NavigateOptions;
 }
 
-interface LoaderData {
-  userId: string;
-  tokenExpired: boolean;
-}
-
 export function VerifyUpdateToken(props: VerifyUpdateTokenProps) {
   const { from, updateForm: UpdateForm, tokenFailRedirect } = props;
 
   const navigate = useNavigate();
-  const loaderData = useLoaderData({ from }) as LoaderData;
-  const { userId, tokenExpired } = loaderData;
+  const { routeData } = useLoaderData({ from });
+  const { userId, tokenExpired } = routeData;
 
   useEffect(() => {
     if (tokenExpired) {
