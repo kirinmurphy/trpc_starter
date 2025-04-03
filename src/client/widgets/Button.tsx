@@ -2,7 +2,7 @@ import { MouseEvent } from 'react';
 import clsx from 'clsx';
 
 interface StyledButtonProps {
-  children: string;
+  children: string | JSX.Element;
   disabled?: boolean;
   type?: 'inline';
   onClick?: (e: MouseEvent) => void;
