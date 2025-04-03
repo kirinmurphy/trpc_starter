@@ -3,7 +3,10 @@ import { Pool, QueryResult } from 'pg';
 import { getPool } from '../../src/server/db/pool';
 import { checkSuperAdminExists } from './utils/checkSuperAdminExists';
 import { SQL_CREATE_SUPER_ADMIN_USER } from '../../src/server/db/sql';
-import { APP_STATE, writeAppState } from '../../src/server/appState/appState';
+import {
+  SYSTEM_STATUS,
+  writeSystemStatus,
+} from '../../src/server/systemStatus/systemStatus';
 import { DEV_SUPER_ADMIN } from './utils/superAdminDevFakeCredentials';
 
 async function main(): Promise<void> {
@@ -21,9 +24,9 @@ async function main(): Promise<void> {
       console.log('Dev super admin setup complete');
     }
 
-    const appStateUpdated = writeAppState(APP_STATE.READY);
+    const systemStatusUpdated = writeSystemStatus(SYSTEM_STATUS.READY);
 
-    if (appStateUpdated) {
+    if (systemStatusUpdated) {
       console.log('App state set to READY');
     } else {
       console.warn('Failed to set app state to READY');

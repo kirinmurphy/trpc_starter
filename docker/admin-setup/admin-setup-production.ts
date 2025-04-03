@@ -10,7 +10,10 @@ import {
 import { getUniqueToken } from '../../src/server/authentication/utils/getUniqueToken';
 import { validateSuperAdminEmail } from './utils/validateSuperAdminEmail';
 import { sendSuperAdminSetupEmail } from './utils/sendSuperAdminSetupEmail';
-import { APP_STATE, writeAppState } from '../../src/server/appState/appState';
+import {
+  SYSTEM_STATUS,
+  writeSystemStatus,
+} from '../../src/server/systemStatus/systemStatus';
 
 async function main(): Promise<void> {
   const pool = getPool();
@@ -38,8 +41,11 @@ async function main(): Promise<void> {
 
     await client.query('COMMIT');
 
-    const appStateUpdated = writeAppState(APP_STATE.IN_PROGRESS, email);
-    if (appStateUpdated) {
+    const systemStatusUpdated = writeSystemStatus(
+      SYSTEM_STATUS.IN_PROGRESS,
+      email
+    );
+    if (systemStatusUpdated) {
       console.log('App state set to IN_PROGRESS');
     } else {
       console.warn('Failed to set app state to IN_PROGRESS');

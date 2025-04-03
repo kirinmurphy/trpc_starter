@@ -12,12 +12,10 @@ import { trpcVanillaClient } from '../trpcService/trpcClientService';
 import { invalidateAuthCheckQuery } from '../trpcService/invalidateQueries';
 import { ROUTE_URLS } from './routeUrls';
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';
-import {
-  createAuthenticatedRoute,
-  createPublicRoute,
-  rootRoute,
-} from './createRouteWrappers';
 import { VerifySuperAdminSetupToken } from '../modules/public/authenticating/superAdminCreation/VerifySuperAdminSetupToken';
+import { createAuthenticatedRoute } from './createRouteHelpers/createAuthenticatedRoute';
+import { createPublicRoute } from './createRouteHelpers/createPublicRoute';
+import { rootRoute } from './createRouteHelpers/rootRoute';
 
 // -- PUBLIC ROUTES
 const publicHomepageRoute = createPublicRoute({
@@ -41,7 +39,7 @@ const loginPageRoute = createPublicRoute({
 const verifyAccountRoute = createPublicRoute({
   path: ROUTE_URLS.verifyAccount,
   component: VerifyAccount,
-  loader: async (context) => {
+  routeLoader: async (context) => {
     const token = new URLSearchParams(context.location.search).get('token');
     const preloadData = await tokenVerificationLoader<
       typeof trpcVanillaClient.auth.verifyAccount
@@ -68,7 +66,7 @@ const requestResetPasswordEmailRoute = createPublicRoute({
 const resetPasswordRoute = createPublicRoute({
   path: ROUTE_URLS.resetPassword,
   component: VerifyPasswordResetToken,
-  loader: async (context) => {
+  routeLoader: async (context) => {
     const token = new URLSearchParams(context.location.search).get('token');
     return tokenVerificationLoader<
       typeof trpcVanillaClient.auth.verifyPasswordResetToken
@@ -83,7 +81,7 @@ const resetPasswordRoute = createPublicRoute({
 const superAdminSetupRoute = createPublicRoute({
   path: ROUTE_URLS.superAdminSetup,
   component: VerifySuperAdminSetupToken,
-  loader: async (context) => {
+  routeLoader: async (context) => {
     const token = new URLSearchParams(context.location.search).get('token');
     return tokenVerificationLoader<
       typeof trpcVanillaClient.auth.verifySuperAdminSetupToken

@@ -1,10 +1,10 @@
 import { trpcVanillaClient } from '../trpcService/trpcClientService';
 import { refreshTokens } from '../trpcService/refreshTokens';
-import { APP_STATE } from '../../server/appState/appState';
+import { SYSTEM_STATUS } from '../../server/systemStatus/systemStatus';
 
 interface ReturnProps {
   isAuthenticated: boolean;
-  appState: APP_STATE | null;
+  systemStatus: SYSTEM_STATUS | null;
 }
 
 export async function getCurrentAppState(): Promise<ReturnProps> {
@@ -28,6 +28,6 @@ export async function getCurrentAppState(): Promise<ReturnProps> {
     return result;
   } catch (err: unknown) {
     console.log('Unexpected error during auth check', err);
-    return { isAuthenticated: false, appState: null };
+    return { isAuthenticated: false, systemStatus: null };
   }
 }

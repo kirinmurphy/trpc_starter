@@ -8,7 +8,10 @@ import {
   checkIfConfirmPasswordMatches,
   userNameSchema,
 } from '../authFormsSchemas';
-import { APP_STATE, writeAppState } from '../../appState/appState';
+import {
+  SYSTEM_STATUS,
+  writeSystemStatus,
+} from '../../systemStatus/systemStatus';
 
 export const SuperAdminSetupSchema = z
   .object({
@@ -42,8 +45,8 @@ export async function superAdminSetupMutation({
       hashedPassword,
     ]);
     console.log('result', result);
-    const appStateUpdated = writeAppState(APP_STATE.READY);
-    console.log('appStateUpdated', appStateUpdated);
+    const systemStatusUpdated = writeSystemStatus(SYSTEM_STATUS.READY);
+    console.log('systemStatusUpdated', systemStatusUpdated);
 
     return { success: true };
   } catch (err: unknown) {
