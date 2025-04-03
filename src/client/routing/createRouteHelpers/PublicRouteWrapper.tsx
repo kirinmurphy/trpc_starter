@@ -11,7 +11,7 @@ export function PublicRouteWrapper(props: PublicRouteWrapperProps) {
   const { children: UserComponent, path } = props;
   const { appState } = useLoaderData({ from: path });
   return (
-    <PublicApp appState={appState.appState}>
+    <PublicApp systemStatus={appState.systemStatus}>
       <UserComponent />
     </PublicApp>
   );

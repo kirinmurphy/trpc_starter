@@ -1,23 +1,27 @@
-import { APP_STATE, isAppReady } from '../appState/appState';
+import { SYSTEM_STATUS, isSystemReady } from '../systemStatus/systemStatus';
 import { ContextType } from './types';
 
 interface Props {
   ctx: ContextType;
 }
 
+// TOOD PR: this could be consolidated with the client interface
 interface ReturnProps {
   isAuthenticated: boolean;
-  appState: APP_STATE;
+  systemStatus: SYSTEM_STATUS;
 }
 
 export async function getAppStateQuery(props: Props): Promise<ReturnProps> {
   const { ctx } = props;
   const { userId } = ctx;
 
-  const appState = isAppReady() ? APP_STATE.READY : APP_STATE.IN_PROGRESS;
+  // TODO PR: is this redundant with just reading the systemStatus
+  const systemStatus = isSystemReady()
+    ? SYSTEM_STATUS.READY
+    : SYSTEM_STATUS.IN_PROGRESS;
 
   return {
     isAuthenticated: !!userId,
-    appState,
+    systemStatus,
   };
 }

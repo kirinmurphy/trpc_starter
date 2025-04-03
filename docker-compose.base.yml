@@ -15,10 +15,10 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - app_state:/app/docker/app_state
+      - system_status:/app/docker/system_status
     environment:
       PORT: '3000'
-      APP_STATE_DIR: '/app/docker/app_state'
+      SYSTEM_STATUS_DIR: '/app/docker/system_status'
 
       # DB
       DB_NAME: ${DB_NAME}
@@ -96,4 +96,4 @@ networks:
 
 volumes:
   postgres_data:
-  app_state:
+  system_status:
