@@ -92,7 +92,7 @@ export const authRouter = router({
     .mutation(resetPasswordMutation),
 
   // -- Super Admin Setup
-  superAdminSetup: protectedQuery
+  superAdminSetup: publicMutation
     .input(SuperAdminSetupSchema)
     .mutation(superAdminSetupMutation),
 

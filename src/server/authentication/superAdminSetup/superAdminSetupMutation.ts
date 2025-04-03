@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { getPool } from '../../db/pool';
-import { SQL_SET_USER_PASSWORD } from '../../db/sql';
+import { SQL_COMPLETE_USER_ADMIN_SETUP } from '../../db/sql';
 import { ContextType } from '../types';
 import {
   resetPasswordBaseFields,
@@ -35,8 +35,7 @@ export async function superAdminSetupMutation({
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    // TODO PR:  new SQL command for setup
-    const result = await getPool().query(SQL_SET_USER_PASSWORD, [
+    const result = await getPool().query(SQL_COMPLETE_USER_ADMIN_SETUP, [
       userId,
       username,
       hashedPassword,
