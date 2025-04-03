@@ -44,10 +44,10 @@ export function InlineNotification({ type, message }: InlineNotificationProps) {
 
   return (
     <div
-      className={`flex gap-4 items-center max-w-md mx-auto px-4 py-1 ${bgColor} text-black text-sm`}
+      className={`flex gap-4 items-center max-w-md mx-auto px-4 py-2 ${bgColor} text-black text-sm`}
     >
       <Icon size="4em" className={`${iconColor}`} />
-      {message}
+      <span dangerouslySetInnerHTML={{ __html: message }} />
     </div>
   );
 }

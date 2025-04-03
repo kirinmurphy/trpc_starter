@@ -13,6 +13,8 @@ export const SQL_SET_USER_AS_VERIFIED =
   'UPDATE users SET verified = true WHERE id = $1';
 export const SQL_SET_USER_PASSWORD =
   'UPDATE users SET password = $2 WHERE id = $1';
+export const SQL_COMPLETE_USER_ADMIN_SETUP =
+  'UPDATE users SET username = $2, password = $3 WHERE id = $1';
 
 // ACCOUNT VERIFICATION
 export const SQL_CREATE_VERIFICATION_RECORD =

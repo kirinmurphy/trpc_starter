@@ -1,13 +1,14 @@
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { getPool } from '../../db/pool';
-import { SQL_SET_USER_PASSWORD } from '../../db/sql';
+import { SQL_COMPLETE_USER_ADMIN_SETUP } from '../../db/sql';
 import { ContextType } from '../types';
 import {
   resetPasswordBaseFields,
   checkIfConfirmPasswordMatches,
   userNameSchema,
 } from '../authFormsSchemas';
+import { APP_STATE, writeAppState } from '../../appState/appState';
 
 export const SuperAdminSetupSchema = z
   .object({
@@ -35,13 +36,15 @@ export async function superAdminSetupMutation({
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    // TODO PR:  new SQL command for setup
-    const result = await getPool().query(SQL_SET_USER_PASSWORD, [
+    const result = await getPool().query(SQL_COMPLETE_USER_ADMIN_SETUP, [
       userId,
       username,
       hashedPassword,
     ]);
     console.log('result', result);
+    const appStateUpdated = writeAppState(APP_STATE.READY);
+    console.log('appStateUpdated', appStateUpdated);
+
     return { success: true };
   } catch (err: unknown) {
     // TODO PR: re-trigger email send
