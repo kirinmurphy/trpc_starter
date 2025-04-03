@@ -18,7 +18,7 @@ export const loginNotifications = {
   [SUPER_ADMIN_SETUP_SUCCESS]: {
     type: 'success',
     message:
-      'Your app setup is now complete. Login with your new password to continue.',
+      'Your app setup is now complete. Login with your new password to continue. <br/> You can now remove the <b>SUPER_ADMIN_EMAIL</b> property in your environment variables.',
   },
 } as const;
 

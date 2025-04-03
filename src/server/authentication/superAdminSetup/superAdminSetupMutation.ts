@@ -8,6 +8,7 @@ import {
   checkIfConfirmPasswordMatches,
   userNameSchema,
 } from '../authFormsSchemas';
+import { APP_STATE, writeAppState } from '../../appState/appState';
 
 export const SuperAdminSetupSchema = z
   .object({
@@ -41,6 +42,9 @@ export async function superAdminSetupMutation({
       hashedPassword,
     ]);
     console.log('result', result);
+    const appStateUpdated = writeAppState(APP_STATE.READY);
+    console.log('appStateUpdated', appStateUpdated);
+
     return { success: true };
   } catch (err: unknown) {
     // TODO PR: re-trigger email send
