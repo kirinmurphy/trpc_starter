@@ -58,7 +58,7 @@ export function SuperAdminCreationForm({ userId }: { userId: string }) {
         onSubmit={onSubmit}
         isLoading={isLoading}
         error={error}
-        title="Reset Password"
+        title="Complete Account Setup"
       >
         {({ fieldErrors }) => (
           <>

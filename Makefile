@@ -82,7 +82,7 @@ build-prod-no-cache: clean-prod
 
 .PHONY: logs-prod
 logs-prod:
-	$(DCP) logs app
+	$(DCP) logs app --follow app
 
 .PHONY: prod-all
 prod-all: build-prod run-prod logs-prod
