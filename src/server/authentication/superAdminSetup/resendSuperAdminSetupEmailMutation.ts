@@ -1,8 +1,17 @@
-export function resendSuperAdminSetupEmailMutation() {
-  console.log('allrighhhhht');
+import { sendSuperAdminSetupEmail } from '../../../../docker/admin-setup/utils/sendSuperAdminSetupEmail';
+import { requestResetPasswordEmailAction } from '../resetPassword/requestResetPasswordEmailAction';
 
-  // Get user record
-  // clear existing password reset request token
-  // create new password reset request token
-  // handleSendingSuperAdminEmail
+const superAdminEmail = process.env.SUPER_ADMIN_EMAIL;
+
+export async function resendSuperAdminSetupEmailMutation() {
+  console.log('allrighhhhht');
+  if (!superAdminEmail) {
+    // TODO: this is quicker, but email should already be in the DB, should we use that
+    throw new Error('SUPER_ADMIN_EMAIL is required');
+  }
+
+  return requestResetPasswordEmailAction({
+    email: superAdminEmail,
+    sendVerificationEmailAction: sendSuperAdminSetupEmail,
+  });
 }

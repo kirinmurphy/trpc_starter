@@ -81,7 +81,7 @@ async function createProdSuperAdmin(
     const result: QueryResult = await client.query(
       SQL_CREATE_SUPER_ADMIN_USER,
       // TODO: Remove after make registration UI workflow
-      ['Site Owner Person', email, hashedPassword, 'super_admin']
+      ['Unverified Super Admin', email, hashedPassword, 'super_admin']
     );
 
     const userId = result.rows[0]?.id;

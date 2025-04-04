@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { SYSTEM_STATUS } from '../../../server/systemStatus/types';
 import { PageContent } from '../../widgets/PageContent';
-import { ResendAdminSetupEmailButton } from './authenticating/superAdminCreation/ResendAdminSetupEmailButton';
+import { ResendSuperAdminSetupEmailButton } from './authenticating/superAdminCreation/ResendSuperAdminSetupEmailButton';
 import { ROUTE_URLS } from '../../routing/routeUrls';
 
 interface Props {
@@ -16,7 +16,6 @@ export function SystemStatusNotification({ systemStatus }: Props) {
   }
 
   const resendEmailProps = {
-    onResendSuccess: () => {},
     onResendError: () => {
       navigate({ to: ROUTE_URLS.superAdminSetupFail });
     },
@@ -28,7 +27,7 @@ export function SystemStatusNotification({ systemStatus }: Props) {
         <div className="">
           Your app is almost ready to launch. Check your email to complete your
           admin account setup.{' '}
-          <ResendAdminSetupEmailButton {...resendEmailProps} />
+          <ResendSuperAdminSetupEmailButton {...resendEmailProps} />
         </div>
       </PageContent>
     </div>
