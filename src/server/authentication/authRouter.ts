@@ -38,6 +38,7 @@ import {
   SuperAdminSetupSchema,
 } from './superAdminSetup/superAdminSetupMutation';
 import { verifySuperAdminSetupTokenMutation } from './superAdminSetup/verifySuperAdminSetupTokenMutation';
+import { resendSuperAdminSetupEmailMutation } from './superAdminSetup/resendSuperAdminSetupEmailMutation';
 
 const { publicQuery, protectedQuery, publicMutation } = procedures;
 
@@ -99,4 +100,8 @@ export const authRouter = router({
   verifySuperAdminSetupToken: publicMutation
     .input(z.object({ token: z.string() }))
     .mutation(verifySuperAdminSetupTokenMutation),
+
+  resendSuperAdminSetupEmail: publicMutation.mutation(
+    resendSuperAdminSetupEmailMutation
+  ),
 });

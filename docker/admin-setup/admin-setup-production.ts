@@ -8,7 +8,7 @@ import {
   SQL_CREATE_SUPER_ADMIN_USER,
 } from '../../src/server/db/sql';
 import { getUniqueToken } from '../../src/server/authentication/utils/getUniqueToken';
-import { validateSuperAdminEmail } from './utils/validateSuperAdminEmail';
+import { validateSuperAdminEmailFormat } from './utils/validateSuperAdminEmail';
 import { sendSuperAdminSetupEmail } from './utils/sendSuperAdminSetupEmail';
 import { writeSystemStatus } from '../../src/server/systemStatus/systemStatus';
 import { SYSTEM_STATUS } from '../../src/server/systemStatus/types';
@@ -27,7 +27,7 @@ async function main(): Promise<void> {
       return;
     }
 
-    const email = validateSuperAdminEmail(process.env.SUPER_ADMIN_EMAIL);
+    const email = validateSuperAdminEmailFormat(process.env.SUPER_ADMIN_EMAIL);
 
     console.log('No super admin found, creating for: ', email);
 

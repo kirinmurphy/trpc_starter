@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export function validateSuperAdminEmail(email?: string): string {
+export function validateSuperAdminEmailFormat(email?: string): string {
   if (!email) {
     throw new Error('SUPER_ADMIN_EMAIL env variable is required for setup.');
   }
