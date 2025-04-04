@@ -1,10 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-
-export enum SYSTEM_STATUS {
-  IN_PROGRESS = 'in-progress',
-  READY = 'ready',
-}
+import { SYSTEM_STATUS } from './types';
 
 interface SystemStatusData {
   systemStatus: SYSTEM_STATUS;

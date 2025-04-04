@@ -10,10 +10,8 @@ import {
 import { getUniqueToken } from '../../src/server/authentication/utils/getUniqueToken';
 import { validateSuperAdminEmail } from './utils/validateSuperAdminEmail';
 import { sendSuperAdminSetupEmail } from './utils/sendSuperAdminSetupEmail';
-import {
-  SYSTEM_STATUS,
-  writeSystemStatus,
-} from '../../src/server/systemStatus/systemStatus';
+import { writeSystemStatus } from '../../src/server/systemStatus/systemStatus';
+import { SYSTEM_STATUS } from '../../src/server/systemStatus/types';
 
 async function main(): Promise<void> {
   const pool = getPool();

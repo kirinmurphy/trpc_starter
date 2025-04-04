@@ -3,11 +3,9 @@ import { Pool, QueryResult } from 'pg';
 import { getPool } from '../../src/server/db/pool';
 import { checkSuperAdminExists } from './utils/checkSuperAdminExists';
 import { SQL_CREATE_SUPER_ADMIN_USER } from '../../src/server/db/sql';
-import {
-  SYSTEM_STATUS,
-  writeSystemStatus,
-} from '../../src/server/systemStatus/systemStatus';
+import { writeSystemStatus } from '../../src/server/systemStatus/systemStatus';
 import { DEV_SUPER_ADMIN } from './utils/superAdminDevFakeCredentials';
+import { SYSTEM_STATUS } from '../../src/server/systemStatus/types';
 
 async function main(): Promise<void> {
   const pool = getPool();

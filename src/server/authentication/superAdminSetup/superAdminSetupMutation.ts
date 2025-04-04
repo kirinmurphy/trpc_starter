@@ -2,16 +2,14 @@ import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { getPool } from '../../db/pool';
 import { SQL_COMPLETE_USER_ADMIN_SETUP } from '../../db/sql';
+import { writeSystemStatus } from '../../systemStatus/systemStatus';
+import { SYSTEM_STATUS } from '../../systemStatus/types';
 import { ContextType } from '../types';
 import {
   resetPasswordBaseFields,
   checkIfConfirmPasswordMatches,
   userNameSchema,
 } from '../authFormsSchemas';
-import {
-  SYSTEM_STATUS,
-  writeSystemStatus,
-} from '../../systemStatus/systemStatus';
 
 export const SuperAdminSetupSchema = z
   .object({

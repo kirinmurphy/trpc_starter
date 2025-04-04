@@ -26,11 +26,8 @@
 
 #root {
   width: 100%;
-  max-width: 1050px;
   min-width: 320px;
   min-height: 100vh;
-  margin: 0 auto;
-  padding: 2rem;
 }
 
 main a {
