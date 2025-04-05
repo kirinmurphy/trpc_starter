@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { trpcService } from '../../../../trpcService/trpcClientService';
-import { Button } from '../../../../widgets/Button';
+import { Button, StyledButtonProps } from '../../../../widgets/Button';
 
 interface Props {
   onResendError: () => void;
   onResendSuccess?: () => void;
+  type?: StyledButtonProps['type'];
 }
 
 export function ResendSuperAdminSetupEmailButton(props: Props) {
-  const { onResendSuccess, onResendError } = props;
+  const { onResendSuccess, onResendError, type = undefined } = props;
 
   const [emailSent, setEmailSent] = useState<boolean>(false);
 
@@ -36,12 +37,12 @@ export function ResendSuperAdminSetupEmailButton(props: Props) {
   return (
     <>
       {!emailSent && (
-        <Button onClick={handleResendEmail} disabled={isLoading} type="inline">
+        <Button onClick={handleResendEmail} disabled={isLoading} type={type}>
           {isLoading ? 'Sending...' : 'Resend verification email'}
         </Button>
       )}
 
-      {emailSent && <span>Email Sent</span>}
+      {emailSent && <strong>Email Sent</strong>}
     </>
   );
 }

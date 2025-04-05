@@ -16,12 +16,13 @@ export function SystemStatusNotification({ systemStatus }: Props) {
   }
 
   return (
-    <div className="bg-red-800 text-white">
+    <div className="bg-red-900 text-white">
       <PageContent className="py-1">
-        <div className="">
+        <div>
           Your app is almost ready to launch. Check your email to complete your
           admin account setup.{' '}
           <ResendSuperAdminSetupEmailButton
+            type="inline"
             onResendError={() => {
               navigate({ to: ROUTE_URLS.superAdminSetupFailed });
             }}
