@@ -11,12 +11,19 @@ import { PageContent } from '../../widgets/PageContent';
 interface Props {
   children: ReactNode;
   systemStatus: SYSTEM_STATUS;
+  hideInProgressSystemNotification?: boolean;
 }
 
-export function PublicApp({ children, systemStatus }: Props) {
+export function PublicApp({
+  children,
+  systemStatus,
+  hideInProgressSystemNotification,
+}: Props) {
   return (
     <>
-      <SystemStatusNotification systemStatus={systemStatus} />
+      {!hideInProgressSystemNotification && (
+        <SystemStatusNotification systemStatus={systemStatus} />
+      )}
       <PageContent>
         <header className="flex py-4 mb-8 border-b border-gray-600">
           <div className="flex-grow">

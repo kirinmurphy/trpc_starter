@@ -14,7 +14,7 @@ interface SuperAdminCreationFormProps {
   confirmPassword: string;
 }
 
-export function SuperAdminCreationForm({ userId }: { userId: string }) {
+export function SuperAdminSetupForm({ userId }: { userId: string }) {
   const navigate = useNavigate();
 
   const {
