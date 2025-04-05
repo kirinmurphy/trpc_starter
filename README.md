@@ -9,7 +9,8 @@ App starter built with Bun, Typescript, tRPC and React
     <td>
       • <a href="./docs/auth.md">Account creation with email verification</a><br>
       • Authentication (& refresh) session management<br>
-      • <a href="./docs/password_reset.md">Password reset workflow</a>
+      • <a href="./docs/password_reset.md">Password reset workflow</a><br>
+      • Dev and production specific <a href="./docs/super_admin_setup.md">super admin setup</a> integrated into build process.
     </td>
   </tr>
   <tr>

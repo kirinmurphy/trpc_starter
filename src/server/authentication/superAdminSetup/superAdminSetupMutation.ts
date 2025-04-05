@@ -2,16 +2,15 @@ import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { getPool } from '../../db/pool';
 import { SQL_COMPLETE_USER_ADMIN_SETUP } from '../../db/sql';
+import { writeSystemStatus } from '../../systemStatus/systemStatus';
+import { SYSTEM_STATUS } from '../../systemStatus/types';
 import { ContextType } from '../types';
 import {
   resetPasswordBaseFields,
   checkIfConfirmPasswordMatches,
   userNameSchema,
 } from '../authFormsSchemas';
-import {
-  SYSTEM_STATUS,
-  writeSystemStatus,
-} from '../../systemStatus/systemStatus';
+import { TRPCError } from '@trpc/server';
 
 export const SuperAdminSetupSchema = z
   .object({
@@ -46,11 +45,22 @@ export async function superAdminSetupMutation({
     ]);
     console.log('result', result);
     const systemStatusUpdated = writeSystemStatus(SYSTEM_STATUS.READY);
-    console.log('systemStatusUpdated', systemStatusUpdated);
+    if (!systemStatusUpdated) {
+      console.warn(
+        'System status update failed, but user setup completed successfully'
+      );
+    }
 
     return { success: true };
   } catch (err: unknown) {
-    // TODO PR: re-trigger email send
-    throw 'Unable to reset password: ' + err;
+    console.error('super admin setup failed', err);
+    writeSystemStatus(SYSTEM_STATUS.IN_PROGRESS);
+
+    throw new TRPCError({
+      code: 'INTERNAL_SERVER_ERROR',
+      message:
+        'Unable to complete account setup, please wait and try again.  If you continue to face problems, please check the build logs and rebuild the application if necessary.',
+      cause: err,
+    });
   }
 }

@@ -3,6 +3,7 @@ import { trpcService } from '../../trpcService/trpcClientService';
 import { ROUTE_URLS } from '../../routing/routeUrls';
 import { LogoutButton } from './LogoutButton';
 import { UserContext } from './UserContext';
+import { PageContent } from '../../widgets/PageContent';
 
 interface AuthenticatedAppProps {
   children: React.ReactNode;
@@ -26,7 +27,7 @@ export function AuthenticatedApp({ children }: AuthenticatedAppProps) {
   }
 
   return (
-    <>
+    <PageContent>
       <header className="flex pb-4 mb-8 border-b">
         <div className="flex-grow">
           <Link to={ROUTE_URLS.publicHomepage} preload={false}>
@@ -43,6 +44,6 @@ export function AuthenticatedApp({ children }: AuthenticatedAppProps) {
       <UserContext.Provider value={user}>
         <main>{children}</main>
       </UserContext.Provider>
-    </>
+    </PageContent>
   );
 }

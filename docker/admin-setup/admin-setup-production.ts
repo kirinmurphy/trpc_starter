@@ -8,12 +8,10 @@ import {
   SQL_CREATE_SUPER_ADMIN_USER,
 } from '../../src/server/db/sql';
 import { getUniqueToken } from '../../src/server/authentication/utils/getUniqueToken';
-import { validateSuperAdminEmail } from './utils/validateSuperAdminEmail';
+import { validateSuperAdminEmailFormat } from './utils/validateSuperAdminEmail';
 import { sendSuperAdminSetupEmail } from './utils/sendSuperAdminSetupEmail';
-import {
-  SYSTEM_STATUS,
-  writeSystemStatus,
-} from '../../src/server/systemStatus/systemStatus';
+import { writeSystemStatus } from '../../src/server/systemStatus/systemStatus';
+import { SYSTEM_STATUS } from '../../src/server/systemStatus/types';
 
 async function main(): Promise<void> {
   const pool = getPool();
@@ -29,7 +27,7 @@ async function main(): Promise<void> {
       return;
     }
 
-    const email = validateSuperAdminEmail(process.env.SUPER_ADMIN_EMAIL);
+    const email = validateSuperAdminEmailFormat(process.env.SUPER_ADMIN_EMAIL);
 
     console.log('No super admin found, creating for: ', email);
 
@@ -83,7 +81,7 @@ async function createProdSuperAdmin(
     const result: QueryResult = await client.query(
       SQL_CREATE_SUPER_ADMIN_USER,
       // TODO: Remove after make registration UI workflow
-      ['Site Owner Person', email, hashedPassword, 'super_admin']
+      ['Unverified Super Admin', email, hashedPassword, 'super_admin']
     );
 
     const userId = result.rows[0]?.id;
