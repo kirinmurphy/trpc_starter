@@ -10,6 +10,8 @@ export function createPublicRoute<TLoaderData = unknown>(
 ) {
   const { path, component: UserComponent, routeLoader, ...safeOptions } = props;
 
+  const hideInProgressSystemNotification = path === ROUTE_URLS.superAdminSetup;
+
   return createRoute({
     ...safeOptions,
     path,
@@ -28,7 +30,11 @@ export function createPublicRoute<TLoaderData = unknown>(
       return { appState };
     },
     component: () => (
-      <PublicRouteWrapper path={path} children={UserComponent} />
+      <PublicRouteWrapper
+        path={path}
+        children={UserComponent}
+        hideInProgressSystemNotification={hideInProgressSystemNotification}
+      />
     ),
   } as RouteOptions);
 }

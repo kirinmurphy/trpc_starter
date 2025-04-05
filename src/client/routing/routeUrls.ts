@@ -10,5 +10,5 @@ export const ROUTE_URLS = {
   resetPassword: '/reset-password',
   superAdminSetup: '/admin-setup',
   // TODO PR: create fail page
-  superAdminSetupFail: '/resend-admin-setup-email',
+  superAdminSetupFailed: '/resend-admin-setup-email',
 } as const;

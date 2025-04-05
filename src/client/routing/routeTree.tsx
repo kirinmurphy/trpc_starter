@@ -9,13 +9,14 @@ import { RequestResetPasswordEmail } from '../modules/public/authenticating/rese
 import { VerifyPasswordResetToken } from '../modules/public/authenticating/resetPassword/VerifyPasswordResetToken';
 import { tokenVerificationLoader } from '../utils/tokenVerificationLoader';
 import { trpcVanillaClient } from '../trpcService/trpcClientService';
+import { VerifySuperAdminSetupToken } from '../modules/public/authenticating/superAdminSetup/VerifySuperAdminSetupToken';
 import { invalidateAuthCheckQuery } from '../trpcService/invalidateQueries';
 import { ROUTE_URLS } from './routeUrls';
 import { LoginRedirectWrapper } from './LoginRedirectWrapper';
-import { VerifySuperAdminSetupToken } from '../modules/public/authenticating/superAdminCreation/VerifySuperAdminSetupToken';
 import { createAuthenticatedRoute } from './createRouteHelpers/createAuthenticatedRoute';
 import { createPublicRoute } from './createRouteHelpers/createPublicRoute';
 import { rootRoute } from './createRouteHelpers/rootRoute';
+import { SuperAdminSetupFailed } from '../modules/public/authenticating/superAdminSetup/SuperAdminSetupFailed';
 
 // -- PUBLIC ROUTES
 const publicHomepageRoute = createPublicRoute({
@@ -88,9 +89,14 @@ const superAdminSetupRoute = createPublicRoute({
     >({
       token,
       verifyTokenProcedure: trpcVanillaClient.auth.verifySuperAdminSetupToken,
-      redirectToOnError: ROUTE_URLS.superAdminSetupFail,
+      redirectToOnError: ROUTE_URLS.superAdminSetupFailed,
     });
   },
+});
+
+const superAdminSetupFailRoute = createPublicRoute({
+  path: ROUTE_URLS.superAdminSetupFailed,
+  component: SuperAdminSetupFailed,
 });
 
 // -- AUTHENTICATED ROUTES
@@ -108,4 +114,5 @@ export const routeTree = rootRoute.addChildren([
   requestResetPasswordEmailRoute,
   resetPasswordRoute,
   superAdminSetupRoute,
+  superAdminSetupFailRoute,
 ]);

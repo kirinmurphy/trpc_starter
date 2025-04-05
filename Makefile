@@ -12,7 +12,7 @@ run-dev:
 	$(DC) up
 
 .PHONY: build-dev
-build-dev: clean-dev
+build-dev: 
 	$(DC) build app
 
 .PHONY: build-dev-no-cache
@@ -47,7 +47,7 @@ run-tests:
 	fi
 
 .PHONY: build-tests
-build-tests: clean-tests
+build-tests: 
 	$(DCT) build cypress
 
 .PHONY: build-tests-no-cache
@@ -73,7 +73,7 @@ run-prod:
 	$(DCP) up
 
 .PHONY: build-prod
-build-prod: clean-prod
+build-prod: 
 	$(DCP) build app
 
 .PHONY: build-prod-no-cache

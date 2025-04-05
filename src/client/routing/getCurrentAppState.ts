@@ -1,6 +1,6 @@
 import { trpcVanillaClient } from '../trpcService/trpcClientService';
 import { refreshTokens } from '../trpcService/refreshTokens';
-import { SYSTEM_STATUS } from '../../server/systemStatus/systemStatus';
+import { SYSTEM_STATUS } from '../../server/systemStatus/types';
 
 interface ReturnProps {
   isAuthenticated: boolean;

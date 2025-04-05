@@ -1,4 +1,5 @@
-import { SYSTEM_STATUS, isSystemReady } from '../systemStatus/systemStatus';
+import { isSystemReady } from '../systemStatus/systemStatus';
+import { SYSTEM_STATUS } from '../systemStatus/types';
 import { ContextType } from './types';
 
 interface Props {

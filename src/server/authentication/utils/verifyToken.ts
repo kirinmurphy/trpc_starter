@@ -66,6 +66,9 @@ export async function verifyToken(
     await client.query('BEGIN');
     try {
       await client.query(SQL_SET_USER_AS_VERIFIED, [userId]);
+      // TODO PR: This deletes the token before they complete the form,
+      // so if they navigate away and return, they will have to request a new token
+      // is this better?  or should we delete the token only after the form is submitted?
       await client.query(deleteTokenSql, [token]);
       await client.query('COMMIT');
     } catch (err) {
