@@ -8,28 +8,30 @@ import {
   SQL_CREATE_SUPER_ADMIN_USER,
 } from '../../src/server/db/sql';
 import { getUniqueToken } from '../../src/server/authentication/utils/getUniqueToken';
-import { validateSuperAdminEmailFormat } from './utils/validateSuperAdminEmail';
+import { validateSuperAdminEmailFormat } from './utils/validateSuperAdminEmailFormat';
 import { sendSuperAdminSetupEmail } from './utils/sendSuperAdminSetupEmail';
 import { writeSystemStatus } from '../../src/server/systemStatus/systemStatus';
 import { SYSTEM_STATUS } from '../../src/server/systemStatus/types';
+
+const superAdminEmail = process.env.SUPER_ADMIN_EMAIL;
 
 async function main(): Promise<void> {
   const pool = getPool();
   const client = await pool.connect();
 
   try {
-    console.log('Checking for existing super admin...');
+    console.log('Checking for existing SuperAdmin...');
 
     const superAdminExists = await checkSuperAdminExists(pool);
 
     if (superAdminExists) {
-      console.log('Super Admin user already exists, skipping creation');
+      console.log('SuperAdmin user already exists, skipping creation');
       return;
     }
 
-    const email = validateSuperAdminEmailFormat(process.env.SUPER_ADMIN_EMAIL);
+    console.log('SuperAdmin not found, creating for: ', superAdminEmail);
 
-    console.log('No super admin found, creating for: ', email);
+    const email = validateSuperAdminEmailFormat(superAdminEmail);
 
     await client.query('BEGIN');
 
@@ -51,7 +53,7 @@ async function main(): Promise<void> {
   } catch (err) {
     await client.query('ROLLBACK');
 
-    throw new Error(`Production super admin setup failed: ${err.message}`);
+    throw new Error(`PRODUCTION BUILD FAILED: ${err.message}`);
   } finally {
     client.release();
   }
@@ -59,7 +61,7 @@ async function main(): Promise<void> {
 
 if (require.main === module) {
   main().catch((err) => {
-    console.error('Unhandled error in admin-setup-prod.ts: ', err);
+    console.error(err.message);
     process.exit(1);
   });
 }
@@ -81,13 +83,13 @@ async function createProdSuperAdmin(
     const result: QueryResult = await client.query(
       SQL_CREATE_SUPER_ADMIN_USER,
       // TODO: Remove after make registration UI workflow
-      ['Unverified Super Admin', email, hashedPassword, 'super_admin']
+      ['Unverified SuperAdmin', email, hashedPassword, 'super_admin']
     );
 
     const userId = result.rows[0]?.id;
 
     if (!userId) {
-      throw new Error('Failed to create super admin user');
+      throw new Error('Failed to create SuperAdmin user');
     }
 
     const verificationToken = getUniqueToken();
@@ -101,7 +103,7 @@ async function createProdSuperAdmin(
 
     return { verificationToken };
   } catch (err) {
-    throw new Error(`Error creating super admin user: ${err.message}`);
+    throw new Error(`Error creating SuperAdmin user: ${err.message}`);
   }
 }
 
@@ -121,7 +123,7 @@ async function handleSendingSuperAdminEmail(props: {
 
     console.log('Setup email sent sucessfully');
   } catch (emailErr) {
-    const errMsg = `Failed to send super admin setup email: ${emailErr.message}`;
+    const errMsg = `Failed to send SuperAdmin setup email: ${emailErr.message}`;
     throw new Error(errMsg);
   }
 }

@@ -2,7 +2,9 @@ import { z } from 'zod';
 
 export function validateSuperAdminEmailFormat(email?: string): string {
   if (!email) {
-    throw new Error('SUPER_ADMIN_EMAIL env variable is required for setup.');
+    throw new Error(
+      'Please supply a SUPER_ADMIN_EMAIL in your environment variables.  You will receive an email at that address to complete the setup for your app.'
+    );
   }
 
   try {

@@ -1,10 +1,11 @@
 # Super Admin Setup 
 ## Production Workflow 
-- Initial production build requires a SUPER_ADMIN_EMAIL environment variable to initialize admin creation.  
-- Product build sends email to SUPER_ADMIN_EMAIL address
-- A missing or invalid environment variable will fail the initial build
-- Super admin form allows site owner to update name and email 
-- A resend verification email option is available if admin setup failed 
+- Initial production build requires a SUPER_ADMIN_EMAIL environment variable to initialize admin setup.  
+- Production build sends email to SUPER_ADMIN_EMAIL address.
+- A missing or invalid environment variable will fail the initial build.
+- Failure to confirm email has been sent will fail the initial build.
+- Email verification link takes site owner to setup form to complete admin account setup. 
+- A resend verification email option is available if admin setup fails
 
 ```mermaid
 %%{init: {
@@ -48,12 +49,12 @@ graph TD
     
     EmailSent -->|"Success"| UserReceiveEmail["User receives email"]
     UserReceiveEmail --> UserClicksLink["User clicks reset link"]
-    UserClicksLink --> RenderResetScreen["Render password reset screen"]
-    RenderResetScreen --> UserSetsPassword["User sets password"]
+    UserClicksLink --> RenderResetScreen["Load admin setup form"]
+    RenderResetScreen --> UserSetsPassword["User sets name and password"]
     
     UserSetsPassword -->|"Success"| MarkSetupComplete["Mark setup complete"]
     MarkSetupComplete --> SetReadyState(["Set app state 'ready'"])
-    UserSetsPassword -->|"Failure"| PasswordResetFail(["Redirect to change password page"])
+    UserSetsPassword -->|"Failure"| PasswordResetFail(["Prompts user to resend verification email."])
     PasswordResetFail -.-> UserReceiveEmail
     
     classDef start fill:#0066cc
@@ -78,13 +79,13 @@ Follow Up Successful Build
 Initial Failed Build (missing SUPER_ADMIN_EMAIL env variable)
 ![Failed Build with missing SUPER_ADMIN_EMAIL](./images/super_admin_setup_prod_03.png)
 ---
-![App In Progress Notification](./images/super_admin_setup_prod_04.png)
+![App In Progress Notification](./images/super_admin_setup_prod_05.png)
 ---
-![Super Admin Setup Email](./images/super_admin_setup_prod_05.png)
+![Super Admin Setup Email](./images/super_admin_setup_prod_06.png)
 ---
-![Super Admin Setup Form](./images/super_admin_setup_prod_06.png)
+![Super Admin Setup Form](./images/super_admin_setup_prod_07.png)
 ---
-![Super Admin Setup Failed](./images/super_admin_setup_prod_07.png)
+![Super Admin Setup Failed](./images/super_admin_setup_prod_08.png)
 ---
 
 ## DEV Workflow 

@@ -33,7 +33,6 @@ if [ $? -ne 0 ]; then
   echo "Super admin setup failed"
   exit 1
 fi 
-echo "Super admin setup email sent" 
 
 echo "Starting application..."
 exec bun run start
