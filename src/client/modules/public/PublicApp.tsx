@@ -4,7 +4,6 @@ import { SYSTEM_STATUS } from '../../../server/systemStatus/types';
 import { ROUTE_URLS } from '../../routing/routeUrls';
 import { StyledButton } from '../../widgets/Button';
 import { ActiveLink } from '../../widgets/ActiveLink';
-import { SuperAdminDevAutoLogin } from './authenticating/SuperAdminDevAutoLogin';
 import { SystemStatusNotification } from './SystemStatusNotification';
 import { PageContent } from '../../widgets/PageContent';
 
@@ -42,7 +41,6 @@ export function PublicApp({
                 <StyledButton>SIGN UP</StyledButton>
               </ActiveLink>
             </div>
-            <SuperAdminDevAutoLogin />
           </div>
         </header>
         <main>{children}</main>

@@ -7,13 +7,14 @@ import { SimpleForm } from '../../../../widgets/forms/SimpleForm';
 import { InputField } from '../../../../widgets/forms/InputField';
 import { useFormState } from '../../../../widgets/forms/utils/useFormState';
 import { InlineNotification } from '../../../../widgets/InlineNotification/InlineNotification';
-import { GetNewVerificationEmail } from '../createAccount/GetNewVerificationEmail';
 import { ROUTE_URLS } from '../../../../routing/routeUrls';
+import { useNotificationQueryParam } from '../../../../widgets/InlineNotification/useNotificationQueryParam';
+import { GetNewVerificationEmail } from '../createAccount/GetNewVerificationEmail';
+import { SuperAdminDevAutoLogin } from '../SuperAdminDevAutoLogin';
 import {
   loginNotifications,
   LoginNotificationType,
 } from './loginNotifications';
-import { useNotificationQueryParam } from '../../../../widgets/InlineNotification/useNotificationQueryParam';
 
 interface LoginProps {
   onLoginSuccess?: () => void;
@@ -55,7 +56,11 @@ export function Login({ onLoginSuccess }: LoginProps) {
   };
 
   return (
-    <>
+    <div>
+      <div className="text-right">
+        <SuperAdminDevAutoLogin />
+      </div>
+
       {!isUnverified && (
         <div className="max-w-md mx-auto">
           <SimpleForm
@@ -104,6 +109,6 @@ export function Login({ onLoginSuccess }: LoginProps) {
           />
         </>
       )}
-    </>
+    </div>
   );
 }
