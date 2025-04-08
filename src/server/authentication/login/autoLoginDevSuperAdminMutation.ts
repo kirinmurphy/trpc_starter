@@ -3,12 +3,15 @@ import { DEV_SUPER_ADMIN } from '../../../../docker/admin-setup/utils/superAdmin
 import { ContextType } from '../types';
 import { loginUserMutation } from './loginUserMutation';
 
+const nodeEnv = process.env.NODE_ENV;
+const isValidEnvironment = nodeEnv === 'development' || nodeEnv === 'test';
+
 export async function autoLoginDevSuperAdminMutation(props: {
   ctx: ContextType;
 }) {
   const { ctx } = props;
 
-  if (process.env.NODE_ENV !== 'development') {
+  if (!isValidEnvironment) {
     throw new TRPCError({
       code: 'FORBIDDEN',
       message: 'This endpoint is only available in development mode.',

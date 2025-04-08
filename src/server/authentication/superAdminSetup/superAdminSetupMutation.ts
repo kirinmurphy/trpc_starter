@@ -38,12 +38,12 @@ export async function superAdminSetupMutation({
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    const result = await getPool().query(SQL_COMPLETE_USER_ADMIN_SETUP, [
+    await getPool().query(SQL_COMPLETE_USER_ADMIN_SETUP, [
       userId,
       username,
       hashedPassword,
     ]);
-    console.log('result', result);
+
     const systemStatusUpdated = writeSystemStatus(SYSTEM_STATUS.READY);
     if (!systemStatusUpdated) {
       console.warn(

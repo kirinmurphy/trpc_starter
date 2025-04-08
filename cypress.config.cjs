@@ -1,10 +1,18 @@
 const { defineConfig } = require('cypress');
-const { verifyTestEnvironment, cleanupTestUsers } = require('./cypress/support/tasks/db.cjs');
-const { getVerificationToken, getPasswordResetToken } = require('./cypress/support/tasks/auth.cjs'); 
+const {
+  verifyTestEnvironment,
+  cleanupTestUsers,
+  createTestPool,
+} = require('./cypress/support/tasks/db.cjs');
+const {
+  getVerificationToken,
+  getPasswordResetToken,
+} = require('./cypress/support/tasks/auth.cjs');
 const mailhogApi = require('./cypress/plugins/mailhog.cjs');
 
-require('dotenv').config();
+const testPool = createTestPool();
 
+require('dotenv').config();
 
 module.exports = defineConfig({
   e2e: {
@@ -47,15 +55,15 @@ module.exports = defineConfig({
         async getPasswordResetToken({ email }) {
           return await getPasswordResetToken({ email });
         },
-        ...mailhogApi
+        ...mailhogApi,
       });
 
       return config;
     },
     baseUrl: process.env.INTERNAL_CLIENT_URL,
     specPattern: 'cypress/e2e/**/*.{ts,tsx}',
-    supportFile: 'cypress/support/e2e.ts',   
+    supportFile: 'cypress/support/e2e.ts',
     defaultCommandTimeout: 10000,
-    requestTimeout: 10000
+    requestTimeout: 10000,
   },
 });
