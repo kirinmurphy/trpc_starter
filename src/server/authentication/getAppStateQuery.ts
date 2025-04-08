@@ -16,7 +16,6 @@ export async function getAppStateQuery(props: Props): Promise<ReturnProps> {
   const { ctx } = props;
   const { userId } = ctx;
 
-  // TODO PR: is this redundant with just reading the systemStatus
   const systemStatus = isSystemReady()
     ? SYSTEM_STATUS.READY
     : SYSTEM_STATUS.IN_PROGRESS;

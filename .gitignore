@@ -32,7 +32,6 @@ cypress/downloads
 
 docs/local
 
-
 nginx/includes/cors_map.conf
 nginx/includes/cors_options.conf
 nginx/includes/rate_limits.conf
