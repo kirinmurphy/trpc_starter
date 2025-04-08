@@ -75,6 +75,7 @@ services:
       - ./nginx/templates:/etc/nginx/templates:ro
       - ./nginx/nginx.conf:/etc/nginx/conf:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - system_status:/app/docker/system_status
     depends_on:
       app:
         condition: service_healthy

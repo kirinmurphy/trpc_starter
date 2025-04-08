@@ -10,6 +10,10 @@ interface SystemStatusData {
 
 const SYSTEM_STATUS_DIR = path.join(process.cwd(), 'docker', 'system_status');
 const SYSTEM_STATUS_FILE = path.join(SYSTEM_STATUS_DIR, 'system_status.json');
+const NGINX_STATUS_FILE = path.join(
+  SYSTEM_STATUS_DIR,
+  'nginx_block_admin_setup'
+);
 
 export function ensureSystemStatusDirectory(): void {
   if (!fs.existsSync(SYSTEM_STATUS_DIR)) {
@@ -49,8 +53,14 @@ export function writeSystemStatus(
       ...(adminEmail && { adminEmail }),
     };
 
-    const fileName = JSON.stringify(systemStatusData, null, 2);
-    fs.writeFileSync(SYSTEM_STATUS_FILE, fileName, 'utf8');
+    const jsonStatus = JSON.stringify(systemStatusData, null, 2);
+    fs.writeFileSync(SYSTEM_STATUS_FILE, jsonStatus, 'utf8');
+
+    if (systemStatus === SYSTEM_STATUS.READY) {
+      fs.writeFileSync(NGINX_STATUS_FILE, '', 'utf8');
+    } else if (fs.existsSync(NGINX_STATUS_FILE)) {
+      fs.unlinkSync(NGINX_STATUS_FILE);
+    }
     return true;
   } catch (err) {
     console.error('Error writing app state:', err);
