@@ -30,14 +30,14 @@ async function main(): Promise<void> {
       console.warn('Failed to set app state to READY');
     }
   } catch (err) {
-    console.error('Dev setup failed: ', err);
+    console.error('❌ Dev setup failed: ', err);
     process.exit(1);
   }
 }
 
 if (require.main === module) {
   main().catch((err) => {
-    console.error('Unhandled error in dev-setup.ts: ', err);
+    console.error('❌ Unhandled error in dev-setup.ts: ', err);
     process.exit(1);
   });
 }
@@ -75,7 +75,7 @@ async function createDevSuperAdmin(pool: Pool) {
       client.release();
     }
   } catch (err) {
-    console.error('Error creating super admin: ', err);
+    console.error('❌ Error creating super admin: ', err);
     throw err;
   }
 }
