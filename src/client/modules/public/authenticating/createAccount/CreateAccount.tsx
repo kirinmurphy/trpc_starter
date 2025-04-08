@@ -46,7 +46,6 @@ export function CreateAccount() {
       mutate({
         email: email.trim(),
         password: password.trim(),
-        // TODO PR: change to username
         username: username.trim(),
       });
     } catch (err) {

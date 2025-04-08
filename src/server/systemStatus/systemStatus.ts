@@ -28,7 +28,6 @@ export function systemStatusExists() {
 export function readSystemStatus(): SystemStatusData | null {
   ensureSystemStatusDirectory();
   if (!systemStatusExists()) {
-    // TODO PR: dead end?
     return null;
   }
 
