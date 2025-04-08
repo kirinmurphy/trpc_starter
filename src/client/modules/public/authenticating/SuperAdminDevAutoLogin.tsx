@@ -26,7 +26,7 @@ export function SuperAdminDevAutoLogin() {
 
   return (
     <div className="mb-4 text-right">
-      <Button onClick={handleAutoLogin} type="inline">
+      <Button onClick={handleAutoLogin}>
         <span className="text-sm">SuperAdmin Login</span>
       </Button>
     </div>
