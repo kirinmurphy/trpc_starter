@@ -48,12 +48,12 @@ async function main(): Promise<void> {
     if (systemStatusUpdated) {
       console.log('App state set to IN_PROGRESS');
     } else {
-      console.warn('Failed to set app state to IN_PROGRESS');
+      console.warn('❌ Failed to set app state to IN_PROGRESS');
     }
   } catch (err) {
     await client.query('ROLLBACK');
 
-    throw new Error(`PRODUCTION BUILD FAILED: ${err.message}`);
+    throw new Error(`❌ PRODUCTION BUILD FAILED: ${err.message}`);
   } finally {
     client.release();
   }
@@ -61,7 +61,7 @@ async function main(): Promise<void> {
 
 if (require.main === module) {
   main().catch((err) => {
-    console.error(err.message);
+    console.error('❌ ', err.message);
     process.exit(1);
   });
 }
@@ -89,7 +89,7 @@ async function createProdSuperAdmin(
     const userId = result.rows[0]?.id;
 
     if (!userId) {
-      throw new Error('Failed to create SuperAdmin user');
+      throw new Error('❌ Failed to create SuperAdmin user');
     }
 
     const verificationToken = getUniqueToken();
@@ -103,7 +103,7 @@ async function createProdSuperAdmin(
 
     return { verificationToken };
   } catch (err) {
-    throw new Error(`Error creating SuperAdmin user: ${err.message}`);
+    throw new Error(`❌ Error creating SuperAdmin user: ${err.message}`);
   }
 }
 
@@ -117,13 +117,13 @@ async function handleSendingSuperAdminEmail(props: {
     const emailResult = await sendSuperAdminSetupEmail(props);
 
     if (!emailResult.success) {
-      const failedSendErrorMsg = `Failed to send email: ${emailResult.error?.message || 'Unknown Error'}`;
+      const failedSendErrorMsg = `❌ Failed to send email: ${emailResult.error?.message || 'Unknown Error'}`;
       throw new Error(failedSendErrorMsg);
     }
 
     console.log('Setup email sent sucessfully');
   } catch (emailErr) {
-    const errMsg = `Failed to send SuperAdmin setup email: ${emailErr.message}`;
+    const errMsg = `❌ Failed to send SuperAdmin setup email: ${emailErr.message}`;
     throw new Error(errMsg);
   }
 }
