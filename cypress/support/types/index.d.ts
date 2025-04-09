@@ -81,6 +81,13 @@ declare global {
         confirmPassword?: string;
       }) => Chainable<void>;
       getPasswordResetToken: (props: { email: string }) => Chainable<string>;
+      task(event: 'writeSystemStatusToInProgress'): Chainable<boolean>;
+      task(event: 'getNewSuperAdminToken'): Chainable<{
+        token: string;
+        userId: string;
+        email: string;
+        stringifiedResult: string;
+      }>;
     }
   }
 }

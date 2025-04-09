@@ -7,6 +7,8 @@ const {
   getVerificationToken,
   getPasswordResetToken,
 } = require('./cypress/support/tasks/auth.cjs');
+const revertToInProgressSystemStatus = require('./cypress/support/tasks/revertToInProgressSystemStatus.cjs');
+
 const mailhogApi = require('./cypress/plugins/mailhog.cjs');
 
 require('dotenv').config();
@@ -53,6 +55,7 @@ module.exports = defineConfig({
           return await getPasswordResetToken({ email });
         },
         ...mailhogApi,
+        ...revertToInProgressSystemStatus,
       });
 
       return config;

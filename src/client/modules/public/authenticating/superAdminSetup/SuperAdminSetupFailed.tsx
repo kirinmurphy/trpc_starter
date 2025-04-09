@@ -5,7 +5,10 @@ export function SuperAdminSetupFailed() {
     console.error("couldn't send that shizz");
   };
   return (
-    <div className="text-center max-w-[540px] mx-auto flex flex-col gap-5">
+    <div
+      className="text-center max-w-[540px] mx-auto flex flex-col gap-5"
+      data-testid="super-admin-failed"
+    >
       <div>
         We were unable to complete your admin account setup. You can request a
         new verification email and try again.
