@@ -16,7 +16,10 @@ export function SystemStatusNotification({ systemStatus }: Props) {
   }
 
   return (
-    <div className="bg-red-900 text-white">
+    <div
+      className="bg-red-900 text-white"
+      data-testid="sytem-status-notification"
+    >
       <PageContent className="py-1">
         <div>
           Your app is almost ready to launch. Check your email to complete your

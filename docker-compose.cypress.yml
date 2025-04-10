@@ -13,6 +13,7 @@ services:
   app:
     environment:
       <<: *test-app-defaults
+      SUPER_ADMIN_EMAIL: 'superadmin@local.dev'
 
   cypress:
     build:
@@ -48,6 +49,7 @@ services:
       - ./cypress/fixtures:/e2e/cypress/fixtures:ro
       - ./cypress/plugins:/e2e/cypress/plugins:ro
       - ./cypress.config.cjs:/e2e/cypress.config.cjs:ro
+      - system_status:/app/docker/system_status
 
       # Writable output directories
       - type: bind

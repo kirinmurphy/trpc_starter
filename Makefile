@@ -21,7 +21,7 @@ build-dev-no-cache: clean-dev
 
 .PHONY: logs-dev
 logs-dev:
-	$(DC) logs dev
+	$(DC) logs app --follow app
 
 .PHONY: dev-all
 dev-all: build-dev run-dev logs-dev
