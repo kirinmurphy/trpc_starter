@@ -107,7 +107,7 @@ graph TD
     ContinueStartup --> BuildComplete[Build Complete]
     
     %% User flow from homepage
-    Start2[User Navigates to App] --> ClickHomeButton["Click 'Super Admin Login' button"]
+    Start2[User Navigates to /login] --> ClickHomeButton["Click 'Super Admin Login' button"]
     ClickHomeButton --> AutoLoginProcess["Auto-login as super admin"]
         
     AutoLoginProcess --> AdminDashboard["Access admin dashboard"]
