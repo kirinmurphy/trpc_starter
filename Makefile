@@ -70,7 +70,7 @@ clean-tests:
 ## -- PRODUCTION ------- ##
 .PHONY: run-prod
 run-prod:
-	$(DCP) up
+	$(DCP) up -d
 
 .PHONY: build-prod
 build-prod: 
