@@ -36,54 +36,8 @@ Steps to deploy this app on a  Digital Ocean droplet
 - Setup your domain/subdomain to point to your Digital Ocean IP
 - set env var `WEBSITE_DOMAIN=yourdomain.com` 
 
-## SSL
+## Github Sync
+in `/opt/trpc_starter` run `git pull origin main`
+
+## Traefik Install 
 - update env: `app update` 
-
-- nginx
-  - install host nginx (different from nginx in docker): `apt install nginx -y` 
-  - start nginx: `sudo systemctl start nginx`
-  - enable to start on boot: `sudo systemctl enable nginx`
-  - confirm nginx is running: `sudo systemctl status nginx` 
-  - add these to your env file 
-    - `NGINX_HTTP_PORT=8080` 
-    - `NGINX_HTTPS_PORT=8443`
-  - create the host nginx config file 
-    - `nano /etc/nginx/sites-available/GITHUB_REPO_NAME` 
-    - add contents of  [Host Nginx config](#host-nginx-config)
-  - enable host nginx and setup ssl with [these commands](#enable-host-nginx) 
-
-
-
-### Host Nginx config 
-```
-server {
-  listen 80;
-  server_name WEBSITE_DOMAIN;
-  
-  location / {
-    proxy_pass http://localhost:8080;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_buffering off;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-  }
-}
-```
-
-### Enable host Nginx 
-```
-ln -s /etc/nginx/sites-available/GITHUB_REPO_NAME /etc/nginx/sites-enabled/
-nginx -t
-systemctl reload nginx 
-
-// install certbot (SSL certificate creation)
-snap install --classic certbot
-ln -s /snap/bin/certbot /usr/bin/certbot
-
-// get SSL cert
-certbot --nginx -d WEBSITE_DOMAIN
-```
