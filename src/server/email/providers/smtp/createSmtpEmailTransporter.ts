@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-interface EmailConfigProps {
+interface SmtpTransporterProps {
   host: string;
   port: number;
   secure: boolean;
@@ -28,9 +28,9 @@ const productionConfig = {
 
 const isProd = process.env.NODE_ENV === 'production';
 
-const emailConfig: EmailConfigProps = isProd ? productionConfig : mailhogConfig;
+const smtpTransportConfig: SmtpTransporterProps = isProd ? productionConfig : mailhogConfig;
 
-export async function createEmailTransporter() {
+export async function createSmtpEmailTransporter() {
   console.log('Creating email transporter for env', process.env.NODE_ENV);
-  return nodemailer.createTransport(emailConfig);
+  return nodemailer.createTransport(smtpTransportConfig);
 }

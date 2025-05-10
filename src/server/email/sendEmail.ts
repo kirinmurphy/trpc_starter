@@ -1,53 +1,18 @@
-import { createEmailTransporter } from './createEmailTransporter';
-import { getMailerError } from './getMailerError';
-import { EmailOptions, EmailResult } from './types';
+import { EmailOptions, EmailProvider, EmailProviderTypes, EmailResult } from './types';
+import { SmtpProvider } from './providers/smtp/SmtpProvider';
+import { SendGridApiProvider } from './providers/SendGridApiProvider';
 
-const websiteDomain = process.env.WEBSITE_DOMAIN;
-const systemEmailDefault = `noreply@${websiteDomain}`;
-const defaultFromEmail =
-  process.env.EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS || systemEmailDefault;
-const defaultFromName =
-  process.env.EMAIL_SERVICE_SYSTEM_EMAIL_SENDER || websiteDomain;
+const providerMap: Record<EmailProviderTypes, EmailProvider> = {
+  [EmailProviderTypes.SENDGRID]: SendGridApiProvider,
+  [EmailProviderTypes.SMTP]: SmtpProvider
+}
 
 export async function sendEmail(props: EmailOptions): Promise<EmailResult> {
-  const {
-    fromEmail = defaultFromEmail,
-    fromSender = defaultFromName,
-    emailTemplate,
-  } = props;
+  const customProvider = process.env.CUSTOM_EMAIL_PROVIDER;
 
-  const transporter = await createEmailTransporter();
-
-  const from = `"${fromSender}" <${fromEmail}>`;
-
-  const html = `
-    <!DOCTYPE html>
-    <html>
-    <head></head>
-    <body>
-      ${emailTemplate}
-    </body>
-    </html>    
-  `;
-
-  try {
-    const info = await transporter.sendMail({
-      ...props,
-      from,
-      html,
-    });
-
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('Email sent: ', props.to, info.messageId);
-    }
-
-    return {
-      success: true,
-      messageId: info.messageId,
-    };
-  } catch (error: unknown) {
-    throw getMailerError({ error, options: props });
-  } finally {
-    transporter.close();
+  if ( customProvider && customProvider in providerMap ) {
+    return providerMap[customProvider as EmailProviderTypes].sendEmail(props);
   }
+  
+  return SmtpProvider.sendEmail(props);
 }
