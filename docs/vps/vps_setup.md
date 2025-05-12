@@ -30,7 +30,7 @@ Steps to deploy this app on a  Digital Ocean droplet
   - ssh into the droplet 
   - `cd opt/GITHUB_REPO_NAME` 
   - set to run docker in detached mode (optional): `sed -i 's/$(DCP) up/$(DCP) up -d/g' Makefile` 
-  - `make run-prod` 
+  - `make prod-up` 
   
 ## Domain
 - Setup your domain/subdomain to point to your Digital Ocean IP

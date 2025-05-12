@@ -40,7 +40,7 @@ jobs:
           ls -la cypress || true
 
       - name: Build test containers
-        run: make build-tests
+        run: make tests-build
 
       # - name: Prepare for test debugging
       #   run: |
@@ -61,7 +61,7 @@ jobs:
       #   run: ./monitor.sh > docker_monitoring.log 2>&1 &
 
       - name: Run tests
-        run: make run-tests FILE=auth_spec
+        run: make tests-up FILE=auth_spec
         id: run_tests
         continue-on-error: false
 
@@ -108,4 +108,4 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: make clean-tests
+        run: make tests-clean

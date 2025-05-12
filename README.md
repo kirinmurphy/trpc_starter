@@ -77,12 +77,12 @@ SUPER_ADMIN_EMAIL=adminemail@gmail.com
 ## Running App With Docker
 
 ### Development commands:
-- **make run-dev**                - Run the application 
-- **make build-dev**              - Clean and build application container
-- **make build-dev-no-cache**     - Clear cache, clean and build dev container
-- **make logs-dev**               - View application logs
+- **make dev-up**                 - Run the application 
+- **make dev-build**              - Clean and build application container
+- **make dev-build-no-cache**     - Clear cache, clean and build dev container
+- **make dev-logs**               - View application logs
 - **make dev-all**                - Run build, start, and logs in sequence
-- **make clean-dev**              - Clean dev containers and volumes
+- **make dev-clean**              - Clean dev containers and volumes
 - **make reload-nginx**           - Update nginx config (no restart needed)
 
 #### Dev URLs
@@ -94,17 +94,18 @@ SUPER_ADMIN_EMAIL=adminemail@gmail.com
 - **make run-test**             - Run cypress tests
 - **make build tests**          - Clean and build cypress container
 - **make build tests-no-cache** - Clear cache, clean and build cypress container
-- **make logs-tests**           - View cypress logs
+- **make tests-logs**           - View cypress logs
 - **make tests-all**            - Clean, build, test, and logs in sequence
-- **make clean-tests**          - Clean tests containers and volumes
+- **make tests-clean**          - Clean tests containers and volumes
 
 ### Production commands:
-- **make run-prod**               - Start the application in production
-- **make build-prod**             - Clean and build production container
-- **make build-prod-no-cache**    - Clear cache and build production container
-- **make logs-prod**              - View production logs
+- **make prod-up**                - Start the application in production
+- **make prod-down**              - Start the application in production
+- **make prod-build**             - Clean and build production container
+- **make prod-build-no-cache**    - Clear cache and build production container
+- **make prod-logs**              - View production logs
 - **make prod-all**               - Run prod build, start, and logs in sequence
-- **make clean-prod**             - Clean prod containers and volumes
+- **make prod-clean**             - Clean prod containers and volumes
 
 ### General 
 - **make help**                   - Show all commands 
