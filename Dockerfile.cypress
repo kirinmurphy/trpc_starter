@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.4
-FROM cypress/included:13.3.0
+FROM cypress/included:13.16.0
 
 WORKDIR /e2e
 

@@ -44,9 +44,13 @@ reload-nginx:
 tests-up:
 	@if [ -n "$(FILE)" ]; then \
 		echo "Running test for: $(FILE)"; \
-		set -o pipefail; $(DCT) up -d mailhog app db nginx && $(DCT) run --rm cypress npx cypress run --spec "cypress/e2e/$(FILE).cy.ts" | grep -v "nginx.*\|.*nginx"; \
+		set -o pipefail; \
+		$(DCT) up -d mailhog app db nginx && \
+		$(DCT) run --rm cypress -- --spec "cypress/e2e/$(FILE).cy.ts" | grep -v "nginx.*\|.*nginx"; \
 	else \
-		set -o pipefail; $(DCT) up -d mailhog app db nginx && $(DCT) run --rm cypress npx cypress run --spec "cypress/e2e/simple.cy.ts" --headless | grep -v "nginx.*\|.*nginx"; \
+		set -o pipefail; \
+		$(DCT) up -d mailhog app db nginx && \
+		$(DCT) run --rm cypress -- --spec "cypress/e2e/simple.cy.ts" | grep -v "nginx.*\|.*nginx"; \
 	fi
 
 .PHONY: tests-down
