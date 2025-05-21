@@ -36,7 +36,7 @@ describe('User Authentication', () => {
     });
 
     describe('successful sign up', () => {
-      it.only('renders the authenticated homepage and then successfully logs out ', () => {
+      it('renders the authenticated homepage and then successfully logs out ', () => {
         cy.contains(DEMO_USER.name).should('be.visible');
         cy.contains(DEMO_USER.email).should('be.visible');
 

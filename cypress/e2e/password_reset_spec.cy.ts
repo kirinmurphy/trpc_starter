@@ -120,7 +120,7 @@ describe('Password Reset Workflow', () => {
         cy.visit(`/reset-password?token=FAKETOKEN23ijook2j3FAKEFAKEk32jk3`);
         cy.url().should('include', '/request-reset-password-email');
         const errorMsg =
-          'There was a problem verifying your account. If you think this is an error, please try again.';
+          'We were unable to verify your email. If you think this is an error, please try again.';
         cy.contains(errorMsg).should('be.visible');
       });
 

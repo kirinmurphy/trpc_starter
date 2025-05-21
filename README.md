@@ -75,15 +75,15 @@ SUPER_ADMIN_EMAIL=adminemail@gmail.com
 
 
 ## Running App With Docker
-
 ### Development commands:
-- **make dev-up**                 - Run the application 
-- **make dev-build**              - Clean and build application container
-- **make dev-build-no-cache**     - Clear cache, clean and build dev container
+- **make dev-up**                 - Start the application 
+- **make dev-down**               - Stop the application
+- **make dev-build**              - Build application container
+- **make dev-build-no-cache**     - Clear cache and build dev container
 - **make dev-logs**               - View application logs
 - **make dev-all**                - Run build, start, and logs in sequence
 - **make dev-clean**              - Clean dev containers and volumes
-- **make reload-nginx**           - Update nginx config (no restart needed)
+- **make reload-nginx**           - Restart nginx service
 
 #### Dev URLs
 - website: `http://localhost`     
@@ -91,24 +91,26 @@ SUPER_ADMIN_EMAIL=adminemail@gmail.com
 
 
 ### CI / Testing commands:
-- **make run-test**             - Run cypress tests
-- **make build tests**          - Clean and build cypress container
-- **make build tests-no-cache** - Clear cache, clean and build cypress container
-- **make tests-logs**           - View cypress logs
-- **make tests-all**            - Clean, build, test, and logs in sequence
-- **make tests-clean**          - Clean tests containers and volumes
+- **make tests-up**               - Run cypress tests (use FILE=filename to run specific test)
+- **make tests-down**             - Stop test containers
+- **make tests-build**            - Build cypress container
+- **make tests-build-no-cache**   - Clear cache and build cypress container
+- **make tests-logs**             - View cypress logs
+- **make tests-all**              - Run tests build, start, and logs in sequence
+- **make tests-clean**            - Clean tests containers and volumes
 
 ### Production commands:
 - **make prod-up**                - Start the application in production
-- **make prod-down**              - Start the application in production
-- **make prod-build**             - Clean and build production container
+- **make prod-down**              - Stop the production application
+- **make prod-build**             - Build production container
 - **make prod-build-no-cache**    - Clear cache and build production container
 - **make prod-logs**              - View production logs
 - **make prod-all**               - Run prod build, start, and logs in sequence
 - **make prod-clean**             - Clean prod containers and volumes
 
-### General 
-- **make help**                   - Show all commands 
+### Utility commands:
+- **make clean-all**              - Clean all containers, systems and volumes
+- **make help**                   - Show all available commands
 
 Notes: 
 - DB Migration is run on every app/production start
