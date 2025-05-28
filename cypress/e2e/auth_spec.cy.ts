@@ -24,6 +24,7 @@ describe('User Authentication', () => {
   });
 
   describe('Create Account', () => {
+
     before(() => {
       cy.verifyTestEnvironment();
       cy.cleanupTestUsers(); // in case prior tests don't complete
@@ -183,7 +184,6 @@ describe('User Authentication', () => {
 
       beforeEach(() => {
         cy.cleanupTestUsers();
-        cy.resetMockEmailServer();
       });
 
       it('fails to send email due to a connection error', () => {

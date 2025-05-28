@@ -72,7 +72,7 @@ tests-build-no-cache: tests-clean
 
 .PHONY: tests-logs
 tests-logs:
-	$(DCT) logs cypress
+	$(DCT) logs app cypress --follow
 
 .PHONY: tests-all
 tests-all: tests-build tests-up tests-logs

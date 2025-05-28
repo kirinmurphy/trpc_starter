@@ -54,10 +54,6 @@ describe('Password Reset Workflow', () => {
     });
 
     describe('request failures', () => {
-      beforeEach(() => {
-        cy.resetMockEmailServer();
-      });
-
       it('renders a form error if email is not sent', () => {
         cy.simulateEmailSendFailure('deliveryError');
         cy.requestPasswordReset({ email: DEMO_USER.email });
@@ -79,12 +75,10 @@ describe('Password Reset Workflow', () => {
 
     afterEach(() => {
       cy.clearEmails();
-      cy.resetMockEmailServer();
     });
 
     describe('verification success', () => {
-      it('allows user to reset password with valid tokenn', () => {
-        expect(1).to.equal(1);
+      it('allows user to reset password with valid token', () => {
         const newPassword = 'NewP@ssword-123';
 
         cy.getPasswordResetToken({ email: DEMO_USER.email })

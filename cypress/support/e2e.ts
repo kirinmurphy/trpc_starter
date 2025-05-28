@@ -4,5 +4,6 @@ import './commands-email';
 import './commands-password-reset';
 
 beforeEach(() => {
+  cy.resetMockEmailServer();
   cy.reload(true);
 });
