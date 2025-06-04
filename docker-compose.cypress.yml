@@ -49,6 +49,8 @@ services:
       - ./cypress/fixtures:/e2e/cypress/fixtures:ro
       - ./cypress/plugins:/e2e/cypress/plugins:ro
       - ./cypress.config.cjs:/e2e/cypress.config.cjs:ro
+      # - ./src:/e2e/src:ro
+
       - system_status:/app/docker/system_status
 
       # Writable output directories

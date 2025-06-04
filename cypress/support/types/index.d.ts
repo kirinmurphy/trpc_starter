@@ -90,6 +90,9 @@ declare global {
         email: string;
         stringifiedResult: string;
       }>;
+      task(event: 'resetEmailProviderMocks'): Chainable<null>;
+      task(event: 'testEmailProvider', options: EmailProviderTestOptions): Chainable<boolean>;
+      task(event: 'testSendGridProvider', options: SendGridTestOptions): Chainable<EmailProviderTestResult>;
     }
   }
 }
