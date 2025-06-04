@@ -5,10 +5,10 @@ source ./docker/check-env.sh
 
 echo "Starting production server..."
 
-echo "Verifying SMTP connectivity..."
-bun run ./docker/verify-smtp.ts
+echo "Verifying Email configuration..."
+bun run ./docker/verify-email.ts
 if [ $? -ne 0 ]; then 
-  echo "SMTP verification failed"
+  echo "Email verification failed"
   exit 1
 fi
 
