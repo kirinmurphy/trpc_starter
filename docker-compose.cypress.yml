@@ -46,9 +46,10 @@ services:
       - ./docker/cypress-run.sh:/e2e/docker/cypress-run.sh:ro
       - ./cypress.config.ts:/e2e/cypress.config.ts:ro
       - ./cypress:/e2e/cypress:ro
-      - system_status:/app/docker/system_status
 
       # Writable output directories
+      - system_status:/app/docker/system_status
+
       - type: bind
         source: ./cypress/videos
         target: /e2e/cypress/videos

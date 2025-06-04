@@ -42,52 +42,10 @@ jobs:
       - name: Build test containers
         run: make tests-build
 
-      # - name: Prepare for test debugging
-      #   run: |
-      #     # Create a script to monitor Docker during test execution
-      #     cat > monitor.sh << 'EOF'
-      #     #!/bin/bash
-      #     echo "Starting Docker monitoring at $(date)"
-      #     for i in {1..30}; do
-      #       echo "---- Docker status check $i at $(date) ----"
-      #       docker ps
-      #       echo ""
-      #       sleep 10
-      #     done
-      #     EOF
-      #     chmod +x monitor.sh
-
-      # - name: Start monitoring
-      #   run: ./monitor.sh > docker_monitoring.log 2>&1 &
-
       - name: Run tests
-        run: make tests-up FILE=auth_spec
+        run: make tests-up
         id: run_tests
         continue-on-error: false
-
-      # - name: Collect debugging information
-      #   if: always()
-      #   run: |
-      #     echo "Docker monitoring log:"
-      #     cat docker_monitoring.log
-
-      #     # Try to find Mailhog logs if it exists
-      #     MAILHOG_CONTAINER=$(docker ps -a | grep -i mail | awk '{print $1}' || echo "")
-      #     if [ -n "$MAILHOG_CONTAINER" ]; then
-      #       echo "Found Mailhog container: $MAILHOG_CONTAINER"
-      #       echo "Mailhog logs:"
-      #       docker logs $MAILHOG_CONTAINER
-      #     else
-      #       echo "No Mailhog container found at end of test"
-      #     fi
-
-      #     # Check Docker Compose project if it exists
-      #     if [ -f "docker-compose.yml" ]; then
-      #       echo "Docker Compose configuration:"
-      #       cat docker-compose.yml
-      #       echo "Docker Compose status:"
-      #       docker-compose ps || echo "docker-compose command failed"
-      #     fi
 
       - name: Check for artifacts
         if: failure()
