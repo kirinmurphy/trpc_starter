@@ -78,5 +78,3 @@ services:
 
   mailhog:
     command: []
-    # command:
-    #   ['-invite-jim', '-jim-linkspeed-min=100', '-jim-linkspeed-max=1000']

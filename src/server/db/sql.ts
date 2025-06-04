@@ -25,6 +25,8 @@ export const SQL_GET_VERIFICATION_RECORD_BY_USERID =
   'SELECT token, email FROM verification_tokens WHERE user_id = $1';
 export const SQL_DELETE_VERIFICATION_RECORD =
   'DELETE FROM verification_tokens WHERE token = $1';
+export const SQL_DELETE_VERIFICATION_RECORDS_BY_USERID = 
+  'DELETE FROM verification_tokens WHERE user_id = $1';
 export const SQL_SET_VERIFICIATION_EMAIL_SEND_STATE =
   'UPDATE verification_tokens SET email_sent_status = $1 WHERE user_id = $2';
 export const SQL_GET_VERIFICATION_EMAIL_SEND_STATE =

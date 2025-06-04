@@ -18,6 +18,10 @@ describe('test in progress systemStatus workflow ', () => {
     cy.task('deleteMockPasswordTokens');
   });
 
+  after(() => {
+    cy.task('writeSystemStatusToReady');
+  });
+
   it('displays notification to complete admin setup', () => {
     cy.visit('/');
     cy.contains(inProgressNotification);

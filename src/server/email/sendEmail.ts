@@ -38,7 +38,7 @@ export async function sendEmail(props: EmailOptions): Promise<EmailResult> {
     });
 
     if (process.env.NODE_ENV !== 'production') {
-      console.log('Email sent: ', info.messageId);
+      console.log('Email sent: ', props.to, info.messageId);
     }
 
     return {

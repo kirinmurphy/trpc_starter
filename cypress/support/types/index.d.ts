@@ -70,6 +70,7 @@ declare global {
       }) => Chainable<string>;
 
       clearEmails: () => Chainable<void>;
+      getAllEmails: () => Chainable<MailhogEmailProps>;
       getLastEmail: (props: { email: string }) => Chainable<MailhogEmailProps>;
       resetMockEmailServer: () => Chainable<void>;
       simulateEmailSendFailure: (type: EmailErrorType) => Chainable<void>;
@@ -82,6 +83,7 @@ declare global {
       }) => Chainable<void>;
       getPasswordResetToken: (props: { email: string }) => Chainable<string>;
       task(event: 'writeSystemStatusToInProgress'): Chainable<boolean>;
+      task(event: 'writeSystemStatusToReady'): Chainable<boolean>;
       task(event: 'getNewSuperAdminToken'): Chainable<{
         token: string;
         userId: string;

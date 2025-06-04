@@ -6,6 +6,7 @@ import {
 } from '../../db/sql';
 import { VERIFICATION_TOKEN_EXPIRY } from '../expiryConstants';
 import { getUniqueToken } from '../utils/getUniqueToken';
+import { createVerificationRecord } from './createVerificationRecord';
 import {
   sendAccountVerificationEmail,
   SendVerificationEmailProps,
@@ -17,18 +18,13 @@ interface Props {
   waitForEmailConfirmation?: boolean;
 }
 
+
 export async function initVerifyAccountFlow(props: Props): Promise<void> {
   const { email, userId, waitForEmailConfirmation = false } = props;
 
-  const verificationToken = getUniqueToken();
-
+  
   try {
-    await getPool().query(SQL_CREATE_VERIFICATION_RECORD, [
-      verificationToken,
-      userId,
-      email,
-      VERIFICATION_TOKEN_EXPIRY,
-    ]);
+    const { verificationToken } = await createVerificationRecord({ userId, email });
 
     const emailPromise = sendVerificationEmailAsync({
       to: email,

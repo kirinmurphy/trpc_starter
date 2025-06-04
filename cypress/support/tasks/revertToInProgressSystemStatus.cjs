@@ -45,14 +45,32 @@ async function deleteMockPasswordTokens() {
   }
 }
 
+
+function writeSystemStatusToReady() {
+  return writeSystemStatusTo('ready');
+}
+
 function writeSystemStatusToInProgress() {
+  return writeSystemStatusTo('in-progress');
+}
+
+
+module.exports = {
+  getNewSuperAdminToken,
+  deleteMockPasswordTokens,
+  writeSystemStatusToInProgress,
+  writeSystemStatusToReady,
+};
+
+
+function writeSystemStatusTo(status) {
   if (!fs.existsSync(SYSTEM_STATUS_DIR)) {
     fs.mkdirSync(SYSTEM_STATUS_DIR, { recursive: true });
   }
 
   fs.writeFileSync(
     SYSTEM_STATUS_FILE,
-    JSON.stringify({ systemStatus: 'in-progress' }, null, 2),
+    JSON.stringify({ systemStatus: status }, null, 2),
     'utf8'
   );
 
@@ -62,9 +80,3 @@ function writeSystemStatusToInProgress() {
 
   return true;
 }
-
-module.exports = {
-  getNewSuperAdminToken,
-  deleteMockPasswordTokens,
-  writeSystemStatusToInProgress,
-};

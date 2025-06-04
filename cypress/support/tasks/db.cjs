@@ -4,6 +4,7 @@ require('dotenv').config();
 async function cleanupTestUsers () {
   const testPool = createTestPool();
   const client = await testPool.connect();
+  
   try {
     await client.query(`
       DELETE FROM users

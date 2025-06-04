@@ -1,8 +1,16 @@
 import { MailhogEmailProps } from './types';
 
+Cypress.Commands.add('resetMockEmailServer', () => {
+  return cy.task('configureMailhogMockResponse');
+});
+
 Cypress.Commands.add('clearEmails', () => {
   cy.task('clearAllEmails');
   cy.wait(1000);
+});
+
+Cypress.Commands.add('getAllEmails', () => {
+  cy.task('getAllEmails');
 });
 
 Cypress.Commands.add('getLastEmail', ({ email }) => {
@@ -10,12 +18,8 @@ Cypress.Commands.add('getLastEmail', ({ email }) => {
   return cy.task('getLastEmailByRecipient', { email }).then((emailResponse) => {
     cy.wrap(emailResponse).should('not.be.null');
     return cy.wrap(emailResponse as MailhogEmailProps);
-  });
-});
-
-Cypress.Commands.add('resetMockEmailServer', () => {
-  cy.task('configureMailhogMockResponse');
-});
+  });    
+});    
 
 Cypress.Commands.add('simulateEmailSendFailure', (type: string) => {
   const configs = {
