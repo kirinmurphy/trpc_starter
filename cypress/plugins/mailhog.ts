@@ -1,21 +1,31 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
 const MAILHOG_API = 'http://mailhog:8025/api';
 const MOCK_CONFIG_ENDPOINT = `${MAILHOG_API}/v2/jim`;
 
-async function getAllEmails () {
+interface MailhogConfig {
+  DisconnectChance?: number;
+  AcceptChance?: number;
+  LinkSpeedAffect?: number;
+  LinkSpeedMin?: number;
+  LinkSpeedMax?: number;
+  RejectSenderChance?: number;
+  RejectRecipientChance?: number;
+  RejectAuthChance?: number;
+  [key: string]: any;
+}
+
+export async function getAllEmails (): Promise<any> {
   const response = await fetch(`${MAILHOG_API}/v2/messages`);
   return response.json();
 }
 
-module.exports = {
-  getAllEmails,
-  clearAllEmails: async () => {
-    await fetch(`${MAILHOG_API}/v1/messages`, { method: 'DELETE' }); 
-    return null;
-  },
-  // TODO: format the email item to be a little more consumable for task users
-  getLastEmailByRecipient: async ({ email }) => {
+export async function clearAllEmails(): Promise<null> {
+  await fetch(`${MAILHOG_API}/v1/messages`, { method: 'DELETE' }); 
+  return null;
+}
+
+export async function getLastEmailByRecipient({ email }: { email: string; }): Promise<any> {
     const { items } = await getAllEmails();
     
     const message = items.find(item => {
@@ -25,8 +35,10 @@ module.exports = {
       });
     });
     return message || null;
-  },
-  configureMailhogMockResponse: async (config) => {    
+}
+
+
+export async function configureMailhogMockResponse (config?: MailhogConfig): Promise<null> {    
     await fetch(MOCK_CONFIG_ENDPOINT, { method: 'DELETE' });
 
     await fetch(MOCK_CONFIG_ENDPOINT, {
@@ -47,4 +59,3 @@ module.exports = {
         
     return null;
   }
-}

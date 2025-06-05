@@ -1,4 +1,4 @@
-import { MailhogEmailProps } from './types';
+import type { MailhogEmailProps } from './types/index.js';
 
 Cypress.Commands.add('resetMockEmailServer', () => {
   return cy.task('configureMailhogMockResponse');

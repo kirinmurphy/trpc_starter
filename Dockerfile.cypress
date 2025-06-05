@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.4
-FROM cypress/included:13.16.0
+FROM cypress/included:latest
 
 WORKDIR /e2e
 
@@ -8,4 +8,6 @@ ENV NODE_ENV=test
 COPY package.json ./
 
 RUN --mount=type=cache,target=/root/.npm \
-    npm install pg 
+    npm install pg typescript ts-node @types/node @types/pg@latest @types/pg node-fetch node-fetch@2
+
+RUN npx cypress verify

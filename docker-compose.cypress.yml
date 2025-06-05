@@ -40,15 +40,13 @@ services:
       FORCE_COLOR: 1
       DEBUG: cypress:user:log
       NODE_DEBUG: console
+      CYPRESS_CHROME_FLAGS: '--disable-dev-shm-usage --no-sandbox'
     volumes:
       # Read-only source files
       - ./tsconfig.json:/e2e/tsconfig.json:ro
-      - ./cypress/tsconfig.json:/e2e/cypress/tsconfig.json:ro
-      - ./cypress/e2e:/e2e/cypress/e2e:ro
-      - ./cypress/support:/e2e/cypress/support:ro
-      - ./cypress/fixtures:/e2e/cypress/fixtures:ro
-      - ./cypress/plugins:/e2e/cypress/plugins:ro
-      - ./cypress.config.cjs:/e2e/cypress.config.cjs:ro
+      - ./docker/cypress-run.sh:/e2e/docker/cypress-run.sh:ro
+      - ./cypress.config.ts:/e2e/cypress.config.ts:ro
+      - ./cypress:/e2e/cypress:ro
       - system_status:/app/docker/system_status
 
       # Writable output directories
@@ -64,12 +62,16 @@ services:
         source: ./cypress/downloads
         target: /e2e/cypress/downloads
         consistency: delegated
-      # - ./cypress/screenshots:/e2e/cypress/screenshots
-      # - ./cypress/downloads:/e2e/cypress/downloads
 
     working_dir: /e2e
 
-    command: bun run test:docker
+    command: ./docker/cypress-run.sh
+
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
 
   nginx:
     environment:
