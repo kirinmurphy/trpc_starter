@@ -1,7 +1,7 @@
-const fs = require('fs');
-const crypto = require('crypto');
-const path = require('path');
-const { createTestPool } = require('./db.cjs');
+import * as fs from 'fs';
+import * as crypto from 'crypto';
+import * as path from 'path';
+import { createTestPool } from './db';
 
 const SYSTEM_STATUS_DIR = path.join('/app/docker/system_status');
 const SYSTEM_STATUS_FILE = path.join(SYSTEM_STATUS_DIR, 'system_status.json');
@@ -10,7 +10,13 @@ const NGINX_STATUS_FILE = path.join(
   'nginx_block_admin_setup'
 );
 
-async function getNewSuperAdminToken() {
+interface SuperAdminTokenResult {
+  token: string;
+  userId: string;
+  email: string;
+}
+
+export async function getNewSuperAdminToken(): Promise<SuperAdminTokenResult> {
   const testPool = createTestPool();
   const client = await testPool.connect();
 
@@ -33,7 +39,7 @@ async function getNewSuperAdminToken() {
   }
 }
 
-async function deleteMockPasswordTokens() {
+export async function deleteMockPasswordTokens(): Promise<boolean> {
   const testPool = createTestPool();
   const client = await testPool.connect();
   try {
@@ -45,25 +51,15 @@ async function deleteMockPasswordTokens() {
   }
 }
 
-
-function writeSystemStatusToReady() {
+export function writeSystemStatusToReady(): boolean {
   return writeSystemStatusTo('ready');
 }
 
-function writeSystemStatusToInProgress() {
+export function writeSystemStatusToInProgress(): boolean {
   return writeSystemStatusTo('in-progress');
 }
 
-
-module.exports = {
-  getNewSuperAdminToken,
-  deleteMockPasswordTokens,
-  writeSystemStatusToInProgress,
-  writeSystemStatusToReady,
-};
-
-
-function writeSystemStatusTo(status) {
+function writeSystemStatusTo(status): boolean {
   if (!fs.existsSync(SYSTEM_STATUS_DIR)) {
     fs.mkdirSync(SYSTEM_STATUS_DIR, { recursive: true });
   }

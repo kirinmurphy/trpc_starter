@@ -1,4 +1,4 @@
-import { MailhogEmailProps } from './types';
+import type { MailhogEmailProps } from './types/index.js';
 
 Cypress.Commands.add('resetMockEmailServer', () => {
   return cy.task('configureMailhogMockResponse');
@@ -18,8 +18,8 @@ Cypress.Commands.add('getLastEmail', ({ email }) => {
   return cy.task('getLastEmailByRecipient', { email }).then((emailResponse) => {
     cy.wrap(emailResponse).should('not.be.null');
     return cy.wrap(emailResponse as MailhogEmailProps);
-  });    
-});    
+  });
+});
 
 Cypress.Commands.add('simulateEmailSendFailure', (type: string) => {
   const configs = {
