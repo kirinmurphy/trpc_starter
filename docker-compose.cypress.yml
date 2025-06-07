@@ -44,7 +44,7 @@ services:
       # Read-only source files
       - ./tsconfig.json:/e2e/tsconfig.json:ro
       - ./docker/cypress-run.sh:/e2e/docker/cypress-run.sh:ro
-      - ./cypress.config.cjs:/e2e/cypress.config.cjs:ro
+      - ./cypress.config.ts:/e2e/cypress.config.ts:ro
       - ./cypress:/e2e/cypress:ro
       - system_status:/app/docker/system_status
 

@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ESNext", // or at least ES6
-    "module": "ESNext", // Ensure this is set to ESNext or ES6
+    "target": "ESNext",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "lib": ["ESNext", "DOM"],
     "types": ["cypress", "node"],
-    "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,

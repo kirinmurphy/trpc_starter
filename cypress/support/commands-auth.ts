@@ -1,4 +1,4 @@
-import { AuthActionProps } from './types';
+import type { AuthActionProps } from './types/index.js';
 
 Cypress.Commands.add(
   'createAccountAttempt',

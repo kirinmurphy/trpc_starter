@@ -1,19 +1,19 @@
-const { defineConfig } = require('cypress');
-const {
+import 'dotenv/config';
+
+import { defineConfig } from 'cypress';
+import {
   verifyTestEnvironment,
   cleanupTestUsers,
-} = require('./cypress/support/tasks/db.cjs');
-const {
+} from './cypress/support/tasks/db';
+import {
   getVerificationToken,
   getPasswordResetToken,
-} = require('./cypress/support/tasks/auth.cjs');
-const revertToInProgressSystemStatus = require('./cypress/support/tasks/revertToInProgressSystemStatus.cjs');
+} from './cypress/support/tasks/auth';
 
-const mailhogApi = require('./cypress/plugins/mailhog.cjs');
+import * as revertToInProgressSystemStatus from './cypress/support/tasks/revertToInProgressSystemStatus';
+import * as mailhogApi from './cypress/plugins/mailhog';
 
-require('dotenv').config();
-
-module.exports = defineConfig({
+export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       config.env = {
