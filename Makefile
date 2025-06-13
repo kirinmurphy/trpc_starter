@@ -2,7 +2,6 @@ SHELL := /bin/bash
 
 DC_BASE=docker compose -f docker-compose.base.yml 
 DC=${DC_BASE} -f docker-compose.dev.yml 
-DCT=${DC} -f docker-compose.cypress.yml
 DCP=${DC_BASE} -f docker-compose.production.yml
 PRUNE=docker system prune -f && docker volume prune -f
 
@@ -38,38 +37,7 @@ dev-clean:
 reload-nginx:
 	$(DC) restart nginx
 
-
-## -- TESTING ------- ## 
-.PHONY: tests-up
-tests-up:
-	echo "DCT expands to: $(DCT)" && \
-	$(DCT) up -d mailhog app db nginx && \
-	$(DCT) run -e FILE=$(FILE) cypress | grep -v "nginx.*\|.*nginx" || exit 1;
-
-
-.PHONY: tests-down
-tests-down:
-	$(DCT) down -v
-
-.PHONY: tests-build
-tests-build: 
-	$(DCT) build cypress
-
-.PHONY: tests-build-no-cache
-tests-build-no-cache: tests-clean
-	$(DCT) build cypress --no-cache
-
-.PHONY: tests-logs
-tests-logs:
-	$(DCT) logs app cypress --follow
-
-.PHONY: tests-all
-tests-all: tests-build tests-up tests-logs
-
-.PHONY: tests-clean
-tests-clean: 
-	$(DCT) down -v --remove-orphans --rmi local
-
+include Makefile.cypress
 
 ## -- PRODUCTION ------- ##
 .PHONY: prod-up

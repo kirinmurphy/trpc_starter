@@ -25,8 +25,9 @@ App starter built with Bun, Typescript, tRPC and React
   <tr>
     <td style="vertical-align: top;">Infra / Devops</td>
     <td>
-      • <a href="./cypress/e2e/auth_spec.cy.ts">e2e testing</a> with CI integration (Github Actions)<br>
       • <a href="#running-app-with-docker">Docker containers</a> for dev, testing, and production environments<br>
+      • <a href="./cypress/e2e/auth_spec.cy.ts">e2e testing</a> with Github Action CI integration <br>
+      • <a href="./docs/cypress_options.md">Dynamic test modes</a> to test unique app variations / feature flags. <br>
       • <a href="./docs/email.md">Email integration</a> for dev, testing and production environments<br>
       • CI integrated postgres migration flow
     </td>

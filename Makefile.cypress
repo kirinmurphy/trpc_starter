@@ -1,0 +1,25 @@
+DCT=${DC} -f docker-compose.cypress.yml
+
+.PHONY: tests-up
+tests-up:
+	DCT='$(DCT)' FILE='$(FILE)' TEST_MODE='$(TEST_MODE)' ./docker/cypress-run-all.sh
+
+.PHONY: tests-down
+tests-down:
+	DCT='$(DCT)' ./docker/cypress-manage-all.sh down -v
+
+.PHONY: tests-build
+tests-build: 
+	DCT='$(DCT)' ./docker/cypress-manage-all.sh build cypress
+
+.PHONY: tests-build-no-cache
+tests-build-no-cache: tests-clean
+	DCT='$(DCT)' ./docker/cypress-manage-all.sh build cypress --no-cache
+
+.PHONY: tests-logs
+tests-logs:
+	DCT='$(DCT)' ./docker/cypress-manage-all.sh logs app cypress --follow
+
+.PHONY: tests-clean
+tests-clean: 
+	DCT='$(DCT)' ./docker/cypress-manage-all.sh clean
