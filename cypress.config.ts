@@ -1,15 +1,8 @@
 import 'dotenv/config';
 
 import { defineConfig } from 'cypress';
-import {
-  verifyTestEnvironment,
-  cleanupTestUsers,
-} from './cypress/support/tasks/db';
-import {
-  getVerificationToken,
-  getPasswordResetToken,
-} from './cypress/support/tasks/auth';
-
+import * as dbTasks from './cypress/support/tasks/db';
+import * as authTasks from './cypress/support/tasks/auth';
 import * as revertToInProgressSystemStatus from './cypress/support/tasks/revertToInProgressSystemStatus';
 import * as mailhogApi from './cypress/plugins/mailhog';
 
@@ -26,7 +19,7 @@ export default defineConfig({
       on('before:run', async () => {
         console.log('Test run starting');
         try {
-          await verifyTestEnvironment();
+          await dbTasks.verifyTestEnvironment();
         } catch (err) {
           console.error('Test environment verification failed: ', err);
           throw err;
@@ -40,20 +33,8 @@ export default defineConfig({
           console.log(message + '\n');
           return null;
         },
-        async cleanupTestUsers() {
-          await cleanupTestUsers();
-          return null;
-        },
-        async verifyTestEnvironment() {
-          await verifyTestEnvironment();
-          return null;
-        },
-        async getVerificationToken({ email }) {
-          return await getVerificationToken({ email });
-        },
-        async getPasswordResetToken({ email }) {
-          return await getPasswordResetToken({ email });
-        },
+        ...dbTasks,
+        ...authTasks,
         ...mailhogApi,
         ...revertToInProgressSystemStatus,
       });
