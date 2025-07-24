@@ -10,12 +10,18 @@ required_vars=(
 )
 
 if [ "$NODE_ENV" = "production" ]; then
+
   required_vars+=(
     "WEBSITE_DOMAIN"
-    "EMAIL_SERVICE_HOST"
-    "EMAIL_SERVICE_USER"
     "EMAIL_SERVICE_PASS"
   )
+
+  if [ -z "$CUSTOM_EMAIL_PROVIDER" ]; then 
+   required_vars+=(
+    "EMAIL_SERVICE_HOST"
+    "EMAIL_SERVICE_USER"
+   )
+  fi
 fi
 
 for var in "${required_vars[@]}"; do

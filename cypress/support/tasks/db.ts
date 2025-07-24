@@ -10,6 +10,7 @@ export async function cleanupTestUsers() {
       DELETE FROM users
       WHERE email LIKE 'test%@%'  
     `);
+    return null;
   } finally {
     client.release();
     await testPool.end();
@@ -28,6 +29,7 @@ export async function verifyTestEnvironment() {
         'Tests must run against a test database. Current database: ' + dbName
       );
     }
+    return null;
   } finally {
     client.release();
     await testPool.end();

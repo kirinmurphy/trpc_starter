@@ -8,8 +8,8 @@ declare -a TEST_SUITE_COLLECTION
 TEST_SUITE_COLLECTION+=("base:")
 
 # ==== GET ALL TEST SUITES ====
-for ENV_OVERRIDE_FILE in $(ls -1 docker-compose.override.*.yml 2>/dev/null); do
-  MODE_NAME=$(basename "$ENV_OVERRIDE_FILE" .yml | sed 's/^docker-compose\.override\.//');
+for ENV_OVERRIDE_FILE in $(ls -1 docker-compose.cypress.override.*.yml 2>/dev/null); do
+  MODE_NAME=$(basename "$ENV_OVERRIDE_FILE" .yml | sed 's/^docker-compose\.cypress\.override\.//');
   TEST_SUITE_COLLECTION+=("$MODE_NAME:-f $ENV_OVERRIDE_FILE")
 done
 

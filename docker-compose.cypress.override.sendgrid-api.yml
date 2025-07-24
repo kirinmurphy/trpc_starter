@@ -2,3 +2,4 @@ services:
   app:
     environment:
       - CUSTOM_EMAIL_PROVIDER=sendgrid
+      - EMAIL_SERVICE_PASS=SG.uwe23lk2j3lk2lk32lk23lk23
