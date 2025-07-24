@@ -31,6 +31,7 @@ cypress/videos
 cypress/downloads
 
 docs/local
+docs/notes.md
 
 nginx/includes/cors_map.conf
 nginx/includes/cors_options.conf
