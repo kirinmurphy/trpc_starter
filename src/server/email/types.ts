@@ -29,9 +29,10 @@ export type EmailResult = EmailSuccess | EmailFailure;
 
 export interface EmailProvider {
   sendEmail(options: EmailOptions): Promise<EmailResult>;
-}                                
+}
 
 export enum EmailProviderTypes {
   SMTP = 'smtp',
-  SENDGRID = 'sendgrid'
+  SENDGRID = 'sendgrid',
+  RESEND = 'resend',
 }
