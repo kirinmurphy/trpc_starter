@@ -22,13 +22,15 @@ const productionConfig = {
   secure: process.env.EMAIL_SERVICE_SECURE === 'true',
   auth: {
     user: process.env.EMAIL_SERVICE_USER!,
-    pass: process.env.EMAIL_SERVICE_PASS!,
+    pass: process.env.EMAIL_API_KEY!,
   },
 };
 
 const isProd = process.env.NODE_ENV === 'production';
 
-const smtpTransportConfig: SmtpTransporterProps = isProd ? productionConfig : mailhogConfig;
+const smtpTransportConfig: SmtpTransporterProps = isProd
+  ? productionConfig
+  : mailhogConfig;
 
 export async function createSmtpEmailTransporter() {
   console.log('Creating email transporter for env', process.env.NODE_ENV);

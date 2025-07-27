@@ -1,18 +1,17 @@
-import { EmailProvider, EmailOptions, EmailResult } from "../types";
-import { getEmailMessageProps } from "../getEmailMessageProps";
-import { getMailerError } from "../getMailerError";
+import { EmailProvider, EmailOptions, EmailResult } from '../types';
+import { getEmailMessageProps } from '../getEmailMessageProps';
 
-const sendgridApiKey = process.env.EMAIL_SERVICE_PASS; 
+const sendgridApiKey = process.env.EMAIL_API_KEY;
 
 const isProd = process.env.NODE_ENV !== 'production';
 
 export const SendGridApiProvider: EmailProvider = {
   async sendEmail(props: EmailOptions): Promise<EmailResult> {
-    const { to, subject } = props; 
+    const { to, subject } = props;
     const { html, from } = getEmailMessageProps(props);
 
-    if ( !sendgridApiKey ) {
-      throw new Error('Sendgrid API Key not set'); 
+    if (!sendgridApiKey) {
+      throw new Error('Sendgrid API Key not set');
     }
 
     const sgMailModule = await import('@sendgrid/mail');
@@ -30,7 +29,7 @@ export const SendGridApiProvider: EmailProvider = {
 
     return {
       success: true,
-      messageId
+      messageId,
     };
-  } 
+  },
 };

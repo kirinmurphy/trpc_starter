@@ -39,8 +39,8 @@ if (require.main === module) {
 async function checkEmailApiConfig(
   providerType: EmailProviderTypes
 ): Promise<void> {
-  if (!process.env.EMAIL_SERVICE_PASS) {
-    throw new Error(`❌ ${providerType} API key (EMAIL_SERVICE_PASS) not set`);
+  if (!process.env.EMAIL_API_KEY) {
+    throw new Error(`❌ ${providerType} API key (EMAIL_API_KEY) not set`);
   }
   console.log(`✅ ${providerType} API configuration verified`);
 }

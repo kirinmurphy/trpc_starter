@@ -8,7 +8,7 @@ import {
 import { Resend } from 'resend';
 
 const MISSING_API_KEY_MSG = 'Resend API Key not set';
-const resendApiKey = process.env.EMAIL_SERVICE_PASS;
+const resendApiKey = process.env.EMAIL_API_KEY;
 const isProd = process.env.NODE_ENV === 'production';
 
 export const ResendApiProvider: EmailProvider = {

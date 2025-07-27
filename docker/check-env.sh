@@ -11,7 +11,7 @@ required_vars=(
 if [ "$NODE_ENV" = "production" ]; then
   required_vars+=(
     "WEBSITE_DOMAIN"
-    "EMAIL_SERVICE_PASS"
+    "EMAIL_API_KEY"
   )
 
   if [ -z "$CUSTOM_EMAIL_PROVIDER" ]; then 

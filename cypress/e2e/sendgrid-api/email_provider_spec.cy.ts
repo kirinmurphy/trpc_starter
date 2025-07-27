@@ -17,7 +17,7 @@ describe('SendGrid API Email Integration Tests', () => {
   //   beforeEach(() => {
   //     // Access the expected API key and system email from Cypress environment variables
   //     // (Ensure these are exposed to Cypress, e.g., via cypress.config.ts 'env' or direct CLI)
-  //     const expectedSendgridApiKey = Cypress.env('EMAIL_SERVICE_PASS');
+  //     const expectedSendgridApiKey = Cypress.env('EMAIL_API_KEY');
   //     const expectedSystemEmailAddress = Cypress.env(
   //       'EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS'
   //     );

@@ -26,7 +26,7 @@ App starter built with Bun, Typescript, tRPC and React
     <td style="vertical-align: top;">Infra / Devops</td>
     <td>
       • <a href="#running-app-with-docker">Docker containers</a> for dev, testing, and production environments<br>
-      • <a href="./cypress/e2e/auth_spec.cy.ts">e2e testing</a> with Github Action CI integration <br>
+      • <a href="./cypress/e2e/base/auth_spec.cy.ts">e2e testing</a> with Github Action CI integration <br>
       • <a href="./docs/cypress_options.md">Dynamic test modes</a> to test unique app variations / feature flags. <br>
       • <a href="./docs/email.md">Email integration</a> for dev, testing and production environments<br>
       • CI integrated postgres migration flow
@@ -67,7 +67,7 @@ WEBSITE_DOMAIN=yourdomain.com
 
 EMAIL_SERVICE_HOST=smtp.some-provider.com
 EMAIL_SERVICE_USER=email_service_user
-EMAIL_SERVICE_PASS=email_service_password_or_api_key
+EMAIL_API_KEY=EMAIL_API_KEYword_or_api_key
 
 # Set up super admin user on initial build
 SUPER_ADMIN_EMAIL=adminemail@gmail.com
