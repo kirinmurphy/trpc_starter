@@ -1,4 +1,4 @@
-DCT=${DC} -f docker-compose.cypress.yml
+DCT=${DCD} -f docker-compose.cypress.yml
 
 .PHONY: tests-up
 tests-up:

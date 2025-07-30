@@ -36,8 +36,10 @@ sudo mkdir -p /opt/traefik
 cd /opt/traefik
 ```
 
-Create `docker-compose.yml` and `acme.json` in `/opt/traefik` 
+- Create `docker-compose.yml` and `acme.json` in `/opt/traefik` 
 
-Update docker-compose.production.yml to connect to the web network 
+- Update docker-compose.production.yml to connect to the web network 
+
+- Remove any port mappings in the nginx service config  
 
 

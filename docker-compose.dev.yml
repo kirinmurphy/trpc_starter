@@ -12,7 +12,7 @@ services:
       NODE_ENV: development
       WEBSITE_DOMAIN: 'localhost'
       INTERNAL_CLIENT_URL: 'http://app:5173'
-      VITE_API_URL: 'http://localhost'
+      VITE_API_URL: '${API_PROTOCOL:-https}://localhost'
       DEBUG: 'app:*'
     healthcheck:
       test:
@@ -41,7 +41,7 @@ services:
     image: mailhog/mailhog:latest
     container_name: mailhog
     networks:
-      - app_network
+      - internal_network
     ports:
       - '1025:1025'
       - '8025:8025'
@@ -49,6 +49,6 @@ services:
   nginx:
     environment:
       VITE_PORT: 5173
-    ports:
-      - '443:443'
-      - '80:80'
+    # ports:
+    #   - '443:443'
+    #   - '80:80'
