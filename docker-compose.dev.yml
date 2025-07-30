@@ -12,7 +12,7 @@ services:
       NODE_ENV: development
       WEBSITE_DOMAIN: 'localhost'
       INTERNAL_CLIENT_URL: 'http://app:5173'
-      VITE_API_URL: 'http://localhost'
+      VITE_API_URL: '${API_PROTOCOL:-https}://localhost'
       DEBUG: 'app:*'
     healthcheck:
       test:
@@ -41,7 +41,7 @@ services:
     image: mailhog/mailhog:latest
     container_name: mailhog
     networks:
-      - app_network
+      - internal_network
     ports:
       - '1025:1025'
       - '8025:8025'
@@ -49,6 +49,42 @@ services:
   nginx:
     environment:
       VITE_PORT: 5173
+    networks:
+      - web
+      - internal_network
+    # TODO: can potentially consoldate labels from dev and production into base
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.my-nginx-dev-http.rule=Host(`localhost`)'
+      - 'traefik.http.routers.my-nginx-dev-http.entrypoints=web'
+      - 'traefik.http.routers.my-nginx-dev-https.rule=Host(`localhost`)'
+      - 'traefik.http.routers.my-nginx-dev-https.entrypoints=websecure'
+      - 'traefik.http.routers.my-nginx-dev-https.tls=true'
+      - 'traefik.http.services.my-nginx-dev.loadbalancer.server.port=80'
+
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik_local
+    command:
+      - --providers.docker=true
+      - --providers.file.filename=/etc/traefik/traefik.yml
+      - --providers.file.watch=true
+      - --api.dashboard=true
+      - --api.insecure=true
+      - --log.level=INFO
+      - --accesslog=true
     ports:
-      - '443:443'
       - '80:80'
+      - '443:443'
+      - '8080:8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./acme.json:/etc/traefik/acme.json
+    networks:
+      - web
+      - internal_network
+    restart: unless-stopped
+
+networks:
+  web:

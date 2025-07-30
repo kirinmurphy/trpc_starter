@@ -36,7 +36,7 @@ services:
           memory: ${DOCKER_APP_MEMORY_LIMIT:-1G}
           cpus: ${DOCKER_APP_CPU_LIMIT:-0.5}
     networks:
-      - web
+      - internal_network
 
   db:
     deploy:
@@ -49,8 +49,8 @@ services:
       nofile:
         soft: 20000
         hard: 40000
-    # networks:
-    #   - web
+    networks:
+      - internal_network
 
   nginx:
     environment:
@@ -60,11 +60,11 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.my-nginx-http.rule=Host(`${WEBSITE_DOMAIN}`)'
-      - 'traefik.http.routers.my-nginx-http.entrypoints=web'
+      - 'traefik.http.routers.my-nginx-http.entrypoints=http'
       - 'traefik.http.services.my-nginx.loadbalancer.server.port=80'
+      - 'traefik.http.routers.my-nginx-https.rule=Host(`${WEBSITE_DOMAIN}`)'
+      - 'traefik.http.routers.my-nginx-https.entrypoints=https'
+      - 'traefik.http.routers.my-nginx-https.tls.certresolver=myresolver'
     networks:
       - web
-
-networks:
-  web:
-    external: true
+      - internal_network

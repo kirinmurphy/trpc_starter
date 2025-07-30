@@ -1,0 +1,33 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+entryPoints:
+  http:
+    address: ':80'
+    http:
+      redirections:
+        entryPoint:
+          to: 'https'
+          scheme: 'https'
+  https:
+    address: ':443'
+
+api:
+  dashboard: true
+  insecure: true
+
+providers:
+  docker:
+    exposedByDefault: false
+    network: internal_network
+# certificatesResolvers:
+#   myresolver:
+#     acme:
+#       email: $${SUPER_ADMIN_EMAIL}
+#       storage: '/etc/traefik/acme.json'
+#       httpChallenge:
+#         entryPoint: http
+#       # dnsChallenge:
+#       #   provider: digitalocean
+#       #   delayBeforeCheck: 0

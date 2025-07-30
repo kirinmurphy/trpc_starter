@@ -1,79 +1,20 @@
 SHELL := /bin/bash
 
 DC_BASE=docker compose -f docker-compose.base.yml 
-DC=${DC_BASE} -f docker-compose.dev.yml 
-DCP=${DC_BASE} -f docker-compose.production.yml
 PRUNE=docker system prune -f && docker volume prune -f
 
-## -- DEV ------- ## 
-.PHONY: dev-up
-dev-up:
-	$(DC) up -d
-
-.PHONY: dev-down
-dev-down: 
-	$(DC) down -v
-
-.PHONY: dev-build
-dev-build: 
-	$(DC) build app
-
-.PHONY: dev-build-no-cache
-dev-build-no-cache: dev-clean
-	$(DC) build app --no-cache
-
-.PHONY: dev-logs
-dev-logs:
-	$(DC) logs app --follow app
-
-.PHONY: dev-all
-dev-all: dev-build dev-up dev-logs
-
-.PHONY: dev-clean
-dev-clean: 
-	$(DC) down -v --remove-orphans --rmi local
-
-.PHONY: reload-nginx
-reload-nginx:
-	$(DC) restart nginx
+include Makefile.dev
 
 include Makefile.cypress
 
-## -- PRODUCTION ------- ##
-.PHONY: prod-up
-prod-up:
-	$(DCP) up -d
-
-.PHONY: prod-down
-prod-down:
-	$(DCP) down -v
-
-.PHONY: prod-build
-prod-build: 
-	$(DCP) build app
-
-.PHONY: prod-build-no-cache
-prod-build-no-cache: prod-clean
-	$(DCP) build app --no-cache
-
-.PHONY: prod-logs
-prod-logs:
-	$(DCP) logs app --follow app
-
-.PHONY: prod-all
-prod-all: prod-build prod-up prod-logs
-
-.PHONY: prod-clean
-prod-clean: 
-	$(DCP) down -v --remove-orphans --rmi local
-
+include Makefile.production
 
 ## -- UTILITIES ------- ## 
 .PHONY: clean-all
 clean-all:
-	$(DC) down -v
+	$(DCD) down -v
 	$(DCT) down -v
-	$(DCP) down -v
+	$(DC_PROD_LOCAL) down -v
 	docker system prune -f
 	docker volume prune -f
 
@@ -98,12 +39,21 @@ help:
 	@echo "  make tests-clean            - Clean tests containers and volumes"
 
 	@echo ""
-	@echo "Production commands:"
-	@echo "  make prod-up               - Start the application in production"
-	@echo "  make prod-build             - Clean and build production container"
-	@echo "  make prod-build-no-cache    - Clear cache and build production container"
-	@echo "  make prod-logs              - View production logs"
-	@echo "  make prod-all               - Run prod build, start, and logs in sequence"
-	@echo "  make prod-clean             - Clean prod containers and volumes"
+	@echo "Production commands (locally):"
+	@echo "  make prod-local-up               - Start the application in production"
+	@echo "  make prod-local-build             - Clean and build production container"
+	@echo "  make prod-local-build-no-cache    - Clear cache and build production container"
+	@echo "  make prod-local-logs              - View production logs"
+	@echo "  make prod-local-all               - Run prod build, start, and logs in sequence"
+	@echo "  make prod-local-clean             - Clean prod containers and volumes"
+
+	@echo ""
+	@echo "Production commands (remote):"
+	@echo "  make prod-remote-up               - Start the application in production"
+	@echo "  make prod-remote-build             - Clean and build production container"
+	@echo "  make prod-remote-build-no-cache    - Clear cache and build production container"
+	@echo "  make prod-remote-logs              - View production logs"
+	@echo "  make prod-remote-all               - Run prod build, start, and logs in sequence"
+	@echo "  make prod-remote-clean             - Clean prod containers and volumes"
 
 	@echo "  make clean-all             - Clean all containers, systems and volumes"

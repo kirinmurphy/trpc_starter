@@ -22,7 +22,7 @@ services:
       args:
         DOCKER_BUILDKIT: 1
     networks:
-      - 'app_network'
+      - internal_network
 
     depends_on:
       nginx:
