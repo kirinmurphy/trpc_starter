@@ -49,3 +49,6 @@ services:
   nginx:
     environment:
       VITE_PORT: 5173
+    ports:
+      - '443:443'
+      - '80:80'

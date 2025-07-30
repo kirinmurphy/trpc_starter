@@ -35,6 +35,8 @@ services:
         limits:
           memory: ${DOCKER_APP_MEMORY_LIMIT:-1G}
           cpus: ${DOCKER_APP_CPU_LIMIT:-0.5}
+    networks:
+      - web
 
   db:
     deploy:
@@ -47,9 +49,22 @@ services:
       nofile:
         soft: 20000
         hard: 40000
+    # networks:
+    #   - web
 
   nginx:
     environment:
       # TODO: move this to env file
       ALLOWED_ORIGINS: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN},${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}:80'
       VITE_PORT: '4173'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.my-nginx-http.rule=Host(`${WEBSITE_DOMAIN}`)'
+      - 'traefik.http.routers.my-nginx-http.entrypoints=web'
+      - 'traefik.http.services.my-nginx.loadbalancer.server.port=80'
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
