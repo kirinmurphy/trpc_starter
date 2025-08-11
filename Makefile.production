@@ -1,6 +1,6 @@
 DC_PROD=${DC_BASE} -f docker-compose.production.yml
 DC_PROD_REMOTE=${DC_PROD} -f docker-compose.production-remote.yml
-DC_PROD_LOCAL=${DC_PROD} -f docker-compose.production-local.yml
+DC_PROD_LOCAL=${DC_PROD} -f docker-compose.traefik-local.yml
 
 ## -- PRODUCTION LOCAL ------- ##
 .PHONY: prod-local-up

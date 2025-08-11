@@ -51,7 +51,7 @@ App starter built with Bun, Typescript, tRPC and React
 
 
 # Setup
-## Evironment Variables
+## Environment Variables
 ```env 
 # -- REQUIRED
 DB_NAME=posgtres_db_name

@@ -1,6 +1,7 @@
 const INVALID_ORIGINS = [
   'http://malicious-site.com',
   'http://localhost:8080',
+  'https://evil.localhost',
   'https://evil.localhost:3000',
   'http://localhost.attacker.com',
   'http://127.0.0.1:3000',

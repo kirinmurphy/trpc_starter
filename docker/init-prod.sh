@@ -6,7 +6,7 @@ source ./docker/check-env.sh
 echo "Starting production server..."
 
 echo "Verifying Email configuration..."
-bun run ./docker/verify-email.ts
+bun run ./dist/docker/verify-email.js
 if [ $? -ne 0 ]; then 
   echo "Email verification failed"
   exit 1
@@ -27,19 +27,18 @@ if [ $elapsed -gt $timeout ]; then
 fi
 echo "Database is ready!"
 
-echo "Building application..."
-bun run build
+# echo "Building application..."
+# bun run build
 
 echo "Running database migrations..."
 bun run migrate 
 
 
 echo "Setting up prod super admin..." 
-bun run ./docker/admin-setup/admin-setup-production.ts
+bun run ./dist/docker/admin-setup/admin-setup-production.js
 if [ $? -ne 0 ]; then
   echo "❌ Super admin setup failed"
   exit 1
 fi 
 
-echo "Starting application..."
-exec bun run start
+echo "Initialization complete!"

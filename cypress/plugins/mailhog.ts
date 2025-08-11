@@ -27,18 +27,32 @@ export async function clearAllEmails(): Promise<null> {
 
 export async function getLastEmailByRecipient({
   email,
+  timeout = 10000,
 }: {
   email: string;
+  timeout?: number;
 }): Promise<any> {
-  const { items } = await getAllEmails();
+  const startTime = Date.now();
+  let emailMessage = null;
 
-  const message = items.find((item) => {
-    return item.To.find((recipient) => {
-      const msgEmail = `${recipient.Mailbox}@${recipient.Domain}`;
-      return msgEmail === email;
+  while (Date.now() - startTime < timeout) {
+    const { items } = await getAllEmails();
+
+    emailMessage = items.find((item) => {
+      return item.To.find((recipient) => {
+        const msgEmail = `${recipient.Mailbox}@${recipient.Domain}`;
+        return msgEmail === email;
+      });
     });
-  });
-  return message || null;
+
+    if (emailMessage) {
+      return emailMessage;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+
+  return null;
 }
 
 export async function configureMailhogMockResponse(

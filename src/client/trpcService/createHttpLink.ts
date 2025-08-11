@@ -17,7 +17,7 @@ const getCsrfStore = () => {
 export const csrfStore = getCsrfStore();
 
 export function createHttpLink() {
-  const url = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const url = import.meta.env.VITE_API_URL || `https://localhost`;
 
   return httpBatchLink({
     url,

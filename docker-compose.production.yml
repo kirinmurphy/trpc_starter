@@ -1,26 +1,26 @@
+x-env-vars: &app_env
+  NODE_ENV: production
+  INTERNAL_CLIENT_URL: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}'
+  VITE_API_URL: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}'
+  CUSTOM_EMAIL_PROVIDER: ${CUSTOM_EMAIL_PROVIDER}
+  EMAIL_SERVICE_HOST: ${EMAIL_SERVICE_HOST}
+  EMAIL_SERVICE_USER: ${EMAIL_SERVICE_USER}
+  EMAIL_API_KEY: ${EMAIL_API_KEY}
+  EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS: ${EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS}
+  EMAIL_SERVICE_SYSTEM_EMAIL_SENDER: ${EMAIL_SERVICE_SYSTEM_EMAIL_SENDER}
+  EMAIL_SERVICE_PORT: ${EMAIL_SERVICE_PORT}
+  EMAIL_SERVICE_SECURE: ${EMAIL_SERVICE_SECURE}
+  SUPER_ADMIN_EMAIL: ${SUPER_ADMIN_EMAIL}
+
 services:
   app:
     build:
-      target: production
+      target: final_production
+    command: bun run start --no-daemon
     expose:
-      - '4173'
+      - '3000'
     environment:
-      NODE_ENV: production
-      WEBSITE_DOMAIN: ${WEBSITE_DOMAIN}
-      INTERNAL_CLIENT_URL: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}'
-      VITE_API_URL: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}'
-      VITE_PORT: '4173'
-
-      # EMAIL SERVICE
-      CUSTOM_EMAIL_PROVIDER: ${CUSTOM_EMAIL_PROVIDER}
-      EMAIL_SERVICE_HOST: ${EMAIL_SERVICE_HOST}
-      EMAIL_SERVICE_USER: ${EMAIL_SERVICE_USER}
-      EMAIL_API_KEY: ${EMAIL_API_KEY}
-      EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS: ${EMAIL_SERVICE_SYSTEM_EMAIL_ADDRESS}
-      EMAIL_SERVICE_SYSTEM_EMAIL_SENDER: ${EMAIL_SERVICE_SYSTEM_EMAIL_SENDER}
-      EMAIL_SERVICE_PORT: ${EMAIL_SERVICE_PORT}
-      EMAIL_SERVICE_SECURE: ${EMAIL_SERVICE_SECURE}
-      SUPER_ADMIN_EMAIL: ${SUPER_ADMIN_EMAIL}
+      <<: *app_env
     healthcheck:
       test:
         [
@@ -28,8 +28,11 @@ services:
           '/bin/sh',
           './docker/app-health-check.sh',
           'http://localhost:3000/ping',
-          'http://localhost:4173',
         ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     deploy:
       resources:
         limits:
@@ -37,6 +40,9 @@ services:
           cpus: ${DOCKER_APP_CPU_LIMIT:-0.5}
     networks:
       - internal_network
+    depends_on:
+      app_initialization:
+        condition: service_completed_successfully
 
   db:
     deploy:
@@ -53,18 +59,52 @@ services:
       - internal_network
 
   nginx:
+    build:
+      target: production_nginx
+      args:
+        VITE_API_URL: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}'
     environment:
-      # TODO: move this to env file
-      ALLOWED_ORIGINS: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN},${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}:80'
-      VITE_PORT: '4173'
+      NODE_ENV: production
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.my-nginx-http.rule=Host(`${WEBSITE_DOMAIN}`)'
-      - 'traefik.http.routers.my-nginx-http.entrypoints=http'
-      - 'traefik.http.services.my-nginx.loadbalancer.server.port=80'
+      - 'traefik.http.routers.my-nginx-http.entrypoints=web'
+      - 'traefik.http.routers.my-nginx-http.middlewares=https-redirect@file'
       - 'traefik.http.routers.my-nginx-https.rule=Host(`${WEBSITE_DOMAIN}`)'
-      - 'traefik.http.routers.my-nginx-https.entrypoints=https'
-      - 'traefik.http.routers.my-nginx-https.tls.certresolver=myresolver'
+      - 'traefik.http.routers.my-nginx-https.entrypoints=websecure'
+      - 'traefik.http.routers.my-nginx-https.tls=true'
+      - 'traefik.http.routers.my-nginx-https.tls.options=default-tls-options@file'
+      - 'traefik.http.routers.my-nginx-api.rule=Host(`${WEBSITE_DOMAIN}`) && (PathPrefix(`/auth`) || PathPrefix(`/ping`))'
+      - 'traefik.http.routers.my-nginx-api.entrypoints=websecure'
+      - 'traefik.http.routers.my-nginx-api.tls=true'
+      - 'traefik.http.routers.my-nginx-api.tls.options=default-tls-options@file'
+    depends_on:
+      app:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
     networks:
       - web
       - internal_network
+
+  app_initialization:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: app_initialization_stage
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      /bin/bash -c "echo 'Waiting for DB to be ready...'; until pg_isready -h db -p 5432 -U postgres; do sleep 1; done; echo 'DB is ready. Running app initialization...'; /app/docker/init-prod.sh"
+    restart: 'no'
+    networks:
+      - internal_network
+    environment:
+      <<: *app_env
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      WEBSITE_DOMAIN: ${WEBSITE_DOMAIN}

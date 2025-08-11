@@ -1,4 +1,4 @@
-DCD=${DC_BASE} -f docker-compose.dev.yml 
+DCD=${DC_BASE} -f docker-compose.dev.yml -f docker-compose.traefik-local.yml
 
 ## -- DEV ------- ## 
 .PHONY: dev-up
