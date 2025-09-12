@@ -1,7 +1,7 @@
 x-env-vars: &app_env
   NODE_ENV: production
-  INTERNAL_CLIENT_URL: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}'
-  VITE_API_URL: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}'
+  INTERNAL_CLIENT_URL: 'https://${WEBSITE_DOMAIN}'
+  VITE_API_URL: 'https://${WEBSITE_DOMAIN}'
   CUSTOM_EMAIL_PROVIDER: ${CUSTOM_EMAIL_PROVIDER}
   EMAIL_SERVICE_HOST: ${EMAIL_SERVICE_HOST}
   EMAIL_SERVICE_USER: ${EMAIL_SERVICE_USER}
@@ -62,7 +62,7 @@ services:
     build:
       target: production_nginx
       args:
-        VITE_API_URL: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}'
+        VITE_API_URL: 'https://${WEBSITE_DOMAIN}'
     environment:
       NODE_ENV: production
     labels:

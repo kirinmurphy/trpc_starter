@@ -10,7 +10,6 @@ export function getVerificationUrl({
   route,
 }: GetVerificationUrlProps): string {
   const domain = process.env.WEBSITE_DOMAIN || 'localhost';
-  const protocol = process.env.API_PROTOCOL || 'http';
 
-  return `${protocol}://${domain}${route}?token=${verificationToken}`;
+  return `https://${domain}${route}?token=${verificationToken}`;
 }

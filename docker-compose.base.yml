@@ -62,7 +62,7 @@ services:
     environment:
       AUTH_RATE: '${AUTH_RATE:-10r/m}'
       VERIFY_RATE: '${VERIFY_RATE:-5r/m}'
-      ALLOWED_ORIGINS: '${API_PROTOCOL:-https}://${WEBSITE_DOMAIN}'
+      ALLOWED_ORIGINS: 'https://${WEBSITE_DOMAIN}'
       WEBSITE_DOMAIN: '${WEBSITE_DOMAIN:-localhost}'
     depends_on:
       app:

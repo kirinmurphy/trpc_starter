@@ -18,10 +18,9 @@ const server = createHTTPServer({
 
 const port = 3000;
 const host = '0.0.0.0';
-const protocol = process.env.API_PROTOCOL || 'http';
 
 server.listen(port, host);
-console.log(`Server running on ${protocol}://${host}:${port}`);
+console.log(`Server running on https://${host}:${port}`);
 
 process.on('SIGINT', () => {
   getPool()
