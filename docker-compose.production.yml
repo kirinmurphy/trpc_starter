@@ -27,7 +27,7 @@ services:
           'CMD',
           '/bin/sh',
           './docker/app-health-check.sh',
-          'http://localhost:3000/ping',
+          'http://${WEBSITE_DOMAIN}:3000/ping',
         ]
       interval: 5s
       timeout: 5s
