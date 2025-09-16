@@ -61,7 +61,7 @@ describe('test in progress systemStatus workflow ', () => {
       expect(token).to.equal(null);
     });
 
-    cy.intercept('POST', '**/auth.verifySuperAdminSetupToken*').as(
+    cy.intercept('POST', '**/api.auth.verifySuperAdminSetupToken*').as(
       'verifyToken'
     );
     cy.visit('/');

@@ -31,7 +31,7 @@ describe('CORS Policy security', () => {
 function makeRequestWithOrigin(origin) {
   const headers = origin ? { Origin: origin } : {};
   return cy.request({
-    url: Cypress.config().baseUrl + '/auth.login',
+    url: Cypress.config().baseUrl + '/api.auth.login',
     method: 'POST',
     headers: {
       ...headers,

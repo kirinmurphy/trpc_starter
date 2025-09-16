@@ -5,9 +5,13 @@ import { authRouter } from './authentication/authRouter';
 import { createContext } from './authentication/createContext';
 import { apiMiddleware } from './middleware/apiMiddleware';
 
-export const appRouter = router({
+const apiRouter = router({
   ping: procedures.publicQuery.query(() => 'pong'),
   auth: authRouter,
+});
+
+export const appRouter = router({
+  api: apiRouter,
 });
 
 const server = createHTTPServer({
