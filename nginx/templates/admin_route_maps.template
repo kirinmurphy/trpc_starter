@@ -5,6 +5,6 @@ map $uri $is_admin_route {
 }
 
 map $uri $is_admin_api_route {
-  ~^/auth\.(verifySuperAdminSetupToken|superAdminSetup|resendSuperAdminSetupEmail) 1;
+  ~^/api.auth\.(verifySuperAdminSetupToken|superAdminSetup|resendSuperAdminSetupEmail) 1;
   default                0;
 }
