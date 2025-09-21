@@ -29,7 +29,7 @@ COPY . .
 RUN chmod +x /app/docker/*.sh
 
 RUN NODE_ENV=production bun build src/server/server.ts --outdir=dist/server --target=node --minify
-RUN NODE_ENV=production bun build ./docker/verify-email.ts ./docker/admin-setup/admin-setup-production.ts --outdir=dist/docker --target=node --minify
+RUN NODE_ENV=production bun run ./docker/setup-production-build-helpers.ts 
 
 
 # PRODUCTION - CLIENT BUILD STAGE
