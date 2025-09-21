@@ -62,10 +62,10 @@ DB_PASSWORD=postgres_db_password
 AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
 REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
-WEBSITE_DOMAIN=yourdomain.com
-WEBSITE_DOMAIN=localhost # for development, local prod
+WEBSITE_DOMAIN=localhost (local dev and production)
 
 # -- FOR PRODUCTION
+WEBSITE_DOMAIN=yourdomain.com (remote prod environment)
 
 EMAIL_SERVICE_HOST=smtp.some-provider.com
 EMAIL_SERVICE_USER=email_service_user
