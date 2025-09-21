@@ -1,0 +1,33 @@
+DCD=${DC_BASE} -f docker-compose.dev.yml -f docker-compose.traefik-local.yml
+
+## -- DEV ------- ## 
+.PHONY: dev-up
+dev-up:
+	$(DCD) up -d
+
+.PHONY: dev-down
+dev-down: 
+	$(DCD) down -v
+
+.PHONY: dev-build
+dev-build: 
+	$(DCD) build app
+
+.PHONY: dev-build-no-cache
+dev-build-no-cache: dev-clean
+	$(DCD) build app --no-cache
+
+.PHONY: dev-logs
+dev-logs:
+	$(DCD) logs app --follow app
+
+.PHONY: dev-all
+dev-all: dev-build dev-up dev-logs
+
+.PHONY: dev-clean
+dev-clean: 
+	$(DCD) down -v --remove-orphans --rmi local
+
+.PHONY: reload-nginx
+reload-nginx:
+	$(DCD) restart nginx

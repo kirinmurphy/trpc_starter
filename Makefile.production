@@ -1,0 +1,61 @@
+DC_PROD=${DC_BASE} -f docker-compose.production.yml
+DC_PROD_REMOTE=${DC_PROD} -f docker-compose.production-remote.yml
+DC_PROD_LOCAL=${DC_PROD} -f docker-compose.traefik-local.yml
+
+## -- PRODUCTION LOCAL ------- ##
+.PHONY: prod-local-up
+prod-local-up:
+	$(DC_PROD_LOCAL) up -d
+
+.PHONY: prod-local-down
+prod-local-down:
+	$(DC_PROD_LOCAL) down -v
+
+.PHONY: prod-local-build
+prod-local-build: 
+	$(DC_PROD_LOCAL) build app
+
+.PHONY: prod-local-build-no-cache
+prod-local-build-no-cache: prod-local-clean
+	$(DC_PROD_LOCAL) build app --no-cache
+
+.PHONY: prod-local-logs
+prod-local-logs:
+	$(DC_PROD_LOCAL) logs app --follow app
+
+.PHONY: prod-local-all
+prod-local-all: prod-local-build prod-local-up prod-local-logs
+
+.PHONY: prod-local-clean
+prod-local-clean: 
+	$(DC_PROD_LOCAL) down -v --remove-orphans --rmi local
+
+
+## -- PRODUCTION REMOTE ------- ##
+.PHONY: prod-remote-up
+prod-remote-up:
+	$(DC_PROD_REMOTE) up -d
+
+.PHONY: prod-remote-down
+prod-remote-down:
+	$(DC_PROD_REMOTE) down -v
+
+.PHONY: prod-remote-build
+prod-remote-build: 
+	$(DC_PROD_REMOTE) build app
+
+.PHONY: prod-remote-build-no-cache
+prod-remote-build-no-cache: prod-remote-clean
+	$(DC_PROD_REMOTE) build app --no-cache
+
+.PHONY: prod-remote-logs
+prod-remote-logs:
+	$(DC_PROD_REMOTE) logs app --follow app
+
+.PHONY: prod-remote-all
+prod-remote-all: prod-remote-build prod-remote-up prod-remote-logs
+
+.PHONY: prod-remote-clean
+prod-remote-clean: 
+	$(DC_PROD_REMOTE) down -v --remove-orphans --rmi local
+

@@ -26,6 +26,7 @@ App starter built with Bun, Typescript, tRPC and React
     <td style="vertical-align: top;">Infra / Devops</td>
     <td>
       • <a href="#running-app-with-docker">Docker containers</a> for dev, testing, and production environments<br>
+      • SSL https implementation locally and in production.<br>
       • <a href="./cypress/e2e/base/auth_spec.cy.ts">e2e testing</a> with Github Action CI integration <br>
       • <a href="./docs/cypress_options.md">Dynamic test modes</a> to test unique app variations / feature flags. <br>
       • <a href="./docs/email.md">Email integration</a> for dev, testing and production environments<br>
@@ -44,14 +45,14 @@ App starter built with Bun, Typescript, tRPC and React
 
 # Stack
 - **Runtime**: Bun, Vite
-- **Server**: tRPC, Zod, Postgres, Nginx
+- **Server**: tRPC, Zod, Postgres, Nginx, Traefik
 - **Client**: React, React Query, Tanstack Router, Tailwind, React Icons
 - **Devops**: Docker, Cypress, Mailhog, Github Actions 
 - **Dev Tools**: Prettier
 
 
 # Setup
-## Evironment Variables
+## Environment Variables
 ```env 
 # -- REQUIRED
 DB_NAME=posgtres_db_name
@@ -61,9 +62,10 @@ DB_PASSWORD=postgres_db_password
 AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
 REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
+WEBSITE_DOMAIN=yourdomain.com
+WEBSITE_DOMAIN=localhost # for development, local prod
 
 # -- FOR PRODUCTION
-WEBSITE_DOMAIN=yourdomain.com
 
 EMAIL_SERVICE_HOST=smtp.some-provider.com
 EMAIL_SERVICE_USER=email_service_user
@@ -74,6 +76,9 @@ SUPER_ADMIN_EMAIL=adminemail@gmail.com
 ``` 
 [full variable list](./.env.example) with additional overrides
 
+
+## SSL Setup
+<a href="./docs/mkcert-setup.md">Create https certificate</a> for local development
 
 ## Running App With Docker
 ### Development commands:

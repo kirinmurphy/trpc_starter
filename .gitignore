@@ -37,3 +37,7 @@ nginx/includes/cors_map.conf
 nginx/includes/cors_options.conf
 nginx/includes/rate_limits.conf
 nginx/includes/client_proxy.conf
+nginx/includes/server_header.conf
+nginx/includes/client_location.conf
+
+traefik/certs/local

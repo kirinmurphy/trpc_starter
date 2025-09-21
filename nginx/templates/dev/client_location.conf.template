@@ -1,0 +1,4 @@
+location / {
+  proxy_pass http://app:${VITE_PORT};
+  include /etc/nginx/includes/proxy_headers.conf;
+}

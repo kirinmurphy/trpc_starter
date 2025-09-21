@@ -1,0 +1,21 @@
+# traefik/traefik.yml
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+api:
+  dashboard: true
+  insecure: true
+providers:
+  docker:
+    exposedByDefault: false
+    network: web
+  file:
+    directory: /etc/traefik/dynamic
+    watch: true
+entryPoints:
+  web:
+    address: ':80'
+  websecure:
+    address: ':443'
+  traefik:
+    address: ':8080'

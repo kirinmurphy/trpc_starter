@@ -1,6 +1,6 @@
 x-network-config: &network-config
   networks:
-    - app_network
+    - internal_network
 
 services:
   app:
@@ -51,11 +51,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 30s
 
   nginx:
-    image: nginx:alpine
-    <<: *network-config
     deploy:
       resources:
         limits:
@@ -64,35 +62,19 @@ services:
     environment:
       AUTH_RATE: '${AUTH_RATE:-10r/m}'
       VERIFY_RATE: '${VERIFY_RATE:-5r/m}'
-      ALLOWED_ORIGINS: '${ALLOWED_ORIGINS:-http://localhost,http://localhost:3000}'
-    command: sh -c "cp ./docker/init-nginx.sh /tmp/init-nginx.sh && chmod +x /tmp/init-nginx.sh && /tmp/init-nginx.sh"
-    ports:
-      - '443:443'
-      - '80:80'
-    volumes:
-      - ./docker:/docker
-      - ./nginx/includes:/etc/nginx/includes
-      - ./nginx/templates:/etc/nginx/templates:ro
-      - ./nginx/nginx.conf:/etc/nginx/conf:ro
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - system_status:/app/docker/system_status
+      ALLOWED_ORIGINS: 'https://${WEBSITE_DOMAIN}'
+      WEBSITE_DOMAIN: '${WEBSITE_DOMAIN:-localhost}'
     depends_on:
       app:
         condition: service_healthy
     healthcheck:
-      test:
-        [
-          'CMD',
-          '/bin/sh',
-          './docker/app-health-check.sh',
-          'http://localhost:80/ping',
-        ]
+      test: ['CMD-SHELL', 'nginx -t || exit 1']
       interval: 10s
       timeout: 5s
       retries: 5
 
 networks:
-  app_network:
+  internal_network:
     driver: bridge
 
 volumes:
