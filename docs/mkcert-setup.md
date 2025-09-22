@@ -29,6 +29,9 @@ The first step is to install **mkcert** and add its local Certificate Authority 
 Once `mkcert` is installed and trusted, you can create the SSL certificates for your `localhost` domain.
 
 1.  Navigate to the `traefik/certs/local` directory in your project.
+    ```
+    cd ~/[YOUR_PROJECT_PATH]/traefik/certs/local
+    ```
 2.  Run the following command to create the `localhost.pem` and `localhost-key.pem` files.
     ```sh
     mkcert -cert-file localhost.pem -key-file localhost-key.pem "localhost" 127.0.0.1 ::1

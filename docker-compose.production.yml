@@ -27,7 +27,7 @@ services:
           'CMD',
           '/bin/sh',
           './docker/app-health-check.sh',
-          'http://${WEBSITE_DOMAIN}:3000/ping',
+          'http://localhost:3000/ping',
         ]
       interval: 5s
       timeout: 5s
@@ -67,21 +67,16 @@ services:
       NODE_ENV: production
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.my-nginx-http.rule=Host(`${WEBSITE_DOMAIN}`)'
-      - 'traefik.http.routers.my-nginx-http.entrypoints=web'
-      - 'traefik.http.routers.my-nginx-http.middlewares=https-redirect@file'
-      - 'traefik.http.routers.my-nginx-https.rule=Host(`${WEBSITE_DOMAIN}`)'
-      - 'traefik.http.routers.my-nginx-https.entrypoints=websecure'
-      - 'traefik.http.routers.my-nginx-https.tls=true'
-      - 'traefik.http.routers.my-nginx-https.tls.options=default-tls-options@file'
-      - 'traefik.http.routers.my-nginx-api.rule=Host(`${WEBSITE_DOMAIN}`) && (PathPrefix(`/auth`) || PathPrefix(`/ping`))'
-      - 'traefik.http.routers.my-nginx-api.entrypoints=websecure'
-      - 'traefik.http.routers.my-nginx-api.tls=true'
-      - 'traefik.http.routers.my-nginx-api.tls.options=default-tls-options@file'
+      - 'traefik.docker.network=web'
+      - 'traefik.http.services.nginx.loadbalancer.server.port=80'
+
+      - 'traefik.http.routers.app.rule=Host(`${WEBSITE_DOMAIN}`)'
+      - 'traefik.http.routers.app.entrypoints=websecure'
+      - 'traefik.http.routers.app.tls=true'
+      - 'traefik.http.routers.app.tls.certresolver=myresolver'
+
     depends_on:
       app:
-        condition: service_healthy
-      traefik:
         condition: service_healthy
     networks:
       - web

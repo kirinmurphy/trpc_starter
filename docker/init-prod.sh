@@ -27,12 +27,8 @@ if [ $elapsed -gt $timeout ]; then
 fi
 echo "Database is ready!"
 
-# echo "Building application..."
-# bun run build
-
 echo "Running database migrations..."
 bun run migrate 
-
 
 echo "Setting up prod super admin..." 
 bun run ./dist/docker/admin-setup/admin-setup-production.js

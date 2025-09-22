@@ -20,7 +20,7 @@ const port = 3000;
 const host = '0.0.0.0';
 
 server.listen(port, host);
-console.log(`Server running on https://${host}:${port}`);
+console.log(`Server running on http://${host}:${port}`);
 
 process.on('SIGINT', () => {
   getPool()

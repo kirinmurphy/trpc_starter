@@ -21,8 +21,8 @@ dev-build-no-cache: dev-clean
 dev-logs:
 	$(DCD) logs app --follow app
 
-.PHONY: dev-all
-dev-all: dev-build dev-up dev-logs
+.PHONY: dev-up-fresh
+dev-up-fresh: dev-clean dev-build dev-up 
 
 .PHONY: dev-clean
 dev-clean: 

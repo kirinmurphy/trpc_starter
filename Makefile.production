@@ -23,8 +23,8 @@ prod-local-build-no-cache: prod-local-clean
 prod-local-logs:
 	$(DC_PROD_LOCAL) logs app --follow app
 
-.PHONY: prod-local-all
-prod-local-all: prod-local-build prod-local-up prod-local-logs
+.PHONY: prod-local-up-fresh
+prod-local-up-build: prod-local-clean prod-local-build prod-local-up 
 
 .PHONY: prod-local-clean
 prod-local-clean: 
@@ -52,8 +52,8 @@ prod-remote-build-no-cache: prod-remote-clean
 prod-remote-logs:
 	$(DC_PROD_REMOTE) logs app --follow app
 
-.PHONY: prod-remote-all
-prod-remote-all: prod-remote-build prod-remote-up prod-remote-logs
+.PHONY: prod-remote-up-fresh
+prod-remote-up-fresh: prod-remote-clean prod-remote-build prod-remote-up 
 
 .PHONY: prod-remote-clean
 prod-remote-clean: 

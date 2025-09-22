@@ -57,14 +57,11 @@ services:
       - internal_network
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.my-nginx-dev-http.rule=Host(`${WEBSITE_DOMAIN}`)'
-      - 'traefik.http.routers.my-nginx-dev-http.entrypoints=web'
-      - 'traefik.http.routers.my-nginx-dev-http.middlewares=https-redirect@file'
-      - 'traefik.http.routers.my-nginx-dev-https.rule=Host(`${WEBSITE_DOMAIN}`)'
-      - 'traefik.http.routers.my-nginx-dev-https.entrypoints=websecure'
-      - 'traefik.http.routers.my-nginx-dev-https.tls=true'
-      - 'traefik.http.routers.my-nginx-dev-https.tls.options=default-tls-options@file'
+      - 'traefik.docker.network=web'
       - 'traefik.http.services.my-nginx-dev.loadbalancer.server.port=80'
+      - 'traefik.http.routers.app-dev.rule=Host(`${WEBSITE_DOMAIN}`)'
+      - 'traefik.http.routers.app-dev.entrypoints=websecure'
+      - 'traefik.http.routers.app-dev.tls=true'
     volumes:
       - ./docker:/docker
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro

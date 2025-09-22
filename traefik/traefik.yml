@@ -2,9 +2,11 @@
 global:
   checkNewVersion: false
   sendAnonymousUsage: false
+
 api:
   dashboard: true
   insecure: true
+
 providers:
   docker:
     exposedByDefault: false
@@ -12,9 +14,16 @@ providers:
   file:
     directory: /etc/traefik/dynamic
     watch: true
+
 entryPoints:
   web:
     address: ':80'
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
   websecure:
     address: ':443'
   traefik:
