@@ -1,11 +1,15 @@
-# Cypress Dynamic Mode Test Orchestration
-Cypress can test for different app variations via various Docker Compose configurations.   
+# Cypress Testing Environment
+Using Cypress:  
+- Repeatable cypress commands available in the `/cypress/support` folder
+- Test files of default behavior should be written in `/cypress/e2e/base`
+- Additional test modes can be created with different app configurations.
 
-Create various `docker-compose.cypress.[OVERRIDE_NAME].yml` files and corresponding `cypress/e2e/OVERRIDE_NAME` directory to provide customized containers for specific tests. 
+## Dynamic Test Modes
+Cypress can test for different app configurations via various Docker Compose configurations.   
 
-## 1. Project Directory Structure:
+Create various `docker-compose.override.OVERRIDE_NAME.yml` files and corresponding `cypress/e2e/OVERRIDE_NAME` directory to provide customized containers for specific tests. 
 
-
+### 1. Project Directory Structure:
 ```
 ├── cypress/
 │   └── e2e/
@@ -16,17 +20,17 @@ Create various `docker-compose.cypress.[OVERRIDE_NAME].yml` files and correspond
 │       └── override2/
 │           └── test_file_3.cy.ts      
 ├── docker-compose.cypress.yml          
-├── docker-compose.cypress.override1.yml 
-└── docker-compose.cypress.override2.yml 
+├── docker-compose.override.override1.yml 
+└── docker-compose.override.override2.yml 
 ```
 - base represents the default config (uses just `docker-compose.cypress.yml`)
 - each `override/` directory must match to a namespaced docker override file
 
 
-## 2. Example Docker Compose Override File:
-Each `docker-compose.cypress.override.[OVERRIDE_NAME].yml` file extends or modifies the base cypress container, often with a custom ENV variable.   
+### 2. Example Docker Compose Override File:
+Each `docker-compose.override.OVERRIDE_NAME.yml` file extends or modifies the base cypress container, often with a custom ENV variable.   
 
-docker-compose.cypress.override1.yml
+docker-compose.override1.yml
 ```yml
 services:
   cypress:
@@ -35,20 +39,19 @@ services:
     # could also add other override settings
     # build:
     #   context: .
-    #   dockerfile: Dockerfile.cypress.override1
+    #   dockerfile: Dockerfile.override1
     # volumes:
     #   - ./cypress-config-override1:/app/cypress/config
 ```
 
-## 3. Usage Examples for `make tests-up`:
-You can run the tests with follow args: 
+## Running The Tests:
+The tests can be run with the following options: 
 
 ### 1. Run All Tests
 ```bash
 make tests-up
 ```
-If no specific `FILE` or `TEST_MODE` is provided, the script runs all test modes.  
-Each mode will bring up its own Docker Compose configuration.
+Runs the default and all override test modes.  Each mode will build its own test container with override configs.
 
 ### 2. Run Tests for a Specific File:
 ```bash
@@ -64,6 +67,6 @@ _Note: If FILE is provided, the TEST_MODE argument will be ignored._
 make tests-up TEST_MODE="base"
 make tests-up TEST_MODE="override2"
 ```
-Run all tests within a specific namespaced directory. 
+Run all tests within a specific test mode directory. 
 
 _Note: This argument is ignored if FILE is also provided._

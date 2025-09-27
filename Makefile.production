@@ -13,18 +13,18 @@ prod-local-down:
 
 .PHONY: prod-local-build
 prod-local-build: 
-	$(DC_PROD_LOCAL) build app
+	$(DC_PROD_LOCAL) build app nginx
 
 .PHONY: prod-local-build-no-cache
 prod-local-build-no-cache: prod-local-clean
-	$(DC_PROD_LOCAL) build app --no-cache
+	$(DC_PROD_LOCAL) build --no-cache app nginx
 
 .PHONY: prod-local-logs
 prod-local-logs:
 	$(DC_PROD_LOCAL) logs app --follow app
 
 .PHONY: prod-local-up-fresh
-prod-local-up-build: prod-local-clean prod-local-build prod-local-up 
+prod-local-up-fresh: prod-local-clean prod-local-build prod-local-up 
 
 .PHONY: prod-local-clean
 prod-local-clean: 
@@ -32,8 +32,28 @@ prod-local-clean:
 
 
 ## -- PRODUCTION REMOTE ------- ##
+SUDO := $(shell [ "$$(id -u)" -eq 0 ] && echo "" || echo "sudo")
+REMOTE_DIR ?= /opt/$(notdir $(CURDIR))
+REMOTE_SETUP_STAMP := $(REMOTE_DIR)/.remote-setup-done
+ENABLE_SWAP ?= 1
+SWAP_GB ?= 2
+
+.PHONY: setup-remote-docker-host
+setup-remote-docker-host: 
+	@mkdir -p '$(REMOTE_DIR)/docker/prod-remote'
+	@test -x docker/prod-remote/setup-buildkit.sh || chmod +x docker/prod-remote/setup-buildkit.sh
+
+	@if [ -f $(REMOTE_SETUP_STAMP) ]; then \
+		echo "Remote Docker host already set up."; \
+	else \
+		$(SUDO) -v; \
+		cd '$(REMOTE_DIR)'; \
+		ENABLE_SWAP='$(ENABLE_SWAP)' SWAP_GB='$(SWAP_GB)' $(SUDO) ./docker/prod-remote/setup-buildkit.sh; \
+		touch $(REMOTE_SETUP_STAMP); \
+	fi
+
 .PHONY: prod-remote-up
-prod-remote-up:
+prod-remote-up: setup-remote-docker-host
 	$(DC_PROD_REMOTE) up -d
 
 .PHONY: prod-remote-down
@@ -41,16 +61,19 @@ prod-remote-down:
 	$(DC_PROD_REMOTE) down -v
 
 .PHONY: prod-remote-build
-prod-remote-build: 
-	$(DC_PROD_REMOTE) build app
+prod-remote-build: setup-remote-docker-host
+	$(DC_PROD_REMOTE) build app nginx
 
 .PHONY: prod-remote-build-no-cache
-prod-remote-build-no-cache: prod-remote-clean
-	$(DC_PROD_REMOTE) build app --no-cache
+.NOTPARALLEL: prod-remote-build-no-cache
+prod-remote-build-no-cache: 
+	$(MAKE) prod-remote-clean 
+	$(MAKE) setup-remote-docker-host 
+	$(DC_PROD_REMOTE) build --no-cache app nginx
 
 .PHONY: prod-remote-logs
 prod-remote-logs:
-	$(DC_PROD_REMOTE) logs app --follow app
+	$(DC_PROD_REMOTE) logs --follow app
 
 .PHONY: prod-remote-up-fresh
 prod-remote-up-fresh: prod-remote-clean prod-remote-build prod-remote-up 
@@ -59,3 +82,26 @@ prod-remote-up-fresh: prod-remote-clean prod-remote-build prod-remote-up
 prod-remote-clean: 
 	$(DC_PROD_REMOTE) down -v --remove-orphans --rmi local
 
+.PHONY: prod-remote-host-info
+prod-remote-host-info:
+	@echo "=== Remote host info (on-host) ==="
+	@echo "REMOTE_DIR         = $(REMOTE_DIR)"
+	@echo "ENABLE_SWAP        = $(ENABLE_SWAP)"
+	@echo "SWAP_GB            = $(SWAP_GB)"
+	@echo
+	@echo "Docker version:"
+	@docker --version || true
+	@echo
+	@echo "Buildx version:"
+	@docker buildx version || echo "buildx not installed"
+	@echo
+	@echo "Buildx builders:"
+	@docker buildx ls || true
+	@echo
+	@echo "BuildKit daemon.json flag:"
+	@{ test -f /etc/docker/daemon.json && cat /etc/docker/daemon.json | sed 's/"/\\"/g' | tr -d '\n' | sed 's/.*/  (contents hidden)/'; } || echo "  /etc/docker/daemon.json not found"
+	@{ test -f /etc/docker/daemon.json && grep -q '"buildkit": *true' /etc/docker/daemon.json && echo "  buildkit=true ✅" || echo "  buildkit not explicitly enabled ⚠️"; } || true
+	@echo
+	@echo "Swap status:"
+	@swapon --show || echo "swapon not available"
+	@free -h || true
