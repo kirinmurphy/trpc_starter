@@ -1,4 +1,4 @@
-
+# Password Reset Workflow
 
 ```mermaid
 %%{init: {

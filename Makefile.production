@@ -13,7 +13,7 @@ prod-local-down:
 
 .PHONY: prod-local-build
 prod-local-build: 
-	$(DC_PROD_LOCAL) build app
+	$(DC_PROD_LOCAL) build app nginx
 
 .PHONY: prod-local-build-no-cache
 prod-local-build-no-cache: prod-local-clean
@@ -42,11 +42,11 @@ prod-remote-down:
 
 .PHONY: prod-remote-build
 prod-remote-build: 
-	$(DC_PROD_REMOTE) build app
+	$(DC_PROD_REMOTE) build app nginx
 
 .PHONY: prod-remote-build-no-cache
 prod-remote-build-no-cache: prod-remote-clean
-	$(DC_PROD_REMOTE) build app --no-cache
+	$(DC_PROD_REMOTE) build --no-cache app nginx
 
 .PHONY: prod-remote-logs
 prod-remote-logs:
