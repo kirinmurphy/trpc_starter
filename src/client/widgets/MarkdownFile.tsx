@@ -1,9 +1,12 @@
+import { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { FaLink } from 'react-icons/fa';
 import Markdown, { Components } from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import DOMPurify from 'dompurify';
+import rehypeSanitize from 'rehype-sanitize';
+import mermaid from 'mermaid';
 
 export interface ReadmeFileProps {
   markdownUrl: string;
@@ -12,6 +15,36 @@ export interface ReadmeFileProps {
 }
 
 type QueryKey = ['markdown', string];
+
+function Mermaid({ chart }: { chart: string }) {
+  const id = useRef(`mmd-${Math.random().toString(36).slice(2)}`);
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    mermaid.initialize({ startOnLoad: false });
+    let active = true;
+    mermaid.render(id.current, chart).then(({ svg }) => {
+      if (active && ref.current) ref.current.innerHTML = svg;
+    });
+    return () => {
+      active = false;
+    };
+  }, [chart]);
+
+  return <div ref={ref} />;
+}
+
+const Code = ((props) => {
+  const { inline, className, children, ...rest } = props as any;
+  const lang = /language-(\w+)/.exec(className || '')?.[1];
+  if (!inline && lang === 'mermaid')
+    return <Mermaid chart={String(children).trim()} />;
+  return (
+    <code className={className} {...rest}>
+      {children}
+    </code>
+  );
+}) as NonNullable<Components['code']>;
 
 export function MarkdownFile(props: ReadmeFileProps) {
   const { markdownUrl, externalLink, linkedFileRootPath } = props;
@@ -47,9 +80,10 @@ export function MarkdownFile(props: ReadmeFileProps) {
     return null;
   }
 
-  const sanitizedContent = DOMPurify.sanitize(mdText);
+  // const sanitizedContent = DOMPurify.sanitize(mdText);
 
   const components: Components = {
+    code: Code,
     a: ({ children, ...props }) => {
       const { href = '', ...propsMinusHref } = props;
 
@@ -95,8 +129,11 @@ export function MarkdownFile(props: ReadmeFileProps) {
         </a>
       )}
 
-      <Markdown rehypePlugins={[rehypeRaw, rehypeSlug]} components={components}>
-        {sanitizedContent}
+      <Markdown
+        rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeSlug]}
+        components={components}
+      >
+        {mdText}
       </Markdown>
     </article>
   );
