@@ -26,6 +26,10 @@ Steps to deploy this app on a  Digital Ocean droplet
   - from the directory of the local env run 
     - `scp .env root@DROPLET_IP_ADDR:/opt/GITHUB_REPO_NAME`
 
+- setup BUILDKIT on the droplet
+  - `chmod +x /docker/prod-remote/setup-buildkit.sh` 
+  - `./docker/prod-remote/setup-buildkit.sh` 
+
 - run the app
   - ssh into the droplet 
   - `cd opt/GITHUB_REPO_NAME` 
