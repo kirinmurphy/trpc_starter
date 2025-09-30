@@ -1,9 +1,14 @@
-# Cypress Dynamic Mode Test Orchestration
+# Cypress E2E Testing Environment
+This app is tested using the Cypress Test Framework. 
+- Reusable cypress commands are availabe in the `/cypress/support` folder
+- Primary test files should be located in `/cypress/e2e/base` or `cypress/e2e/base/some_subdirectory`
+
+## Dynamic Mode Test Orchestration
 Cypress can test for different app variations via various Docker Compose configurations.   
 
 Create various `docker-compose.cypress.[OVERRIDE_NAME].yml` files and corresponding `cypress/e2e/OVERRIDE_NAME` directory to provide customized containers for specific tests. 
 
-## 1. Project Directory Structure:
+### 1. Project Directory Structure:
 
 
 ```
@@ -23,7 +28,7 @@ Create various `docker-compose.cypress.[OVERRIDE_NAME].yml` files and correspond
 - each `override/` directory must match to a namespaced docker override file
 
 
-## 2. Example Docker Compose Override File:
+### 2. Example Docker Compose Override File:
 Each `docker-compose.cypress.override.[OVERRIDE_NAME].yml` file extends or modifies the base cypress container, often with a custom ENV variable.   
 
 docker-compose.cypress.override1.yml
@@ -40,7 +45,7 @@ services:
     #   - ./cypress-config-override1:/app/cypress/config
 ```
 
-## 3. Usage Examples for `make tests-up`:
+## Usage Examples for `make tests-up`:
 You can run the tests with follow args: 
 
 ### 1. Run All Tests

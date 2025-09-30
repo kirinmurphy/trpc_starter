@@ -1,5 +1,4 @@
-# User Auth Workflow
-
+# User Creation And Authentication
 
 ```mermaid
 %%{init: {

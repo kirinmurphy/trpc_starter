@@ -1,6 +1,8 @@
 # Super Admin Setup 
+The docker build processes automatically create Super Admin Site Owners for each instance of this site, with different workflows for production and dev environments.  
+
 ## Production Workflow 
-- Initial production build requires a SUPER_ADMIN_EMAIL environment variable to initialize admin setup.  
+- The initial production build requires a SUPER_ADMIN_EMAIL environment variable to initialize admin setup.  
 - Production build sends email to SUPER_ADMIN_EMAIL address.
 - A missing or invalid environment variable will fail the initial build.
 - Failure to confirm email has been sent will fail the initial build.
