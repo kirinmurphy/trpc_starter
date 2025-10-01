@@ -1,7 +1,7 @@
 x-env-vars: &app_env
   NODE_ENV: production
-  INTERNAL_CLIENT_URL: 'https://${WEBSITE_DOMAIN}'
-  VITE_API_URL: 'https://${WEBSITE_DOMAIN}'
+  INTERNAL_CLIENT_URL: 'https://${WEBSITE_DOMAIN:-localhost}'
+  VITE_API_URL: 'https://${WEBSITE_DOMAIN:-localhost}'
   CUSTOM_EMAIL_PROVIDER: ${CUSTOM_EMAIL_PROVIDER}
   EMAIL_SERVICE_HOST: ${EMAIL_SERVICE_HOST}
   EMAIL_SERVICE_USER: ${EMAIL_SERVICE_USER}
@@ -62,7 +62,7 @@ services:
     build:
       target: production_nginx
       args:
-        VITE_API_URL: 'https://${WEBSITE_DOMAIN}'
+        VITE_API_URL: 'https://${WEBSITE_DOMAIN:-localhost}'
     environment:
       NODE_ENV: production
     labels:
@@ -70,7 +70,7 @@ services:
       - 'traefik.docker.network=web'
       - 'traefik.http.services.nginx.loadbalancer.server.port=80'
 
-      - 'traefik.http.routers.app.rule=Host(`${WEBSITE_DOMAIN}`)'
+      - 'traefik.http.routers.app.rule=Host(`${WEBSITE_DOMAIN:-localhost}`)'
       - 'traefik.http.routers.app.entrypoints=websecure'
       - 'traefik.http.routers.app.tls=true'
       - 'traefik.http.routers.app.tls.certresolver=myresolver'
@@ -78,9 +78,6 @@ services:
     depends_on:
       app:
         condition: service_healthy
-    networks:
-      - web
-      - internal_network
 
   app_initialization:
     build:
@@ -102,4 +99,4 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
-      WEBSITE_DOMAIN: ${WEBSITE_DOMAIN}
+      WEBSITE_DOMAIN: ${WEBSITE_DOMAIN:-localhost}

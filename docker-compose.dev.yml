@@ -10,9 +10,9 @@ services:
       - /app/node_modules
     environment:
       NODE_ENV: development
-      WEBSITE_DOMAIN: ${WEBSITE_DOMAIN}
+      WEBSITE_DOMAIN: ${WEBSITE_DOMAIN:-localhost}
       INTERNAL_CLIENT_URL: 'http://app:5173'
-      VITE_API_URL: 'https://${WEBSITE_DOMAIN}'
+      VITE_API_URL: 'https://${WEBSITE_DOMAIN:-localhost}'
       DEBUG: 'app:*'
     healthcheck:
       test:
@@ -52,14 +52,11 @@ services:
     environment:
       VITE_PORT: 5173
       NODE_ENV: development
-    networks:
-      - web
-      - internal_network
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=web'
       - 'traefik.http.services.my-nginx-dev.loadbalancer.server.port=80'
-      - 'traefik.http.routers.app-dev.rule=Host(`${WEBSITE_DOMAIN}`)'
+      - 'traefik.http.routers.app-dev.rule=Host(`${WEBSITE_DOMAIN:-localhost}`)'
       - 'traefik.http.routers.app-dev.entrypoints=websecure'
       - 'traefik.http.routers.app-dev.tls=true'
     volumes:

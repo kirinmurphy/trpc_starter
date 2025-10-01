@@ -1,4 +1,4 @@
   listen 80;
-  server_name ${WEBSITE_DOMAIN};
+  server_name ${WEBSITE_DOMAIN:-localhost};
   root /usr/share/nginx/html;
   index index.html index.htm;

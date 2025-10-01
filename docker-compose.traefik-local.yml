@@ -15,7 +15,7 @@ services:
       - internal_network
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'ping', '-c', '1', '${WEBSITE_DOMAIN}']
+      test: ['CMD', 'ping', '-c', '1', '${WEBSITE_DOMAIN:-localhost}']
       interval: 10s
       timeout: 5s
       retries: 3
