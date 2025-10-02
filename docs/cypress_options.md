@@ -1,10 +1,11 @@
 # Cypress E2E Testing Environment
-This app is tested using the Cypress Test Framework. 
-- Reusable cypress commands are availabe in the `/cypress/support` folder
-- Primary test files should be located in `/cypress/e2e/base` or `cypress/e2e/base/some_subdirectory`
+Using Cypress:  
+- Repeatable cypress commands are availabe in the `/cypress/support` folder
+- Test files of default behavior should be written in `/cypress/e2e/base`
+- Additional test modes can be created with different app configurations.
 
-## Dynamic Mode Test Orchestration
-Cypress can test for different app variations via various Docker Compose configurations.   
+## Dynamic Test Modes
+Cypress can test for different app configurations via various Docker Compose configurations.   
 
 Create various `docker-compose.cypress.[OVERRIDE_NAME].yml` files and corresponding `cypress/e2e/OVERRIDE_NAME` directory to provide customized containers for specific tests. 
 

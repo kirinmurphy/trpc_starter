@@ -19,8 +19,9 @@ App starter built with Bun, Typescript, tRPC and React
     <td style="vertical-align: top;">Security</td>
     <td>
       • HTTPS/TLS encryption<br>
-      • Proxied port mapping of whitelisted ports<br>
-      • Helmet headers/csp, csrf and cors protections<br>
+      • Proxied port mapping of enabled ports<br>
+      • CSRF protection<br>
+      • Helmet headers/csp and cors protections<br>
       • Rate limited mutation endpoints<br>
       • Form input sanitization
     </td>
@@ -54,7 +55,7 @@ App starter built with Bun, Typescript, tRPC and React
 
 
 # Setup
-## Environment Variables
+## 1. Environment Variables
 ```env 
 # -- REQUIRED
 DB_NAME=posgtres_db_name
@@ -64,10 +65,8 @@ DB_PASSWORD=postgres_db_password
 AUTH_TOKEN_SECRET=base64_encoded_32+_characters_string
 REFRESH_TOKEN_SECRET=base64_encoded_32+_characters_string
 
-WEBSITE_DOMAIN=localhost (local dev and production)
-
 # -- FOR PRODUCTION
-WEBSITE_DOMAIN=yourdomain.com (remote prod environment)
+WEBSITE_DOMAIN=yourdomain.com (remote build only)
 
 EMAIL_SERVICE_HOST=smtp.some-provider.com
 EMAIL_SERVICE_USER=email_service_user
@@ -75,14 +74,14 @@ EMAIL_API_KEY=EMAIL_API_KEYword_or_api_key
 
 # Set up super admin user on initial build
 SUPER_ADMIN_EMAIL=adminemail@gmail.com
-``` 
+```
 [full variable list](./.env.example) with additional overrides
 
 
-## SSL Setup
+## 2. SSL Setup
 <a href="./docs/mkcert-setup.md">Create https certificate</a> for local development and production testing
 
-## Running App With Docker
+## 3. Running App With Docker
 There are 4 container environments 
 - **dev**: auto rebuilding / hot reloading app enviroment
 - **tests**: cypress tests suite running with dev instance, used in Github Actions CI.
