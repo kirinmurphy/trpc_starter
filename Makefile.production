@@ -33,7 +33,7 @@ prod-local-clean:
 
 ## -- PRODUCTION REMOTE ------- ##
 SUDO := $(shell [ "$$(id -u)" -eq 0 ] && echo "" || echo "sudo")
-REMOTE_SETUP_STAMP := $(REMOTE_DIR)/.remote-setup-done
+REMOTE_SETUP_STAMP := .remote-setup-done
 REMOTE_DIR ?= /opt/$(notdir $(CURDIR))
 ENABLE_SWAP ?= 1
 SWAP_GB ?= 2
@@ -42,7 +42,7 @@ SWAP_GB ?= 2
 setup-remote-docker-host: 
 	@mkdir -p '$(REMOTE_DIR)/docker/prod-remote'
 	@test -x docker/prod-remote/setup-buildkit.sh || chmod +x docker/prod-remote/setup-buildkit.sh
-	@if [ -f '$(REMOTE_SETUP_STAMP)' ]; then \
+	@if [ -f '$(REMOTE_DIR)/$(REMOTE_SETUP_STAMP)' ]; then \
 		echo "Remote Docker host already set up."; \
 	else \
 		$(SUDO) -v; \
