@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -o pipefail
 
 echo "==== Starting Dynamic Cypress Test Orchestration ===="
 
