@@ -10,16 +10,17 @@ interface AuthenticatedAppProps {
 }
 
 export function AuthenticatedApp({ children }: AuthenticatedAppProps) {
-  const { data: user } = trpcService.auth.getUser.useQuery(undefined, {
+  const { data: user, error } = trpcService.auth.getUser.useQuery(undefined, {
     staleTime: 30 * 60 * 1000,
-    cacheTime: 60 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    onError: (err: unknown) => {
-      console.error('failed to fetch user', err);
-    },
   });
+
+  if (error) {
+    console.error('failed to fetch user', error);
+  }
 
   // TODO: Add system error handling
   if (!user) {

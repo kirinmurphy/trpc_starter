@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { EmailSentStatus } from '../../../../../utils/types';
 import { trpcService } from '../../../../trpcService/trpcClientService';
 import { SimpleForm } from '../../../../widgets/forms/SimpleForm';
@@ -53,6 +53,14 @@ export function CreateAccount() {
     }
   };
 
+  const handleEmailChecked = useCallback((state: EmailSentStatus) => {
+    setAccountCreationState(state);
+  }, []);
+
+  const handleResendSuccess = useCallback(() => {
+    setAccountCreationState(EmailSentStatus.emailSent);
+  }, []);
+
   return (
     <>
       {accountCreationState === 'default' && (
@@ -94,9 +102,7 @@ export function CreateAccount() {
       {accountCreationState === EmailSentStatus.emailQueued && data && (
         <CheckingEmailSent
           userId={data.userId}
-          onEmailChecked={(state) => {
-            setAccountCreationState(state);
-          }}
+          onEmailChecked={handleEmailChecked}
         />
       )}
 
@@ -108,9 +114,7 @@ export function CreateAccount() {
         <UnsentVerificationEmailInstructions
           email={email}
           userId={data.userId}
-          onResendSuccess={() => {
-            setAccountCreationState(EmailSentStatus.emailSent);
-          }}
+          onResendSuccess={handleResendSuccess}
         />
       )}
     </>

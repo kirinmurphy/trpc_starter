@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { EmailSentStatus } from '../../../../../utils/types';
 import { trpcService } from '../../../../trpcService/trpcClientService';
 
@@ -9,19 +10,25 @@ interface Props {
 export function CheckingEmailSent(props: Props) {
   const { userId, onEmailChecked } = props;
 
-  trpcService.auth.getVerificationEmailSentStatus.useQuery(
+  const { data, error, isSuccess, isError } = trpcService.auth.getVerificationEmailSentStatus.useQuery(
     { userId },
     {
-      cacheTime: 0,
+      gcTime: 0,
       staleTime: 0,
-      onSuccess: (data) => {
-        onEmailChecked(data);
-      },
-      onError: () => {
-        onEmailChecked(EmailSentStatus.emailFailed);
-      },
     }
   );
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      onEmailChecked(data);
+    }
+  }, [isSuccess, data, onEmailChecked]);
+
+  useEffect(() => {
+    if (isError) {
+      onEmailChecked(EmailSentStatus.emailFailed);
+    }
+  }, [isError, error, onEmailChecked]);
 
   return <div className="text-center">Creating account...</div>;
 }
