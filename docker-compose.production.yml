@@ -1,5 +1,6 @@
 x-env-vars: &app_env
   NODE_ENV: production
+  WEBSITE_DOMAIN: ${WEBSITE_DOMAIN:-localhost}
   INTERNAL_CLIENT_URL: 'https://${WEBSITE_DOMAIN:-localhost}'
   VITE_API_URL: 'https://${WEBSITE_DOMAIN:-localhost}'
   CUSTOM_EMAIL_PROVIDER: ${CUSTOM_EMAIL_PROVIDER}
