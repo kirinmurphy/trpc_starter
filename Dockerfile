@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.4
-FROM oven/bun:latest AS base 
+FROM oven/bun:1 AS base
 WORKDIR /app
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -41,7 +41,7 @@ ENV VITE_API_URL=$VITE_API_URL
 RUN NODE_ENV=production bun run vite build --minify
 
 # NGINX BASE STAGE
-FROM nginx:alpine AS nginx_base
+FROM nginx:1.27-alpine AS nginx_base
 COPY nginx/includes /etc/nginx/includes
 COPY nginx/templates /etc/nginx/templates
 

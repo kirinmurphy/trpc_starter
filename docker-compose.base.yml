@@ -38,7 +38,7 @@ services:
       start_period: 60s
 
   db:
-    image: postgres:latest
+    image: postgres:17-alpine
     <<: *network-config
     environment:
       POSTGRES_USER: ${DB_USER}
