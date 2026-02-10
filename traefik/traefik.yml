@@ -26,5 +26,10 @@ entryPoints:
           permanent: true
   websecure:
     address: ':443'
+    http:
+      middlewares:
+        - security-headers@file
+        - rate-limit@file
+        - compress@file
   traefik:
     address: ':8080'

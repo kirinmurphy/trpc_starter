@@ -16,10 +16,19 @@ The Traefik container runs with hardened defaults. See [traefik.md](./traefik.md
 
 ## Traefik Middleware Security
 
-Traefik middlewares are defined in `traefik/dynamic/middleware.yml` (local) and `/opt/traefik/traefik/dynamic/middleware.yml` (remote). Both should be kept in sync. The nginx service references these via Docker labels in `docker-compose.production.yml`:
+Traefik middlewares are defined in `traefik/dynamic/middleware.yml` (local) and `/opt/traefik/traefik/dynamic/middleware.yml` (remote). Both should be kept in sync.
 
-```
-traefik.http.routers.app.middlewares=security-headers@file,rate-limit@file,compress@file
+Middlewares are applied at the **entryPoint level** in `traefik.yml` on the `websecure` entryPoint, so they are automatically enforced on all HTTPS traffic — individual apps do not need to reference them via Docker labels.
+
+```yaml
+entryPoints:
+  websecure:
+    address: ":443"
+    http:
+      middlewares:
+        - security-headers@file
+        - rate-limit@file
+        - compress@file
 ```
 
 ### security-headers

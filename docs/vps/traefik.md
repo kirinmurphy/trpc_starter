@@ -66,10 +66,13 @@ The Traefik container runs with these security options (defined in `docker-compo
 - **Resource limits** — 256MB RAM, 0.25 CPU max
 - **Docker socket mounted read-only** — Traefik can discover containers but can't modify Docker
 
+## EntryPoint-Level Middlewares
+Security middlewares are applied globally on the `websecure` entryPoint in `traefik.yml`, so all HTTPS traffic is automatically protected. Individual apps do not need to add middleware labels — they only need routing labels (host rule, TLS, certresolver). See [vps_hardening.md](./vps_hardening.md#traefik-middleware-security) for details on each middleware.
+
 ## Dynamic Configuration
 Traefik loads dynamic config files from `traefik/dynamic/` (watched for changes):
 
-- **`tls.yml`** — TLS certificate paths and cipher suite configuration
+- **`tls.yml`** — TLS options with minimum version and cipher suite configuration (named `default` so it auto-applies to all routers)
 - **`middleware.yml`** — security headers, rate limiting, and compression (see [vps_hardening.md](./vps_hardening.md))
 - **`timeouts.yml`** — forwarding timeout settings for the nginx backend
 
@@ -81,4 +84,4 @@ networks:
     external: true
 ```
 
-The nginx service in `docker-compose.production.yml` uses Traefik Docker labels to register itself as a backend — no direct host port mappings needed.
+The nginx service in `docker-compose.production.yml` uses Traefik Docker labels to register itself as a routing backend — no direct host port mappings or middleware labels needed.
