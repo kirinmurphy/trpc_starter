@@ -31,5 +31,6 @@ entryPoints:
         - security-headers@file
         - rate-limit@file
         - compress@file
+        - in-flight-req@file
   traefik:
     address: ':8080'
