@@ -18,7 +18,7 @@ The Traefik container runs with hardened defaults. See [traefik.md](./traefik.md
 
 Traefik middlewares are defined in `traefik/dynamic/middleware.yml` (local) and `/opt/traefik/traefik/dynamic/middleware.yml` (remote). Both should be kept in sync.
 
-Middlewares are applied at the **entryPoint level** in `traefik.yml` on the `websecure` entryPoint, so they are automatically enforced on all HTTPS traffic — individual apps do not need to reference them via Docker labels.
+Global middlewares are applied at the **entryPoint level** in `traefik.yml` on the `websecure` entryPoint, so they are automatically enforced on all HTTPS traffic. Per-project middlewares (like `cross-origin-isolation`) are applied at the **router level** via Docker labels, allowing each app to opt in to policies that depend on its specific requirements.
 
 ```yaml
 entryPoints:
@@ -29,6 +29,7 @@ entryPoints:
         - security-headers@file
         - rate-limit@file
         - compress@file
+        - in-flight-req@file
 ```
 
 ### security-headers
@@ -40,6 +41,11 @@ Adds HTTP response headers to protect against common web attacks:
 - **X-XSS-Protection: "0"** — disables the legacy browser XSS auditor (deprecated, itself exploitable; modern protection comes from CSP)
 - **Permissions-Policy** — blocks access to camera, microphone, and geolocation APIs
 
+### cross-origin-isolation (per-project, router-level)
+Applied via Docker label (`traefik.http.routers.<name>.middlewares=cross-origin-isolation@file`) rather than at the entryPoint level, since each project may need different cross-origin policies depending on what resources it embeds or shares.
+- **Cross-Origin-Opener-Policy: same-origin** — isolates browsing context, prevents cross-origin popup attacks
+- **Cross-Origin-Resource-Policy: same-site** — prevents cross-origin resource reads while allowing subdomain sharing
+
 ### rate-limit
 Throttles incoming requests per client:
 - 100 requests/second sustained, with bursts up to 150
@@ -48,6 +54,9 @@ Throttles incoming requests per client:
 
 ### compress
 Enables gzip/brotli compression on responses based on the client's `Accept-Encoding` header. Reduces bandwidth and improves load times.
+
+### in-flight-req
+Caps concurrent connections at 100 per source IP. Complements rate limiting by catching slow-connection exhaustion (slowloris-style) attacks where an attacker holds many connections open simultaneously rather than sending requests quickly.
 
 ## TODO
 - [ ] Disable root SSH login (`PermitRootLogin no`)

@@ -75,6 +75,7 @@ services:
       - 'traefik.http.routers.app.entrypoints=websecure'
       - 'traefik.http.routers.app.tls=true'
       - 'traefik.http.routers.app.tls.certresolver=myresolver'
+      - 'traefik.http.routers.app.middlewares=cross-origin-isolation@file'
 
     depends_on:
       app:

@@ -66,14 +66,41 @@ The Traefik container runs with these security options (defined in `docker-compo
 - **Resource limits** — 256MB RAM, 0.25 CPU max
 - **Docker socket mounted read-only** — Traefik can discover containers but can't modify Docker
 
-## EntryPoint-Level Middlewares
-Security middlewares are applied globally on the `websecure` entryPoint in `traefik.yml`, so all HTTPS traffic is automatically protected. Individual apps do not need to add middleware labels — they only need routing labels (host rule, TLS, certresolver). See [vps_hardening.md](./vps_hardening.md#traefik-middleware-security) for details on each middleware.
+## Middleware Architecture
+Global security middlewares (security-headers, rate-limit, compress, in-flight-req) are applied at the `websecure` entryPoint in `traefik.yml`, so all HTTPS traffic is automatically protected.
+
+Per-project middlewares (like `cross-origin-isolation`) are applied at the router level via Docker labels, allowing each app to control policies that depend on its specific needs:
+```yaml
+labels:
+  - 'traefik.http.routers.app.middlewares=cross-origin-isolation@file'
+```
+
+See [vps_hardening.md](./vps_hardening.md#traefik-middleware-security) for details on each middleware.
+
+## Access Logging
+Traefik writes JSON-formatted access logs to stdout for security auditing.
+
+**What's logged:** All standard request fields are kept — client IP, method, path, status code, duration, TLS version, etc.
+
+**What's dropped:** Request headers are dropped by default to avoid logging cookies and auth tokens. Only `User-Agent`, `Content-Type`, `X-Forwarded-For`, and `X-Real-Ip` are selectively kept.
+
+**Viewing logs:**
+```bash
+# Recent access logs
+docker logs traefik-proxy --tail 20
+
+# Filter for errors (4xx/5xx)
+docker logs traefik-proxy 2>&1 | jq 'select(.DownstreamStatus >= 400)'
+
+# Filter by path
+docker logs traefik-proxy 2>&1 | jq 'select(.RequestPath | startswith("/api"))'
+```
 
 ## Dynamic Configuration
 Traefik loads dynamic config files from `traefik/dynamic/` (watched for changes):
 
 - **`tls.yml`** — TLS options with minimum version and cipher suite configuration (named `default` so it auto-applies to all routers)
-- **`middleware.yml`** — security headers, rate limiting, and compression (see [vps_hardening.md](./vps_hardening.md))
+- **`middleware.yml`** — security headers, rate limiting, compression, and in-flight request limiting (see [vps_hardening.md](./vps_hardening.md))
 - **`timeouts.yml`** — forwarding timeout settings for the nginx backend
 
 ## Connecting the App
@@ -84,4 +111,4 @@ networks:
     external: true
 ```
 
-The nginx service in `docker-compose.production.yml` uses Traefik Docker labels to register itself as a routing backend — no direct host port mappings or middleware labels needed.
+The nginx service in `docker-compose.production.yml` uses Traefik Docker labels to register itself as a routing backend. Global middlewares are inherited from the entryPoint; per-project middlewares (e.g., `cross-origin-isolation@file`) are added via router labels.

@@ -123,3 +123,8 @@ Test filters can be added to `make tests-up` - [instructions](./docs/cypress_opt
 ### Utility commands:
 - `make clean-all`              - Clean all containers, systems and volumes
 - `make help`                   - Show all available commands
+
+# VPS / Deployment
+- [VPS Setup](./docs/vps/vps_setup.md) — initial server provisioning and configuration
+- [Traefik](./docs/vps/traefik.md) — reverse proxy, TLS, access logging, and dynamic configuration
+- [VPS Hardening](./docs/vps/vps_hardening.md) — security headers, rate limiting, and middleware details

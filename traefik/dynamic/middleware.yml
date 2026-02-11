@@ -18,5 +18,18 @@ http:
         burst: 50
         period: 1s
 
+    cross-origin-isolation:
+      headers:
+        customResponseHeaders:
+          Cross-Origin-Opener-Policy: "same-origin"
+          Cross-Origin-Resource-Policy: "same-site"
+
     compress:
       compress: {}
+
+    in-flight-req:
+      inFlightReq:
+        amount: 100
+        sourceCriterion:
+          ipStrategy:
+            depth: 0
