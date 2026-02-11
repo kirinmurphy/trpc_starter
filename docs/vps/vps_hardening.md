@@ -58,7 +58,27 @@ Enables gzip/brotli compression on responses based on the client's `Accept-Encod
 ### in-flight-req
 Caps concurrent connections at 100 per source IP. Complements rate limiting by catching slow-connection exhaustion (slowloris-style) attacks where an attacker holds many connections open simultaneously rather than sending requests quickly.
 
-## TODO
-- [ ] Disable root SSH login (`PermitRootLogin no`)
-- [ ] Disable password authentication (`PasswordAuthentication no`)
-- [ ] Install and configure fail2ban for SSH brute-force protection
+## System-Level Hardening
+
+### SSH (`/etc/ssh/sshd_config`)
+- `PermitRootLogin no`
+- `PasswordAuthentication no` (also enforced via cloud-init drop-in)
+- `X11Forwarding no`
+- `MaxAuthTries 3`
+- `ClientAliveInterval 300` / `ClientAliveCountMax 2`
+
+### fail2ban (`/etc/fail2ban/jail.local`)
+SSH jail: maxretry=3, bantime=3600 (1 hour), findtime=600
+
+### Kernel hardening (`/etc/sysctl.d/99-hardening.conf`)
+- ICMP send_redirects disabled (all + default)
+- Source-routed packets rejected
+- Default interface ICMP redirects disabled (IPv4 + IPv6)
+- SysRq key disabled
+- Hardlink/symlink protections enabled
+
+### UFW firewall
+Only ports 22 (SSH), 80 (HTTP), 443 (HTTPS) allowed inbound.
+
+### Docker log rotation (`/etc/docker/daemon.json`)
+json-file driver, max 10MB per log, 3 files retained.
