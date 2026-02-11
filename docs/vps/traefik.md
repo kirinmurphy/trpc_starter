@@ -78,7 +78,7 @@ labels:
 See [vps_hardening.md](./vps_hardening.md#traefik-middleware-security) for details on each middleware.
 
 ## Access Logging
-Traefik writes JSON-formatted access logs to stdout for security auditing.
+Traefik writes JSON-formatted access logs to a file at `/var/log/traefik/access.log` (volume-mounted from the host for fail2ban integration).
 
 **What's logged:** All standard request fields are kept — client IP, method, path, status code, duration, TLS version, etc.
 
@@ -87,13 +87,13 @@ Traefik writes JSON-formatted access logs to stdout for security auditing.
 **Viewing logs:**
 ```bash
 # Recent access logs
-docker logs traefik-proxy --tail 20
+docker exec traefik-proxy tail -20 /var/log/traefik/access.log
 
 # Filter for errors (4xx/5xx)
-docker logs traefik-proxy 2>&1 | jq 'select(.DownstreamStatus >= 400)'
+docker exec traefik-proxy cat /var/log/traefik/access.log | jq 'select(.DownstreamStatus >= 400)'
 
 # Filter by path
-docker logs traefik-proxy 2>&1 | jq 'select(.RequestPath | startswith("/api"))'
+docker exec traefik-proxy cat /var/log/traefik/access.log | jq 'select(.RequestPath | startswith("/api"))'
 ```
 
 ## Dynamic Configuration
