@@ -15,6 +15,7 @@ x-env-vars: &app_env
 
 services:
   app:
+    restart: unless-stopped
     build:
       target: final_production
     command: bun run start --no-daemon
@@ -46,6 +47,7 @@ services:
         condition: service_completed_successfully
 
   db:
+    restart: unless-stopped
     deploy:
       resources:
         limits:
@@ -60,6 +62,7 @@ services:
       - internal_network
 
   nginx:
+    restart: unless-stopped
     build:
       target: production_nginx
       args:
