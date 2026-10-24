@@ -1,4 +1,8 @@
 services:
+  traefik:
+    volumes:
+      - ./traefik/traefik-dev.yml:/etc/traefik/traefik.yml:ro
+
   app:
     build:
       target: development
